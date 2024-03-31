@@ -1,0 +1,81 @@
+.contact.page {
+  width: 100%;
+}
+
+.contact.page .container {
+  width: 80%;
+}
+
+.contact-hero {
+  width: 100%;
+  height: 100%;
+}
+
+.contact-hero h1 {
+  padding-top: 2.5em;
+}
+
+.contact-row {
+  width: 100%;
+  display: flex;
+}
+
+.contact-row .contact-col:nth-child(1) {
+  flex: 1.5;
+}
+
+.contact-row .contact-col:nth-child(2) {
+  flex: 4;
+}
+
+.contact-col {
+  /* border: 1px solid rgba(255, 255, 255, 0.1); */
+  padding: 1em;
+}
+
+.contact-col h1 {
+  font-family: "Wremena";
+  font-size: 70px;
+  text-transform: none;
+  letter-spacing: 0 !important;
+}
+
+.contact-col h1 span {
+  text-transform: none;
+  letter-spacing: 0 !important;
+  font-weight: 400;
+}
+
+.contact.page section {
+  padding-top: 2em;
+}
+
+.contact-form .contact-row:nth-child(1) .contact-col:nth-child(1) {
+  padding-top: 2.25em;
+}
+
+.contact-subscribe h3 {
+  margin-bottom: 0.5em;
+}
+
+.contact-subscribe .input {
+  margin-top: 1em;
+}
+
+@media (max-width: 900px) {
+  .contact.page .container {
+    width: 100%;
+  }
+
+  .contact-col h1 {
+    font-size: 50px;
+  }
+
+  .contact-row {
+    flex-direction: column;
+  }
+
+  .contact-col {
+    padding: 1em 0;
+  }
+}
