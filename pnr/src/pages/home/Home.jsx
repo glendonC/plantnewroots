@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import "./home.css";
 
 import Transition from "../../components/transition/Transition";
-import PortraitImg from "../../assets/images/home/portrait.jpg";
+import PortraitImg from "../../assets/images/home/portrait.jpeg";
 
 import { gsap } from "gsap";
 
