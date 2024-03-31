@@ -1,0 +1,38 @@
+.footer {
+  position: relative;
+  z-index: 0;
+}
+
+.footer .container {
+  display: flex;
+}
+
+.footer .container .footer-col {
+  flex: 1;
+  display: flex;
+  gap: 1em;
+}
+
+.footer-col:nth-child(2) {
+  justify-content: flex-end;
+}
+
+.footer-col .footer-item a {
+  font-family: "Inter";
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .footer {
+    padding: 1em 0;
+  }
+  .footer-col {
+    flex-direction: column;
+  }
+
+  .footer-col:nth-child(2) {
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+}
