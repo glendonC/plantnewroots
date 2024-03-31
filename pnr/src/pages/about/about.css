@@ -1,0 +1,156 @@
+.about.page {
+  width: 100%;
+}
+
+.about-marquee {
+  position: relative;
+  width: 100%;
+  margin-top: 10em;
+  z-index: 0;
+}
+
+.about-row {
+  width: 100%;
+  display: flex;
+}
+
+.about-col:nth-child(1) {
+  flex: 2;
+}
+
+.about-col:nth-child(2) {
+  flex: 3;
+}
+
+.about-intro h2 {
+  text-indent: 500px;
+  margin: 2em 0;
+}
+
+.about-intro-copy,
+.about-portrait,
+.about-awards {
+  width: 80%;
+  margin: 2em auto;
+}
+
+.about-intro-copy h3 {
+  font-family: "Inter";
+  font-weight: 200 !important;
+  font-size: 24px;
+}
+
+.about-portrait .about-col p {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.about-portrait .about-col p span:nth-child(1) {
+  flex: 1;
+}
+
+.about-portrait .about-col p span:nth-child(2) {
+  flex: 3;
+  font-family: "Wremena";
+  text-transform: none;
+  font-size: 1em;
+}
+
+.faqs {
+  margin: 1em 0;
+}
+
+.faqs > div {
+  background: var(--colors-bg);
+}
+
+.faqs > div section section {
+  padding: 20px 0 !important;
+  border-bottom: 1px solid var(--color-text-secondary) !important;
+}
+
+.faqs > div section section div {
+  color: var(--color-text-primary) !important;
+  font-size: 24px;
+}
+
+.faqs > div section section div:nth-child(2) div {
+  padding-top: 0.75em !important;
+  font-size: 20px !important;
+  line-height: 125% !important;
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.faqs > div section section svg {
+  fill: #fff !important;
+}
+
+.faqs > div section section div span {
+  position: relative;
+  top: 24px !important;
+}
+
+.award-header {
+  margin: 1em 0;
+}
+
+.about-row.award-row {
+  padding: 15px 0;
+  border-bottom: 1px solid var(--color-text-secondary);
+}
+
+.about-row.award-row .about-col {
+  display: flex;
+}
+
+.about-awards.in-press {
+  margin-top: 4em;
+}
+
+.about-row.award-row .about-col .award-year,
+.about-row.award-row .about-col .award-view,
+.about-row.award-row .about-col .award-info,
+.about-row.award-row .about-col .award-project {
+  flex: 1;
+}
+
+.about-contact {
+  width: 100%;
+  margin: 16em 0 4em 0;
+}
+
+.about-contact-copy {
+  width: 60%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about-contact-copy h2 {
+  font-family: "Rosseta";
+  margin-bottom: 0.25em;
+}
+
+.about-contact-copy p span {
+  text-transform: none;
+  font-weight: 300;
+  font-size: 20px;
+}
+
+@media (max-width: 900px) {
+  .about-row {
+    flex-direction: column;
+  }
+  .about-intro h2 {
+    text-indent: 100px;
+  }
+
+  .about-intro-copy,
+  .about-portrait,
+  .about-awards {
+    width: 100%;
+  }
+
+  .about-contact-copy {
+    width: 100%;
+  }
+}
