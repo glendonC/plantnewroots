@@ -1,0 +1,45 @@
+.m-btn-wrapper {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  padding: 2em 0;
+}
+
+.m-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  border: 1px solid var(--color-text-secondary);
+  border-radius: 100%;
+}
+
+.m-btn-copy {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.m-btn-copy p {
+  text-align: center;
+  font-family: "Rosseta";
+  font-size: 40px;
+  line-height: 85%;
+}
+
+.arrow-right {
+  position: absolute;
+  top: 50%;
+  right: -10%;
+  transform: translate(0%, -50%);
+  background: var(--color-bg);
+  transform-origin: center center;
+  transition: 0.3s;
+}
+
+.m-btn:hover .arrow-right {
+  right: -5%;
+}
