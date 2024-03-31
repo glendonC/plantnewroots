@@ -1,0 +1,298 @@
+section.project-hero {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.project-title {
+  position: relative;
+  top: -100px;
+  text-align: center;
+  z-index: 0;
+}
+
+.project-brief {
+  position: relative;
+  width: 75%;
+  margin: 1em auto 5em auto;
+  z-index: 0;
+}
+
+.project-description {
+  position: relative;
+  z-index: 0;
+  margin-bottom: 2em;
+}
+
+.project-description .project-row {
+  width: 92%;
+  margin: 4em auto;
+  display: flex;
+}
+
+.project-col:nth-child(1) {
+  display: flex;
+  flex: 3;
+}
+
+.project-col:nth-child(2) {
+  flex: 5;
+}
+
+.project-col:nth-child(1) .project-sub-col:nth-child(1) {
+  flex: 1;
+}
+
+.project-col:nth-child(1) .project-sub-col:nth-child(2) {
+  flex: 3;
+}
+
+.project-images {
+  position: relative;
+  width: 100%;
+  margin: 5em 0 5em 0;
+  z-index: 0;
+}
+
+.project-img-row {
+  width: 100%;
+  display: flex;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+.project-img {
+  flex: 1;
+  height: 100px;
+}
+
+@media (max-width: 900px) {
+  .project-brief,
+  .project-description .project-row {
+    width: 100%;
+  }
+
+  .project-description .project-row,
+  .project-col:nth-child(1) {
+    flex-direction: column;
+    gap: 2em;
+  }
+
+  .project-img-row {
+    flex-direction: column;
+  }
+}
+
+.container1 {
+  height: 1000px; /* Set the height to 100% of the viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.work {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #141414;
+  padding: 6em 4em;
+  transition: background-color 0.5s ease;
+  overflow: hidden;
+}
+
+.project.page {
+  padding-bottom: 0;
+}
+
+.overlay {
+  position: absolute;
+  top: 0%;
+  left: 13.25%;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10em;
+  transition: 1s;
+  opacity: 0.5;
+}
+
+.prev {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  background: gray;
+  transform: rotate(10deg) scale(1);
+  transition: transform 0.5s ease;
+}
+
+.prev.active {
+  transform: rotate(12.5deg) scale(1);
+}
+
+#prev-1 {
+  top: -500px;
+}
+
+#prev-2 {
+  top: 0;
+}
+
+#prev-3 {
+  top: 500px;
+}
+
+p {
+  position: relative;
+  color: #fff;
+  font-size: 30px;
+  margin-bottom: 1em;
+  transition: 0.5s;
+  z-index: 2;
+}
+
+h1 {
+  color: #fff;
+  opacity: 0.5;
+  font-size: 80px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  transition: 0.5s;
+}
+
+.work-item {
+  position: relative;
+  width: 100%;
+  padding: 2em 0;
+  display: flex;
+  align-items: center;
+  gap: 2em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: 0.5s;
+  z-index: 2;
+}
+
+.work-item#w-3 {
+  border-bottom: none;
+}
+
+.work-item-icon {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border-radius: 100%;
+  background: #0b1925;
+  color: #fff;
+  overflow: hidden;
+  left: -20px;
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.icon-holder {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.5s;
+}
+
+.i-1 {
+  transition-delay: 0.2s;
+  left: -70px;
+}
+
+.i-2 {
+  left: 0px;
+}
+
+.work.hovered button {
+  background: #0b1925;
+}
+
+.work-item:hover .work-item-name h1 {
+  color: #fff;
+
+}
+.work.hovered h1 {
+  color: #0b1925;
+  opacity: 1;
+}
+
+.work.hovered p {
+  color: #0b1925;
+}
+
+.work.hovered .work-item {
+  border-bottom: 1px solid #0b1925;
+}
+
+.work.hovered .work-item#w-3 {
+  border-bottom: none;
+}
+
+.work-item:hover .work-item-icon {
+  opacity: 1;
+  left: 0px;
+}
+
+.work-item:hover .icon-holder.i-1 {
+  left: 0;
+}
+
+.work-item:hover .icon-holder.i-2 {
+  left: 70px;
+}
+
+.bg-color-red {
+  background-color: rgb(164, 250, 249);
+}
+
+.bg-color-blue {
+  background-color: rgb(246, 250, 164);
+}
+
+.bg-color-green {
+  background-color: rgb(250, 164, 164);
+}
+
+@media (max-width: 900px) {
+  .work {
+    padding: 4em 1em;
+  }
+
+  .work-item {
+    gap: 1em;
+  }
+
+  p {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .work-item-icon {
+    transform: scale(0.75);
+  }
+
+  button {
+    padding: 1em 2em;
+  }
+}
