@@ -1,0 +1,193 @@
+.menu-container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* menu-bar */
+.menu-bar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.75em;
+  z-index: 100000;
+  pointer-events: all;
+}
+
+.menu-logo a {
+  font-family: "PP Monument Extended";
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.menu-actions {
+  display: flex;
+  align-items: center;
+  gap: 2em;
+}
+
+.menu-toggle {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.hamburger-icon {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  height: 70px;
+  width: 70px;
+  border: 0px;
+  border-radius: 100%;
+  padding: 0;
+  background: transparent;
+  transition: all 300ms;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  cursor: pointer;
+}
+
+.hamburger-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.hamburger-icon:before,
+.hamburger-icon:after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 1.5px;
+  background: #fff;
+  transition: all 300ms ease-in-out;
+  transition-delay: 150ms;
+  will-change: transform;
+}
+
+.hamburger-icon:before {
+  transform: translateY(-3px);
+}
+
+.hamburger-icon:after {
+  transform: translateY(3px);
+}
+
+.active.hamburger-icon:before {
+  transform: translateY(0) rotate(45deg);
+}
+
+.active.hamburger-icon:after {
+  transform: translateY(0) rotate(-45deg);
+}
+
+/* menu overlay */
+.menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg-light);
+  clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: all;
+  z-index: 100;
+}
+
+.menu-col {
+  width: 75%;
+  height: 100%;
+  padding: 2em;
+  display: flex;
+  gap: 1em;
+}
+
+.menu-col > div {
+  flex: 1;
+}
+
+.menu-col .menu-sub-col {
+  display: flex;
+  align-items: center;
+}
+
+/* main links */
+.menu-link-item {
+  position: relative;
+  padding: 1em 0 0.125em 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  /* border: 1px solid red; */
+}
+
+.menu-link-item .menu-link-item-holder {
+  position: relative;
+}
+
+.menu-link-item .menu-link-item-holder a {
+  position: relative;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: "Rosseta";
+  font-size: 125px;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 80%;
+  transition: color 0.3s;
+}
+
+.menu-link-item .menu-link-item-holder:hover a {
+  color: rgba(255, 255, 255, 1);
+}
+
+/* link hover preview */
+.link-preview-img {
+  position: absolute;
+  left: 50%;
+  width: 400px;
+  height: 500px;
+  transform: rotate(10deg);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.bind-new-img {
+  position: absolute;
+  top: 125%;
+  left: -50%;
+  transform: rotate(-30deg);
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 900px) {
+  .menu-toggle {
+    justify-content: flex-end;
+  }
+
+  .menu-col {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .menu-link-item .menu-link-item-holder a {
+    font-size: 100px;
+  }
+
+  .link-preview-img {
+    display: none;
+  }
+}
