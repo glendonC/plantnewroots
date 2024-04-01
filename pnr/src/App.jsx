@@ -1,7 +1,5 @@
 import "./App.css";
-
-import { Routes, Route, useLocation } from "react-router-dom";
-
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Menu from "./components/menu/Menu";
 import Footer from "./components/footer/Footer";
 
@@ -25,22 +23,23 @@ function App() {
 
   return (
     <>
-      <Menu />
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route index element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/works" element={<Works />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/sample-project" element={<SampleProject />} />
-          <Route path="/sample-blog" element={<SampleBlog />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-        </Routes>
-      </AnimatePresence>
-      {showFooter && <Footer />}
-    </>
+    <Menu />
+    <AnimatePresence mode="wait">
+      <Routes>
+        <Route path="/" element={<Navigate replace to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/works" element={<Works />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/sample-project" element={<SampleProject />} />
+        <Route path="/sample-blog" element={<SampleBlog />} />
+      </Routes>
+    </AnimatePresence>
+    <Footer />
+  </>
   );
 }
 
