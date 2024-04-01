@@ -14,6 +14,9 @@ import Blog from "./pages/blog/Blog";
 import SampleProject from "./pages/sampleproject/SampleProject";
 import SampleBlog from "./pages/sampleblog/SampleBlog";
 
+import Login from "./pages/login/Login";
+import SignUp from "./pages/signup/Signup";
+
 import { AnimatePresence } from "framer-motion";
 
 function App() {
@@ -32,6 +35,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/sample-project" element={<SampleProject />} />
           <Route path="/sample-blog" element={<SampleBlog />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
       </AnimatePresence>
       {showFooter && <Footer />}
