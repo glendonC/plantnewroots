@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './signup.css';
 
 function SignUp() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,15 +22,13 @@ function SignUp() {
       if (response.ok) {
         const data = await response.json();
         console.log('Sign up successful', data);
-        // Handle sign-up success, e.g., redirecting to the login page or clearing the form
+        navigate('/login');
       } else {
-        // It might be useful to display the error message from the server
         const errorData = await response.json();
         throw new Error(errorData.message || 'Sign up failed');
       }
     } catch (error) {
       console.error('Error during sign up:', error.message);
-      // Here, you could update the UI to show the error message to the user
     }
   };
   
@@ -43,7 +43,7 @@ function SignUp() {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter your username" // Placeholder added here
+            placeholder="Enter your username"
             required
           />
         </div>
@@ -54,7 +54,7 @@ function SignUp() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email" // Placeholder added here
+            placeholder="Enter your email"
             required
           />
         </div>
@@ -65,7 +65,7 @@ function SignUp() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Create a password" // Placeholder added here
+            placeholder="Create a password"
             required
           />
         </div>
