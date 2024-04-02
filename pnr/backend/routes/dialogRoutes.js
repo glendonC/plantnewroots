@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { sendToDialogflow } = require('../dialogflowAgent');
+const { sendToDialogflow } = require('../services/dialogflowAgent');
 
 router.post('/daily', async (req, res) => {
     try {
