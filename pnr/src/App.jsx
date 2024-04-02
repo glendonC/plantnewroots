@@ -15,6 +15,11 @@ import SampleBlog from "./pages/sampleblog/SampleBlog";
 import Login from "./pages/login/Login";
 import SignUp from "./pages/signup/Signup";
 
+import DailyConversation from './pages/agents/daily/DailyConversation';
+import ProfessionalConversation from './pages/agents/professional/ProfessionalConversation';
+import CulturalConversation from './pages/agents/cultural/CulturalConversation';
+
+
 import { AnimatePresence } from "framer-motion";
 
 import { useAuth } from './contexts/AuthContext';
@@ -39,6 +44,9 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/conversationchoices" element={<ConversationChoices />} />
+        <Route path="/daily" element={<DailyConversation />} />
+        <Route path="/professional" element={<ProfessionalConversation />} />
+        <Route path="/cultural" element={<CulturalConversation />} />
         <Route path="/sample-blog" element={<SampleBlog />} />
       </Routes>
     </AnimatePresence>
