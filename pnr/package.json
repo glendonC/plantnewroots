@@ -12,6 +12,7 @@
   "dependencies": {
     "@gsap/react": "^2.1.0",
     "@phosphor-icons/react": "^2.1.4",
+    "axios": "^1.6.8",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
