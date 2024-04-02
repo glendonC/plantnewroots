@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+
 import './login.css';
 
 function Login() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -15,23 +20,20 @@ function Login() {
         },
         body: JSON.stringify({ email, password }),
       });
-  
-      const data = await response.json(); // Attempt to parse JSON regardless of the response status
-  
+
+      const data = await response.json();
+
       if (response.ok) {
         console.log('Login successful', data);
-        // Handle login success (e.g., redirect or update state)
+        login();
+        navigate('/home');
       } else {
-        // Handle non-200 responses (e.g., display error message from server)
         console.error('Login error:', data.message);
       }
     } catch (error) {
       console.error('Error during login:', error);
-      // Handle network error or JSON parsing error
     }
   };
-  
-  
 
   return (
     <div className="login-container">
