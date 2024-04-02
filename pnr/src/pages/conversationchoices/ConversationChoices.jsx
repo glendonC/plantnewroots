@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./sample-project.css";
+import "./conversationchoices.css";
 
 import Transition from "../../components/transition/Transition";
 import { ArrowRight } from "@phosphor-icons/react";

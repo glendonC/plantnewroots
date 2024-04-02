@@ -120,7 +120,7 @@ const Works = () => {
                 onMouseOver={() => handleMouseOver(1)}
               >
                 <div className="project-img">
-                  <Link to="/sample-project">
+                  <Link to="/conversationchoices">
                     <img src={WorkImg1} alt="" />
                   </Link>
                 </div>
@@ -140,7 +140,7 @@ const Works = () => {
                 onMouseOver={() => handleMouseOver(2)}
               >
                 <div className="project-img">
-                  <Link to="/sample-project">
+                  <Link to="/conversationchoices">
                     <img src={WorkImg2} alt="" />
                   </Link>
                 </div>
@@ -158,7 +158,7 @@ const Works = () => {
                 onMouseOver={() => handleMouseOver(3)}
               >
                 <div className="project-img">
-                  <Link to="/sample-project">
+                  <Link to="/conversationchoices">
                     <img src={WorkImg3} alt="" />
                   </Link>
                 </div>
@@ -178,7 +178,7 @@ const Works = () => {
                 onMouseOver={() => handleMouseOver(4)}
               >
                 <div className="project-img">
-                  <Link to="/sample-project">
+                  <Link to="/conversationchoices">
                     <img src={WorkImg4} alt="" />
                   </Link>
                 </div>

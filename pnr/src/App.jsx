@@ -9,7 +9,7 @@ import Works from "./pages/works/Works";
 import Profile from "./pages/profile/Profile";
 import Blog from "./pages/blog/Blog";
 
-import SampleProject from "./pages/sampleproject/SampleProject";
+import ConversationChoices from "./pages/conversationchoices/ConversationChoices";
 import SampleBlog from "./pages/sampleblog/SampleBlog";
 
 import Login from "./pages/login/Login";
@@ -38,7 +38,7 @@ function App() {
         <Route path="/works" element={<Works />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/sample-project" element={<SampleProject />} />
+        <Route path="/conversationchoices" element={<ConversationChoices />} />
         <Route path="/sample-blog" element={<SampleBlog />} />
       </Routes>
     </AnimatePresence>
