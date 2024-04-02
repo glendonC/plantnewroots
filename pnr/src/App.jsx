@@ -17,9 +17,13 @@ import SignUp from "./pages/signup/Signup";
 
 import { AnimatePresence } from "framer-motion";
 
+import { useAuth } from './contexts/AuthContext';
+
+
 function App() {
   const location = useLocation();
   const showFooter = location.pathname !== "/";
+  const { isLoggedIn } = useAuth();
 
   return (
     <>
@@ -27,8 +31,8 @@ function App() {
     <AnimatePresence mode="wait">
       <Routes>
         <Route path="/" element={<Navigate replace to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={isLoggedIn ? <Navigate replace to="/home" /> : <Login />} />
+        <Route path="/signup" element={isLoggedIn ? <Navigate replace to="/home" /> : <SignUp />} />
         <Route path="/home" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/works" element={<Works />} />
