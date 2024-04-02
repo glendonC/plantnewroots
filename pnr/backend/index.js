@@ -1,8 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-
 const userRoutes = require('./routes/userRoutes');
+const dialogRoutes = require('./routes/dialogRoutes');
 
 const app = express();
 
@@ -17,10 +17,13 @@ app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
 
+// Use the user routes
+app.use('/api/users', userRoutes);
+
+// Use the dialog routes
+app.use('/api/dialog', dialogRoutes);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-
-app.use('/api/users', userRoutes);
