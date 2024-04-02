@@ -3,12 +3,16 @@ import { Link } from "react-router-dom";
 
 import "./MagneticButton.css";
 
+import { useAuth } from '../../contexts/AuthContext';
+
 import gsap from "gsap";
 
 const MagneticButton = () => {
   const btnRef = useRef(null);
   const textRef = useRef(null);
   const wrapperRef = useRef(null);
+
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -69,8 +73,8 @@ const MagneticButton = () => {
 
   return (
     <div className="m-btn-wrapper" ref={wrapperRef}>
-      <Link to="/">
-        <div className="m-btn" ref={btnRef}>
+      <Link to={isLoggedIn ? "/home" : "/login"}>
+      <div className="m-btn" ref={btnRef}>
           <div className="arrow-right">
             <img
               src="https://assets-global.website-files.com/61385c793ab59f1f6a3372f7/613b078390142aafe0cdc267_arrow-next_white.svg"

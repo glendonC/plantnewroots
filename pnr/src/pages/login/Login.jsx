@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+
 import './login.css';
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -22,6 +25,7 @@ function Login() {
 
       if (response.ok) {
         console.log('Login successful', data);
+        login();
         navigate('/home');
       } else {
         console.error('Login error:', data.message);
