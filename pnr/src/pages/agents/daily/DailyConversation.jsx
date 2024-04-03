@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './dailyconversation.css';
 
+
+import SaveConversationButton from '../../../components/saveconversationbutton/SaveConversationButton';
+
 function DailyConversation() {
     const [userInput, setUserInput] = useState('');
     const [messages, setMessages] = useState([]);
@@ -32,6 +35,16 @@ function DailyConversation() {
         }
     };
 
+    const saveConversation = async () => {
+        try {
+            await axios.post('/api/conversations/save', { messages });
+            alert('Conversation saved successfully!');
+        } catch (error) {
+            console.error('Failed to save conversation: ', error);
+            alert('Failed to save the conversation.');
+        }
+    };
+
     return (
         <div className="daily-conversation-container">
             <h2>Daily Conversation Practice</h2>
@@ -52,8 +65,10 @@ function DailyConversation() {
                 />
                 <button onClick={sendMessage}>Send</button>
             </div>
+            <SaveConversationButton onSaveConversation={saveConversation} />
         </div>
     );
+    
 }
 
 export default DailyConversation;
