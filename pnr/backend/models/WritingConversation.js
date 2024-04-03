@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const writingConversationSchema = new mongoose.Schema({
-  participants: [String],
+  participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   messages: [{
     text: String,
-    from: String,
+    from: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     timestamp: Date
   }],
   createdAt: {
