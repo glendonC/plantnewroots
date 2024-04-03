@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const dialogRoutes = require('./routes/dialogRoutes');
+const conversationRoutes = require('./routes/writingConversationRoutes');
 
 const app = express();
 
@@ -22,6 +23,8 @@ app.use('/api/users', userRoutes);
 
 // Use the dialog routes
 app.use('/api/dialog', dialogRoutes);
+
+app.use('/api/writingConversations', conversationRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
