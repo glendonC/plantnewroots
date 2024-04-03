@@ -143,12 +143,12 @@ const Works = () => {
                 onMouseOver={() => handleMouseOver(3)}
               >
                 <div className="project-img">
-                  <Link to="/conversationchoices">
+                  <Link to="/analysispage">
                     <img src={WorkImg3} alt="" />
                   </Link>
                 </div>
                 <div className="project-copy copy-pos-right">
-                  <h2>Community Forum</h2>
+                  <h2>Analysis</h2>
                 </div>
               </div>
             </div>
@@ -163,7 +163,7 @@ const Works = () => {
                 onMouseOver={() => handleMouseOver(4)}
               >
                 <div className="project-img">
-                  <Link to="/conversationchoices">
+                  <Link to="/analysisreport">
                     <img src={WorkImg4} alt="" />
                   </Link>
                 </div>

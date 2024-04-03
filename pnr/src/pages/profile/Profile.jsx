@@ -55,11 +55,10 @@ const Profile = () => {
                 Receive report on progress
               </h3>
               <p>
-                Some text
+                Your growth starts with failure and learning from it.
               </p>
-
               <div className="input">
-                <input type="text" placeholder="Email" />
+                <input type="text" placeholder="Write how you feel!" />
                 <button>Submit</button>
               </div>
             </div>
