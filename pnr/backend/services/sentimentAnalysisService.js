@@ -19,6 +19,12 @@ async function analyzeSentiment(text) {
     console.error('Error analyzing sentiment:', error);
     throw error;
   }
+  
 }
+
+// analyzeSentiment("This is a test sentence!!").then(sentiment => {
+//   console.log(sentiment);
+// }).catch(console.error);
+
 
 module.exports = { analyzeSentiment };
