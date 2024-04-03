@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './dailyconversation.css';
+import './dailywritingconversation.css';
 
 
 import SaveConversationButton from '../../../components/saveconversationbutton/SaveConversationButton';
 
-function DailyConversation() {
+function DailyWritingConversation() {
     const [userInput, setUserInput] = useState('');
     const [messages, setMessages] = useState([]);
 
@@ -37,17 +37,21 @@ function DailyConversation() {
 
     const saveConversation = async () => {
         try {
-            await axios.post('/api/conversations/save', { messages });
-            alert('Conversation saved successfully!');
+          await axios.post('/api/writingConversations/save', {
+            participants: ['user', 'bot'], // Update as needed
+            messages: messages // Assuming 'messages' is your state holding the conversation
+          });
+          alert('Conversation saved!');
         } catch (error) {
-            console.error('Failed to save conversation: ', error);
-            alert('Failed to save the conversation.');
+          console.error('Error saving conversation:', error);
+          alert('Failed to save the conversation.');
         }
-    };
+      };
+      
 
     return (
         <div className="daily-conversation-container">
-            <h2>Daily Conversation Practice</h2>
+            <h2>Daily Writing Conversation Practice</h2>
             <div className="messages-container">
                 {messages.map((message, index) => (
                     <div key={index} className={`message ${message.from}`}>
@@ -71,4 +75,4 @@ function DailyConversation() {
     
 }
 
-export default DailyConversation;
+export default DailyWritingConversation;

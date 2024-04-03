@@ -35,21 +35,6 @@ const Works = () => {
     WorkImg4,
   ];
 
-  let lastHoveredIndex = null;
-  const projectPreviewContainer = document.querySelector(".project-preview");
-
-  const handleResetPreivew = () => {
-    const projectPreviewContainer = document.querySelector(".project-preview");
-
-    gsap.to(".project-preview img", {
-      opacity: 0,
-      duration: 0.3,
-      onComplete: () => {
-        lastHoveredIndex = -1;
-      },
-    });
-  };
-
   const handleMouseOver = (index) => {
     const projectPreviewContainer = document.querySelector(".project-preview");
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './professionalconversation.css';
+import './culturalwritingconversation.css';
 
-function ProfessionalConversation() {
+function CulturalWritingConversation() {
     const [userInput, setUserInput] = useState('');
     const [messages, setMessages] = useState([]);
 
@@ -56,4 +56,4 @@ function ProfessionalConversation() {
     );
 }
 
-export default ProfessionalConversation;
+export default CulturalWritingConversation;
