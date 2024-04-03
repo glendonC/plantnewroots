@@ -20,20 +20,25 @@ function Login() {
         },
         body: JSON.stringify({ email, password }),
       });
-
       const data = await response.json();
-
+  
       if (response.ok) {
         console.log('Login successful', data);
-        login();
+
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
+
+        login(data.token);
         navigate('/home');
       } else {
+        // Handle login failure
         console.error('Login error:', data.message);
       }
     } catch (error) {
       console.error('Error during login:', error);
     }
   };
+  
 
   return (
     <div className="login-container">
