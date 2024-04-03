@@ -2,15 +2,11 @@ const express = require('express');
 const router = express.Router();
 const WritingConversation = require('../models/WritingConversation');
 const { analyzeSentiment } = require('../services/sentimentAnalysisService');
+const authenticate = require('../middleware/authenticate');
 
-const findUserId = (req, res, next) => {
-  req.userId = 'test';
-  next();
-};
-
-router.get('/report', findUserId, async (req, res) => {
+router.get('/report', authenticate, async (req, res) => {
   try {
-    const conversations = await WritingConversation.find({ participants: req.userId });
+    const conversations = await WritingConversation.find({ participants: req.user.id });
     const sentimentScores = [];
 
     for (let conversation of conversations) {
