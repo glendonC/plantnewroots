@@ -16,6 +16,17 @@ import WorkImg4 from "../../assets/images/work/collage.jpg";
 const Works = () => {
   const workCopyReveal = useRef();
 
+  let lastHoveredIndex = null;
+
+  const handleResetPreivew = () => {
+    gsap.to(".project-preview img", {
+      opacity: 0,
+      duration: 0.3,
+      onComplete: () => {
+        lastHoveredIndex = -1;
+      },
+    });
+  };
   useEffect(() => {
     workCopyReveal.current = gsap.timeline({ paused: true }).to("h1", {
       top: "0",

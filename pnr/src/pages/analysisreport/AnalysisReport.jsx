@@ -9,22 +9,19 @@ function AnalysisReport() {
   const fetchAnalysisReport = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.get('/api/analysis/report', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
-      
       setAnalysisResult(response.data);
     } catch (error) {
-      console.error('Failed to fetch analysis report:', error.response ? error.response.data.message : error.message);
+      console.error('Failed to fetch analysis report:', error);
       alert('Failed to fetch analysis report. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="analysis-report-container">
