@@ -6,7 +6,11 @@ const authenticate = require('../middleware/authenticate');
 
 router.get('/report', authenticate, async (req, res) => {
   try {
-    const conversations = await WritingConversation.find({ participants: req.user.id });
+    const conversations = await WritingConversation.find({
+      participants: req.user.id
+    }).populate('participants messages.from');
+    console.log('Fetched conversations:', conversations);
+
     const sentimentScores = [];
 
     for (let conversation of conversations) {
