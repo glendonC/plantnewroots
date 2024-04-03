@@ -35,21 +35,6 @@ const Works = () => {
     WorkImg4,
   ];
 
-  let lastHoveredIndex = null;
-  const projectPreviewContainer = document.querySelector(".project-preview");
-
-  const handleResetPreivew = () => {
-    const projectPreviewContainer = document.querySelector(".project-preview");
-
-    gsap.to(".project-preview img", {
-      opacity: 0,
-      duration: 0.3,
-      onComplete: () => {
-        lastHoveredIndex = -1;
-      },
-    });
-  };
-
   const handleMouseOver = (index) => {
     const projectPreviewContainer = document.querySelector(".project-preview");
 
@@ -120,7 +105,7 @@ const Works = () => {
                 onMouseOver={() => handleMouseOver(1)}
               >
                 <div className="project-img">
-                  <Link to="/sample-project">
+                  <Link to="/conversationchoices">
                     <img src={WorkImg1} alt="" />
                   </Link>
                 </div>
@@ -140,7 +125,7 @@ const Works = () => {
                 onMouseOver={() => handleMouseOver(2)}
               >
                 <div className="project-img">
-                  <Link to="/sample-project">
+                  <Link to="/conversationchoices">
                     <img src={WorkImg2} alt="" />
                   </Link>
                 </div>
@@ -158,7 +143,7 @@ const Works = () => {
                 onMouseOver={() => handleMouseOver(3)}
               >
                 <div className="project-img">
-                  <Link to="/sample-project">
+                  <Link to="/conversationchoices">
                     <img src={WorkImg3} alt="" />
                   </Link>
                 </div>
@@ -178,7 +163,7 @@ const Works = () => {
                 onMouseOver={() => handleMouseOver(4)}
               >
                 <div className="project-img">
-                  <Link to="/sample-project">
+                  <Link to="/conversationchoices">
                     <img src={WorkImg4} alt="" />
                   </Link>
                 </div>

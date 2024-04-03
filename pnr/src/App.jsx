@@ -9,11 +9,16 @@ import Works from "./pages/works/Works";
 import Profile from "./pages/profile/Profile";
 import Blog from "./pages/blog/Blog";
 
-import SampleProject from "./pages/sampleproject/SampleProject";
+import ConversationChoices from "./pages/conversationchoices/ConversationChoices";
 import SampleBlog from "./pages/sampleblog/SampleBlog";
 
 import Login from "./pages/login/Login";
 import SignUp from "./pages/signup/Signup";
+
+import DailyWritingConversation from './pages/agents/daily/DailyWritingConversation';
+import ProfessionalWritingConversation from './pages/agents/professional/ProfessionalWritingConversation';
+import CulturalWritingConversation from './pages/agents/cultural/CulturalWritingConversation';
+
 
 import { AnimatePresence } from "framer-motion";
 
@@ -38,7 +43,10 @@ function App() {
         <Route path="/works" element={<Works />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/sample-project" element={<SampleProject />} />
+        <Route path="/conversationchoices" element={<ConversationChoices />} />
+        <Route path="/daily" element={<DailyWritingConversation />} />
+        <Route path="/professional" element={<ProfessionalWritingConversation />} />
+        <Route path="/cultural" element={<CulturalWritingConversation />} />
         <Route path="/sample-blog" element={<SampleBlog />} />
       </Routes>
     </AnimatePresence>

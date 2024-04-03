@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./sample-project.css";
+import "./conversationchoices.css";
 
 import Transition from "../../components/transition/Transition";
 import { ArrowRight } from "@phosphor-icons/react";
@@ -10,11 +10,16 @@ import prev1 from './casualconvo.gif';
 import prev2 from './professionalconvo.gif';
 import prev3 from './culturalexchange.gif';
 
-const SampleProject = () => {
+import { useNavigate } from 'react-router-dom';
+
+
+const ConversationChoices = () => {
 
   const [activePreview, setActivePreview] = useState('prev-2');
   const [workClass, setWorkClass] = useState('work');
   const [overlayPosition, setOverlayPosition] = useState({ top: '0%', left: '13.25%' });
+
+  const navigate = useNavigate();
 
   const handleMouseOver = (index) => {
       // Update active preview
@@ -37,6 +42,10 @@ const SampleProject = () => {
       setActivePreview('prev-2');
       setWorkClass('work');
       setOverlayPosition({ top: '0%', left: '13.25%' });
+  };
+
+  const navigateToConversation = (path) => {
+    navigate(path);
   };
 
   return (
@@ -72,7 +81,7 @@ const SampleProject = () => {
           </div>
         </div>
 
-      <div className="work-item" id="w-1" onMouseOver={() => handleMouseOver(0)} onMouseOut={handleMouseOut}>
+        <div className="work-item" onClick={() => navigateToConversation('/daily')} onMouseOver={() => handleMouseOver(0)} onMouseOut={handleMouseOut}>
         <div className="work-item-name">
           <h1>Daily</h1>
         </div>
@@ -85,7 +94,7 @@ const SampleProject = () => {
           </div>
         </div>
       </div>
-      <div className="work-item" id="w-2" onMouseOver={() => handleMouseOver(1)} onMouseOut={handleMouseOut}>
+      <div className="work-item" onClick={() => navigateToConversation('/professional')} onMouseOver={() => handleMouseOver(1)} onMouseOut={handleMouseOut}>
         <div className="work-item-name">
           <h1>Professional / Academic</h1>
         </div>
@@ -98,7 +107,7 @@ const SampleProject = () => {
           </div>
         </div>
       </div>
-      <div className="work-item" id="w-3" onMouseOver={() => handleMouseOver(2)} onMouseOut={handleMouseOut}>
+      <div className="work-item" onClick={() => navigateToConversation('/cultural')} onMouseOver={() => handleMouseOver(2)} onMouseOut={handleMouseOut}>
         <div className="work-item-name">
           <h1>Cultural Exchange</h1>
         </div>
@@ -120,4 +129,4 @@ const SampleProject = () => {
   
 };
 
-export default Transition(SampleProject);
+export default Transition(ConversationChoices);
