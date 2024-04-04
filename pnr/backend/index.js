@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const dialogRoutes = require('./routes/dialogRoutes');
 const conversationRoutes = require('./routes/writingConversationRoutes');
+const writingAnalysisRoutes = require('./routes/writingAnalysisRoutes');
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/dialog', dialogRoutes);
 
 app.use('/api/writingConversations', conversationRoutes);
+
+app.use('/api/analysis', writingAnalysisRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

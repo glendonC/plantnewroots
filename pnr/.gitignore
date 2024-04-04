@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-service-account.json
+pnr-service-account.json
 
 # Editor directories and files
 .vscode/*

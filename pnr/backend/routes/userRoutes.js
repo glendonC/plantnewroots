@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const router = express.Router();
@@ -16,7 +17,17 @@ router.post('/signup', async (req, res) => {
     });
 
     await newUser.save();
-    res.status(201).json({ message: 'User created successfully.' });
+
+    const token = jwt.sign(
+      { userId: newUser._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(201).json({
+      message: 'User created successfully.',
+      token,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -28,7 +39,18 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ email });
 
     if (user && await bcrypt.compare(password, user.password)) {
-      res.status(200).json({ message: 'Login successful' });
+      const token = jwt.sign(
+        { userId: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+
+      res.status(200).json({
+        message: 'Login successful',
+        token,
+        username: user.username,
+        userId: user._id.toString(),
+      });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
     }
@@ -36,5 +58,6 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 module.exports = router;

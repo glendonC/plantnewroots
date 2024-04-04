@@ -6,6 +6,7 @@ import "./profile.css";
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 
 const Profile = () => {
+  const username = localStorage.getItem('username');
   return (
     <div className="contact page">
       <div className="container">
@@ -14,7 +15,7 @@ const Profile = () => {
             <div className="contact-col"></div>
             <div className="contact-col">
               <h1>
-                Welcome, <span>username</span>
+                Welcome, <span>{username}</span>
               </h1>
             </div>
           </div>
@@ -24,19 +25,16 @@ const Profile = () => {
           <div className="contact-row">
             <div className="contact-col">
               <p>
-                <span>Profile</span>
+                <span>Update Profile</span>
               </p>
             </div>
             <div className="contact-col">
               <form action="">
                 <div className="input">
-                  <input type="text" placeholder="Name" />
+                  <input type="text" placeholder="New Username" />
                 </div>
                 <div className="input">
-                  <input type="text" placeholder="Password" />
-                </div>
-                <div className="input">
-                  <input type="text" placeholder="Other" />
+                  <input type="text" placeholder="New Password" />
                 </div>
               </form>
             </div>
@@ -55,11 +53,10 @@ const Profile = () => {
                 Receive report on progress
               </h3>
               <p>
-                Some text
+                Your growth starts with failure and learning from it.
               </p>
-
               <div className="input">
-                <input type="text" placeholder="Email" />
+                <input type="text" placeholder="Write how you feel!" />
                 <button>Submit</button>
               </div>
             </div>

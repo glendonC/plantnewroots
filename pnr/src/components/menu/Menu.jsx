@@ -136,6 +136,8 @@ const Menu = () => {
     };
   }, []);
 
+  const username = localStorage.getItem('username');
+  
   return (
     <div className="menu-container" ref={menuContainer}>
       <div className="menu-bar">
@@ -145,7 +147,7 @@ const Menu = () => {
         <div className="menu-actions">
           <div className="contact-btn">
             <div className="btn">
-              <Link to="/profile">Profile</Link>
+              <Link to="/profile">{username}</Link>
             </div>
           </div>
           <div className="menu-toggle">

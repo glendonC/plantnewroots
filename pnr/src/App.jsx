@@ -19,6 +19,7 @@ import DailyWritingConversation from './pages/agents/daily/DailyWritingConversat
 import ProfessionalWritingConversation from './pages/agents/professional/ProfessionalWritingConversation';
 import CulturalWritingConversation from './pages/agents/cultural/CulturalWritingConversation';
 
+import AnalysisReport from './pages/analysisreport/AnalysisReport'
 
 import { AnimatePresence } from "framer-motion";
 
@@ -44,6 +45,7 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/conversationchoices" element={<ConversationChoices />} />
+        <Route path="/analysispage" element={<AnalysisReport />} />
         <Route path="/daily" element={<DailyWritingConversation />} />
         <Route path="/professional" element={<ProfessionalWritingConversation />} />
         <Route path="/cultural" element={<CulturalWritingConversation />} />

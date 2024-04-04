@@ -36,19 +36,29 @@ function DailyWritingConversation() {
     };
 
     const saveConversation = async () => {
+        const userId = localStorage.getItem('userId');
+        const botId = '660a88e076ab4670bfd0bfc6';
+      
         try {
           await axios.post('/api/writingConversations/save', {
-            participants: ['user', 'bot'], // Update as needed
-            messages: messages // Assuming 'messages' is your state holding the conversation
+            participants: [userId, botId],
+            messages: messages.map(message => ({
+              ...message,
+              from: message.from === 'user' ? userId : botId,
+            }))
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
           });
           alert('Conversation saved!');
         } catch (error) {
-          console.error('Error saving conversation:', error);
+          console.error('Error saving conversation:', error.response ? error.response.data : error.message);
           alert('Failed to save the conversation.');
         }
       };
       
-
     return (
         <div className="daily-conversation-container">
             <h2>Daily Writing Conversation Practice</h2>
