@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const WritingConversation = require('../models/WritingConversation');
-const { analyzeSentiment } = require('../services/sentimentAnalysisService');
+const { analyzeSentiment, analyzeText } = require('../services/sentimentAnalysisService');
 const authenticate = require('../middleware/authenticate');
 
 router.get('/report', authenticate, async (req, res) => {
@@ -28,6 +28,24 @@ router.get('/report', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Error generating analysis report:', error);
     res.status(500).json({ error: 'Failed to generate analysis report' });
+  }
+});
+
+router.post('/analyze', async (req, res) => {
+  try {
+    const { conversationId } = req.body;
+    const conversation = await WritingConversation.findById(conversationId);
+
+    const analysisPromises = conversation.messages.map(message =>
+      analyzeText(message.text)
+    );
+    const analysisResults = await Promise.all(analysisPromises);
+
+    // process analysisResults to identify mistakes, strengths, etc
+    res.json({ detailedAnalysis: analysisResults });
+  } catch (error) {
+    console.error("Error analyzing conversation:", error);
+    res.status(500).json({ error: 'Failed to analyze conversation' });
   }
 });
 
