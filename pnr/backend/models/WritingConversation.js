@@ -5,13 +5,12 @@ const writingConversationSchema = new mongoose.Schema({
   messages: [{
     text: String,
     from: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    timestamp: Date
+    timestamp: { type: Date, default: Date.now }
   }],
   conversationId: { type: String, required: true },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
+  name: { type: String, required: true },
+  tag: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('WritingConversation', writingConversationSchema);
