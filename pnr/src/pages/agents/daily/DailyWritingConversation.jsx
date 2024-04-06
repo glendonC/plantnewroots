@@ -8,6 +8,9 @@ import SaveConversationButton from '../../../components/saveconversationbutton/S
 function DailyWritingConversation() {
     const [userInput, setUserInput] = useState('');
     const [messages, setMessages] = useState([]);
+    const [conversationName, setConversationName] = useState('');
+
+    const conversationTag = "Daily Writing";
 
     const sendMessage = async () => {
         if (!userInput.trim()) return;
@@ -44,7 +47,9 @@ function DailyWritingConversation() {
             messages: messages.map(message => ({
                 ...message,
                 from: message.from === 'user' ? userId : botId,
-            }))
+            })),
+            name: conversationName,
+            tag: conversationTag,
         };
     
         try {
@@ -69,11 +74,21 @@ function DailyWritingConversation() {
         const userId = localStorage.getItem('userId');
         const userMessages = messages.filter(message => message.from === 'user').map(message => message.text);
     
+        // console.log("Saving user messages with payload:", {
+        //     userId,
+        //     conversationId,
+        //     messages: userMessages,
+        //     name: conversationName,
+        //     tag: conversationTag,
+        // });
+
         try {
             await axios.post('/api/writingConversations/userMessages/save', {
                 userId,
                 conversationId,
                 messages: userMessages,
+                name: conversationName,
+                tag: conversationTag,
             }, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -85,6 +100,7 @@ function DailyWritingConversation() {
             console.error('Error saving user messages:', error);
         }
     };
+    
     
     
       
@@ -108,6 +124,12 @@ function DailyWritingConversation() {
                 />
                 <button onClick={sendMessage}>Send</button>
             </div>
+            <input
+  type="text"
+  value={conversationName}
+  placeholder="Enter a name for this conversation"
+  onChange={(e) => setConversationName(e.target.value)}
+/>
             <SaveConversationButton onSaveConversation={saveConversation} />
         </div>
     );
