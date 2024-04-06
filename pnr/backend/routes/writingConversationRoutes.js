@@ -6,6 +6,18 @@ const mongoose = require('mongoose');
 
 const { v4: uuidv4 } = require('uuid');
 
+
+
+router.get('/', async (req, res) => {
+  try {
+    const conversations = await Conversation.find({});
+    res.json(conversations);
+  } catch (error) {
+    console.error("Error fetching conversations:", error);
+    res.status(500).send("Failed to fetch conversations");
+  }
+});
+
 router.post('/save', async (req, res) => {
   try {
 
@@ -58,7 +70,5 @@ router.post('/userMessages/save', async (req, res) => {
     res.status(400).send({ message: "Failed to save user messages", details: error.message });
   }
 });
-
-
 
 module.exports = router;
