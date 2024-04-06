@@ -10,6 +10,18 @@ function AnalysisReport() {
   //currently hardcoded
   const conversationId = '660d16d9be47f7f9540c7520';
 
+  useEffect(() => {
+    setLoading(true);
+    Promise.all([fetchGeneralReport(), fetchDetailedAnalysis()])
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (generalReport && detailedAnalysis) {
+      generateAIContent();
+    }
+  }, [generalReport, detailedAnalysis]);
+
   const fetchGeneralReport = async () => {
     try {
       const response = await axios.get('/api/analysis/report', {
@@ -39,22 +51,37 @@ const fetchDetailedAnalysis = async () => {
   }
 };
 
-useEffect(() => {
-  setLoading(true);
-  Promise.all([fetchGeneralReport(), fetchDetailedAnalysis()])
-    .then(generateAIContent)
-    .finally(() => setLoading(false));
-}, []);
+const createAIPrompt = (generalReport, detailedAnalysis) => {
+  let prompt = "Here's an analysis of the user's conversation: ";
 
+  if (generalReport) {
+    prompt += `The average sentiment score is ${generalReport.sentimentScoreAverage}, `;
+    prompt += `with a total of ${generalReport.analysisCount} analyses conducted. `;
+  }
+
+  if (detailedAnalysis && detailedAnalysis.length > 0) {
+    prompt += "The detailed analysis reveals areas for improvement in grammar and style. ";
+  }
+
+  prompt += "Based on this analysis, provide recommendations for the user to improve their conversation skills.";
+
+  return prompt;
+};
 
 const generateAIContent = async () => {
+  if (!generalReport || !detailedAnalysis) {
+    console.error("Data for generating AI content is incomplete.");
+    return;
+  }
+
+  const prompt = createAIPrompt(generalReport, detailedAnalysis);
+
   try {
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    const prompt = "Provide a summary and recommendations based on the analysis.";
-    
+
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = await response.text();
@@ -63,6 +90,7 @@ const generateAIContent = async () => {
     console.error('Error loading GoogleGenerativeAI or generating content:', error);
   }
 };
+
 
   return (
     <div className="analysis-report-container">
