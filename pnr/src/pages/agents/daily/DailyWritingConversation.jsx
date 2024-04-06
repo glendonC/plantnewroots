@@ -8,6 +8,9 @@ import SaveConversationButton from '../../../components/saveconversationbutton/S
 function DailyWritingConversation() {
     const [userInput, setUserInput] = useState('');
     const [messages, setMessages] = useState([]);
+    const [conversationName, setConversationName] = useState('');
+
+    const conversationTag = "Daily Writing";
 
     const sendMessage = async () => {
         if (!userInput.trim()) return;
@@ -38,26 +41,68 @@ function DailyWritingConversation() {
     const saveConversation = async () => {
         const userId = localStorage.getItem('userId');
         const botId = '660a88e076ab4670bfd0bfc6';
-      
-        try {
-          await axios.post('/api/writingConversations/save', {
+    
+        const payload = {
             participants: [userId, botId],
             messages: messages.map(message => ({
-              ...message,
-              from: message.from === 'user' ? userId : botId,
-            }))
-          }, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          });
-          alert('Conversation saved!');
+                ...message,
+                from: message.from === 'user' ? userId : botId,
+            })),
+            name: conversationName,
+            tag: conversationTag,
+        };
+    
+        try {
+            const response = await axios.post('/api/writingConversations/save', payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+    
+            const { conversationId } = response.data;
+            await saveUserMessages(conversationId);
+            
+            alert('Conversation saved!');
         } catch (error) {
-          console.error('Error saving conversation:', error.response ? error.response.data : error.message);
-          alert('Failed to save the conversation.');
+            console.error('Error saving conversation:', error);
+            alert('Failed to save the conversation.');
         }
-      };
+    };
+    
+    const saveUserMessages = async (conversationId) => {
+        const userId = localStorage.getItem('userId');
+        const userMessages = messages.filter(message => message.from === 'user').map(message => message.text);
+    
+        // console.log("Saving user messages with payload:", {
+        //     userId,
+        //     conversationId,
+        //     messages: userMessages,
+        //     name: conversationName,
+        //     tag: conversationTag,
+        // });
+
+        try {
+            await axios.post('/api/writingConversations/userMessages/save', {
+                userId,
+                conversationId,
+                messages: userMessages,
+                name: conversationName,
+                tag: conversationTag,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            console.log('User messages saved successfully!');
+        } catch (error) {
+            console.error('Error saving user messages:', error);
+        }
+    };
+    
+    
+    
       
     return (
         <div className="daily-conversation-container">
@@ -79,6 +124,12 @@ function DailyWritingConversation() {
                 />
                 <button onClick={sendMessage}>Send</button>
             </div>
+            <input
+  type="text"
+  value={conversationName}
+  placeholder="Enter a name for this conversation"
+  onChange={(e) => setConversationName(e.target.value)}
+/>
             <SaveConversationButton onSaveConversation={saveConversation} />
         </div>
     );
