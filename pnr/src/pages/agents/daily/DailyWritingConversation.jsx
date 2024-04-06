@@ -38,38 +38,41 @@ function DailyWritingConversation() {
     const saveConversation = async () => {
         const userId = localStorage.getItem('userId');
         const botId = '660a88e076ab4670bfd0bfc6';
-
+    
         const payload = {
-          participants: [userId, botId],
-          messages: messages.map(message => ({
-            ...message,
-            from: message.from === 'user' ? userId : botId,
-          }))
+            participants: [userId, botId],
+            messages: messages.map(message => ({
+                ...message,
+                from: message.from === 'user' ? userId : botId,
+            }))
         };
     
         try {
-          await axios.post('/api/writingConversations/save', payload, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          });
-          alert('Conversation saved!');
-          await saveUserMessages();
+            const response = await axios.post('/api/writingConversations/save', payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+    
+            const { conversationId } = response.data;
+            await saveUserMessages(conversationId);
+            
+            alert('Conversation saved!');
         } catch (error) {
-          console.error('Error saving conversation:', error);
-          alert('Failed to save the conversation.');
+            console.error('Error saving conversation:', error);
+            alert('Failed to save the conversation.');
         }
     };
     
-
-    const saveUserMessages = async () => {
+    const saveUserMessages = async (conversationId) => {
         const userId = localStorage.getItem('userId');
         const userMessages = messages.filter(message => message.from === 'user').map(message => message.text);
     
         try {
             await axios.post('/api/writingConversations/userMessages/save', {
                 userId,
+                conversationId,
                 messages: userMessages,
             }, {
                 headers: {
