@@ -6,7 +6,7 @@ function AnalysisReport() {
   const [generalReport, setGeneralReport] = useState(null);
   const [detailedAnalysis, setDetailedAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [generatedText, setGeneratedText] = useState('');
   //currently hardcoded
   const conversationId = '660d16d9be47f7f9540c7520';
 
@@ -41,8 +41,28 @@ const fetchDetailedAnalysis = async () => {
 
 useEffect(() => {
   setLoading(true);
-  Promise.all([fetchGeneralReport(), fetchDetailedAnalysis()]).finally(() => setLoading(false));
+  Promise.all([fetchGeneralReport(), fetchDetailedAnalysis()])
+    .then(generateAIContent)
+    .finally(() => setLoading(false));
 }, []);
+
+
+const generateAIContent = async () => {
+  try {
+    const { GoogleGenerativeAI } = await import('@google/generative-ai');
+    const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+    const genAI = new GoogleGenerativeAI(API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const prompt = "Provide a summary and recommendations based on the analysis.";
+    
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = await response.text();
+    setGeneratedText(text);
+  } catch (error) {
+    console.error('Error loading GoogleGenerativeAI or generating content:', error);
+  }
+};
 
   return (
     <div className="analysis-report-container">
@@ -57,19 +77,8 @@ useEffect(() => {
               <p>Number of Analyses Conducted: {generalReport.analysisCount || 0}</p>
             </div>
           )}
-<h2>Detailed Analysis</h2>
-{detailedAnalysis && detailedAnalysis.length > 0 ? (
-    detailedAnalysis.map((analysis, index) => (
-        <div key={index} className="analysis-item">
-            <h3>Message Analysis {index + 1}</h3>
-
-        </div>
-    ))
-) : (
-    <p>No detailed analysis data available.</p>
-)}
-
-
+      <h2>Generated Recommendations</h2>
+      {generatedText ? <p>{generatedText}</p> : <p>Loading recommendations...</p>}
         </>
       )}
     </div>
