@@ -19,10 +19,8 @@ app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
 
-// Use the user routes
 app.use('/api/users', userRoutes);
 
-// Use the dialog routes
 app.use('/api/dialog', dialogRoutes);
 
 app.use('/api/writingConversations', conversationRoutes);

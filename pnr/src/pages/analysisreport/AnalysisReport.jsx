@@ -8,7 +8,7 @@ function AnalysisReport() {
   const [loading, setLoading] = useState(false);
   const [generatedText, setGeneratedText] = useState('');
   //currently hardcoded
-  const conversationId = '660d16d9be47f7f9540c7520';
+  const conversationId = '6610e988c83d6f3710eb93d2';
 
   useEffect(() => {
     setLoading(true);

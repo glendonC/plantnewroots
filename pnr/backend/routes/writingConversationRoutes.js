@@ -21,4 +21,29 @@ router.post('/save', async (req, res) => {
   }
 });
 
+router.post('/userMessages/save', async (req, res) => {
+  console.log("Received payload for user messages:", req.body);
+  try {
+    const userId = new mongoose.Types.ObjectId(req.body.userId);
+    const userMessages = req.body.messages.map(message => ({
+      text: message,
+      from: userId,
+      timestamp: new Date()
+    }));
+
+    const newUserMessageDoc = new Conversation({
+      participants: [userId],
+      messages: userMessages,
+    });
+console.log("Received payload for user messages:", req.body);
+    await newUserMessageDoc.save();
+    res.status(201).send({ message: 'User messages saved successfully' });
+  } catch (error) {
+    console.error("Error saving user messages:", error);
+    
+    res.status(400).send(error);
+    res.status(400).send({ message: "Error processing request", details: error.message });
+  }
+});
+
 module.exports = router;

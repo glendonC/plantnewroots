@@ -38,26 +38,52 @@ function DailyWritingConversation() {
     const saveConversation = async () => {
         const userId = localStorage.getItem('userId');
         const botId = '660a88e076ab4670bfd0bfc6';
-      
+
+        const payload = {
+          participants: [userId, botId],
+          messages: messages.map(message => ({
+            ...message,
+            from: message.from === 'user' ? userId : botId,
+          }))
+        };
+    
         try {
-          await axios.post('/api/writingConversations/save', {
-            participants: [userId, botId],
-            messages: messages.map(message => ({
-              ...message,
-              from: message.from === 'user' ? userId : botId,
-            }))
-          }, {
+          await axios.post('/api/writingConversations/save', payload, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
           });
           alert('Conversation saved!');
+          await saveUserMessages();
         } catch (error) {
-          console.error('Error saving conversation:', error.response ? error.response.data : error.message);
+          console.error('Error saving conversation:', error);
           alert('Failed to save the conversation.');
         }
-      };
+    };
+    
+
+    const saveUserMessages = async () => {
+        const userId = localStorage.getItem('userId');
+        const userMessages = messages.filter(message => message.from === 'user').map(message => message.text);
+    
+        try {
+            await axios.post('/api/writingConversations/userMessages/save', {
+                userId,
+                messages: userMessages,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            console.log('User messages saved successfully!');
+        } catch (error) {
+            console.error('Error saving user messages:', error);
+        }
+    };
+    
+    
       
     return (
         <div className="daily-conversation-container">
