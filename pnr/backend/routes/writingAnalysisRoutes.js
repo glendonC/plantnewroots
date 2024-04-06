@@ -31,6 +31,33 @@ router.get('/report', authenticate, async (req, res) => {
   }
 });
 
+router.get('/report/:conversationId', authenticate, async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const conversation = await WritingConversation.findById(conversationId).populate('participants messages.from');
+
+    if (!conversation) {
+      return res.status(404).json({ message: 'Conversation not found' });
+    }
+
+    const sentimentScores = [];
+    for (let message of conversation.messages) {
+      const sentiment = await analyzeSentiment(message.text);
+      sentimentScores.push(sentiment.score);
+    }
+    
+    const averageSentimentScore = sentimentScores.reduce((a, b) => a + b, 0) / sentimentScores.length;
+
+    res.json({
+      sentimentScoreAverage: averageSentimentScore.toFixed(2),
+      analysisCount: sentimentScores.length
+    });
+  } catch (error) {
+    console.error('Error fetching specific analysis report:', error);
+    res.status(500).json({ error: 'Failed to fetch specific analysis report' });
+  }
+});
+
 router.post('/analyze', async (req, res) => {
   try {
     const { conversationId } = req.body;
