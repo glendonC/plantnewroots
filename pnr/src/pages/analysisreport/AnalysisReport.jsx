@@ -16,11 +16,23 @@ function AnalysisReport() {
         const response = await axios.get('/api/writingConversations', {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
-        setConversations(response.data);
+        let filteredConversations = [];
+        const seenIds = new Set();
+    
+        response.data.forEach(conversation => {
+          if (!seenIds.has(conversation.conversationId)) {
+            filteredConversations.push(conversation);
+            seenIds.add(conversation.conversationId);
+          }
+          // maybe need to handle user-message-only conversations or handle duplicates differently
+        });
+    
+        setConversations(filteredConversations);
       } catch (error) {
         console.error('Failed to fetch conversations:', error);
       }
     };
+    
 
     fetchConversations();
   }, []);
@@ -68,7 +80,7 @@ function AnalysisReport() {
         },
       });
       console.log("General Report Data:", response.data);
-      return response.data; // Ensure this is correct
+      return response.data;
     } catch (error) {
       console.error('Failed to fetch general report:', error);
     }
@@ -203,8 +215,6 @@ const formatAIGeneratedText = (generatedText) => {
   );
 };
 
-
-
   return (
     <div className="analysis-report-container">
       <h1>Conversation Analysis Report</h1>
@@ -217,6 +227,7 @@ const formatAIGeneratedText = (generatedText) => {
           </option>
         ))}
       </select>
+
 
       {loading ? (
         <p>Loading...</p>
