@@ -40,26 +40,30 @@ function AnalysisReport() {
   useEffect(() => {
     const fetchData = async () => {
       if (!selectedConversationId) return;
-    
+  
       setLoading(true);
       try {
-        const generalReportData = await fetchGeneralReport(selectedConversationId);
-        const detailedAnalysisData = await fetchDetailedAnalysis(selectedConversationId);
-        const userMessages = await fetchUserMessages(selectedConversationId);
-    
-        if (!generalReportData || !detailedAnalysisData || !userMessages || userMessages.length === 0) {
-          throw new Error('Data for generating AI content is incomplete.');
-        }
-
-        console.log({ generalReportData, detailedAnalysisData, userMessages });
-    
-        generateAIContent(generalReportData, detailedAnalysisData, userMessages);
+          let generalReportData, detailedAnalysisData, generatedText;
+          const savedReport = await fetchSavedReport(selectedConversationId);
+          if (savedReport) {
+              generatedText = savedReport.generatedText;
+          } else {
+              generalReportData = await fetchGeneralReport(selectedConversationId);
+              detailedAnalysisData = await fetchDetailedAnalysis(selectedConversationId);
+              const userMessages = await fetchUserMessages(selectedConversationId);
+              if (!generalReportData || !detailedAnalysisData || !userMessages || userMessages.length === 0) {
+                  throw new Error('Data for generating AI content is incomplete.');
+              }
+              generatedText = await generateAIContent(generalReportData, detailedAnalysisData, userMessages);
+          }
+          setGeneratedText(generatedText);
       } catch (error) {
-        console.error('Error fetching data for AI content generation:', error);
+          console.error('Error fetching data for AI content generation:', error);
       } finally {
-        setLoading(false);
+          setLoading(false);
       }
-    };
+  };
+  
     
   
     fetchData();
@@ -85,6 +89,20 @@ function AnalysisReport() {
       console.error('Failed to fetch general report:', error);
     }
   };
+
+  const fetchSavedReport = async (conversationId) => {
+    try {
+        const response = await axios.get(`/api/analysis/${conversationId}`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+        });
+        console.log("Saved Report Data:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch saved report:', error);
+        return null;
+    }
+};
+
   
   const fetchDetailedAnalysis = async (conversationId) => {
     try {
@@ -149,15 +167,9 @@ function AnalysisReport() {
       return;
     }
 
-
-    
     setLoading(true);
     const prompt = createAIPrompt(generalReportData, detailedAnalysisData, userMessages);
 
-  
-
-  
-    
     try {
       const { GoogleGenerativeAI } = await import('@google/generative-ai');
       const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
@@ -168,6 +180,8 @@ function AnalysisReport() {
       const response = await result.response;
       const text = await response.text();
       setGeneratedText(text);
+
+      await saveGeneratedText(selectedConversationId, text);
     } catch (error) {
       console.error('Error loading GoogleGenerativeAI or generating content:', error);
     } finally {
@@ -175,45 +189,60 @@ function AnalysisReport() {
     }
   };
 
-const formatAIGeneratedText = (generatedText) => {
-  const sections = generatedText.split("**").filter(text => text.trim() !== "");
-  
-  return (
-    <>
-      {sections.map((section, index) => {
-        if (section.startsWith("General Analysis:") || section.startsWith("Detailed Analysis Findings:")) {
-          return <h3 key={index}>{section}</h3>;
-        } else if (section.startsWith("Examples from the conversation:")) {
-          const messages = section.split("\n").filter(text => text.trim() !== "" && !text.startsWith("Examples from"));
-          return (
-            <div key={index}>
-              <h4>Examples from the conversation:</h4>
-              <ul>
-                {messages.map((msg, msgIndex) => (
-                  <li key={msgIndex}>{msg}</li>
-                ))}
-              </ul>
-            </div>
-          );
-        } else if (section.startsWith("Personalized Recommendations:") || section.startsWith("Overall Improvement Tips:")) {
-          const items = section.split("*").filter(text => text.trim() !== "");
-          return (
-            <div key={index}>
-              <h4>{items.shift()}</h4>
-              <ul>
-                {items.map((item, itemIndex) => (
-                  <li key={itemIndex}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          );
-        } else {
-          return <p key={index}>{section}</p>;
-        }
-      })}
-    </>
-  );
+  const saveGeneratedText = async (conversationId, generatedText) => {
+    try {
+        await axios.post('/api/conversationanalyses/saveGeneratedText', {
+            conversationId,
+            generatedText
+        }, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+        });
+        console.log('Generated text saved successfully');
+    } catch (error) {
+        console.error('Error saving generated text:', error);
+    }
 };
+
+
+  const formatAIGeneratedText = (generatedText) => {
+    const sections = generatedText.split("**").filter(text => text.trim() !== "");
+    
+    return (
+      <>
+        {sections.map((section, index) => {
+          if (section.startsWith("General Analysis:") || section.startsWith("Detailed Analysis Findings:")) {
+            return <h3 key={index}>{section}</h3>;
+          } else if (section.startsWith("Examples from the conversation:")) {
+            const messages = section.split("\n").filter(text => text.trim() !== "" && !text.startsWith("Examples from"));
+            return (
+              <div key={index}>
+                <h4>Examples from the conversation:</h4>
+                <ul>
+                  {messages.map((msg, msgIndex) => (
+                    <li key={msgIndex}>{msg}</li>
+                  ))}
+                </ul>
+              </div>
+            );
+          } else if (section.startsWith("Personalized Recommendations:") || section.startsWith("Overall Improvement Tips:")) {
+            const items = section.split("*").filter(text => text.trim() !== "");
+            return (
+              <div key={index}>
+                <h4>{items.shift()}</h4>
+                <ul>
+                  {items.map((item, itemIndex) => (
+                    <li key={itemIndex}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            );
+          } else {
+            return <p key={index}>{section}</p>;
+          }
+        })}
+      </>
+    );
+  };
 
   return (
     <div className="analysis-report-container">
@@ -227,7 +256,6 @@ const formatAIGeneratedText = (generatedText) => {
           </option>
         ))}
       </select>
-
 
       {loading ? (
         <p>Loading...</p>
