@@ -3,6 +3,7 @@ const router = express.Router();
 const Conversation = require('../models/WritingConversation');
 
 const mongoose = require('mongoose');
+const authenticate = require('../middleware/authenticate');
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -70,5 +71,26 @@ router.post('/userMessages/save', async (req, res) => {
     res.status(400).send({ message: "Failed to save user messages", details: error.message });
   }
 });
+
+router.get('/userMessages/:conversationId', authenticate, async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const userId = req.user.id;
+    const conversation = await Conversation.findById(conversationId);
+
+    if (!conversation) {
+      return res.status(404).json({ message: 'Conversation not found.' });
+    }
+
+    const userMessages = conversation.messages.filter(message => message.from.toString() === userId);
+    res.json({ messages: userMessages });
+  } catch (error) {
+    console.error('Error fetching user messages:', error);
+    res.status(500).json({ error: 'Failed to fetch user messages', details: error.message });
+  }
+});
+
+
+
 
 module.exports = router;
