@@ -43,20 +43,20 @@ function AnalysisReport() {
   
       setLoading(true);
       try {
-          let generalReportData, detailedAnalysisData, generatedText;
-          const savedReport = await fetchSavedReport(selectedConversationId);
-          if (savedReport) {
-              generatedText = savedReport.generatedText;
-          } else {
-              generalReportData = await fetchGeneralReport(selectedConversationId);
-              detailedAnalysisData = await fetchDetailedAnalysis(selectedConversationId);
-              const userMessages = await fetchUserMessages(selectedConversationId);
-              if (!generalReportData || !detailedAnalysisData || !userMessages || userMessages.length === 0) {
-                  throw new Error('Data for generating AI content is incomplete.');
-              }
-              generatedText = await generateAIContent(generalReportData, detailedAnalysisData, userMessages);
-          }
+        let generalReportData, detailedAnalysisData, generatedText;
+        const savedReport = await fetchSavedReport(selectedConversationId);
+        if (savedReport) {
+          generatedText = savedReport.generatedText;
           setGeneratedText(generatedText);
+        } else if (!generatedText) {
+          generalReportData = await fetchGeneralReport(selectedConversationId);
+          detailedAnalysisData = await fetchDetailedAnalysis(selectedConversationId);
+          const userMessages = await fetchUserMessages(selectedConversationId);
+          if (!generalReportData || !detailedAnalysisData || !userMessages || userMessages.length === 0) {
+            throw new Error('Data for generating AI content is incomplete.');
+          }
+          generatedText = await generateAIContent(generalReportData, detailedAnalysisData, userMessages);
+        }
       } catch (error) {
           console.error('Error fetching data for AI content generation:', error);
       } finally {
@@ -125,6 +125,12 @@ function AnalysisReport() {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
       });
       console.log("User Messages:", response.data);
+  
+      // Check if the response data is null or undefined
+      if (!response.data || !response.data.messages) {
+        throw new Error('No messages found in the response data');
+      }
+  
       return response.data.messages;
     } catch (error) {
       console.error('Failed to fetch user messages:', error);
@@ -166,10 +172,10 @@ function AnalysisReport() {
       setLoading(false);
       return;
     }
-
+  
     setLoading(true);
     const prompt = createAIPrompt(generalReportData, detailedAnalysisData, userMessages);
-
+  
     try {
       const { GoogleGenerativeAI } = await import('@google/generative-ai');
       const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
@@ -180,7 +186,6 @@ function AnalysisReport() {
       const response = await result.response;
       const text = await response.text();
       setGeneratedText(text);
-
       await saveGeneratedText(selectedConversationId, text);
     } catch (error) {
       console.error('Error loading GoogleGenerativeAI or generating content:', error);
@@ -188,10 +193,12 @@ function AnalysisReport() {
       setLoading(false);
     }
   };
+  
+  
 
   const saveGeneratedText = async (conversationId, generatedText) => {
     try {
-        await axios.post('/api/conversationanalyses/saveGeneratedText', {
+        await axios.post('/api/analysis/saveGeneratedText', {
             conversationId,
             generatedText
         }, {
@@ -258,20 +265,19 @@ function AnalysisReport() {
       </select>
 
       {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {generalReport && (
-            <div className="report-result">
-              <p>Average Sentiment Score: {generalReport.sentimentScoreAverage || 'N/A'}</p>
-              <p>Number of Analyses Conducted: {generalReport.analysisCount || 0}</p>
-            </div>
-          )}
-          <h2>Generated Recommendations</h2>
-          {generatedText ? formatAIGeneratedText(generatedText) : <p>Loading recommendations...</p>}
-
-        </>
-      )}
+  <p>Loading...</p>
+) : (
+  <>
+    {generatedText ? (
+      <div>
+        <h2>Generated Recommendations</h2>
+        {formatAIGeneratedText(generatedText)}
+      </div>
+    ) : (
+      <p>No recommendations generated yet.</p>
+    )}
+  </>
+)}
     </div>
   );
 }
