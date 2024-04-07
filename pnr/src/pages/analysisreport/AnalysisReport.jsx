@@ -25,20 +25,36 @@ function AnalysisReport() {
     fetchConversations();
   }, []);
 
-  // get report when a conversation is selected
   useEffect(() => {
-    if (selectedConversationId) {
-      fetchGeneralReport(selectedConversationId);
-      fetchDetailedAnalysis(selectedConversationId);
-    }
-  }, [selectedConversationId]);
+    const fetchData = async () => {
+      if (!selectedConversationId) return;
+    
+      setLoading(true);
+      try {
+        const generalReportData = await fetchGeneralReport(selectedConversationId);
+        const detailedAnalysisData = await fetchDetailedAnalysis(selectedConversationId);
+        const userMessages = await fetchUserMessages(selectedConversationId);
+    
+        if (!generalReportData || !detailedAnalysisData || !userMessages || userMessages.length === 0) {
+          throw new Error('Data for generating AI content is incomplete.');
+        }
 
-  useEffect(() => {
-    if (generalReport && detailedAnalysis) {
-      generateAIContent();
-    }
-  }, [generalReport, detailedAnalysis]);
+        console.log({ generalReportData, detailedAnalysisData, userMessages });
+    
+        generateAIContent(generalReportData, detailedAnalysisData, userMessages);
+      } catch (error) {
+        console.error('Error fetching data for AI content generation:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
   
+    fetchData();
+  }, [selectedConversationId]);
+  
+  
+
 
   const handleConversationSelect = (event) => {
     setSelectedConversationId(event.target.value);
@@ -52,12 +68,12 @@ function AnalysisReport() {
         },
       });
       console.log("General Report Data:", response.data);
-      setGeneralReport(response.data);
+      return response.data; // Ensure this is correct
     } catch (error) {
       console.error('Failed to fetch general report:', error);
     }
   };
-
+  
   const fetchDetailedAnalysis = async (conversationId) => {
     try {
       const response = await axios.post('/api/analysis/analyze', { conversationId }, {
@@ -66,51 +82,128 @@ function AnalysisReport() {
         },
       });
       console.log("Detailed Analysis Data:", response.data);
-      setDetailedAnalysis(response.data.detailedAnalysis);
+      return response.data.detailedAnalysis;
     } catch (error) {
         console.error('Failed to fetch detailed analysis:', error);
     }
   };
+  
 
-  const createAIPrompt = (generalReport, detailedAnalysis) => {
-    let prompt = "Here's an analysis of the user's conversation: ";
-  
-    if (generalReport) {
-      prompt += `The average sentiment score is ${generalReport.sentimentScoreAverage}, `;
-      prompt += `with a total of ${generalReport.analysisCount} analyses conducted. `;
+  const fetchUserMessages = async (conversationId) => {
+    try {
+      const response = await axios.get(`/api/writingConversations/userMessages/${conversationId}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+      });
+      console.log("User Messages:", response.data);
+      return response.data.messages;
+    } catch (error) {
+      console.error('Failed to fetch user messages:', error);
+      return [];
     }
+  };
   
-    if (detailedAnalysis && detailedAnalysis.length > 0) {
-      prompt += "The detailed analysis reveals areas for improvement in grammar and style. ";
-    }
+
+  const createAIPrompt = (generalReport, detailedAnalysis, userMessages) => {
+    let prompt = `Analyze the following conversation data and provide specific feedback and recommendations for improvement:\n\n`;
   
-    prompt += "Based on this analysis, provide recommendations for the user to improve their conversation skills.";
+    prompt += `General Analysis:\n- Average Sentiment Score: ${generalReport.sentimentScoreAverage} (${generalReport.sentimentScoreAverage < 0 ? "negative" : "positive or neutral"} tone)\n`;
+    prompt += `- Number of Analyses Conducted: ${generalReport.analysisCount}\n\n`;
+  
+    prompt += `Detailed Analysis Findings:\n`;
+    detailedAnalysis.forEach((issue, index) => {
+      prompt += `${index + 1}. ${issue.aspect}: ${issue.feedback}\n`;
+    });
+  
+    prompt += `\nExamples from the conversation:\n`;
+    userMessages.forEach((msg, index) => {
+      prompt += `${index + 1}. "${msg.text}"\n`;
+    });
+  
+    prompt += `\nBased on the above analysis and examples, provide specific feedback and actionable recommendations for the user to improve their conversation skills. Focus on aspects such as grammar, style, vocabulary, and engagement.`;
   
     return prompt;
   };
+  
+  
 
-  const generateAIContent = async () => {
-    if (!generalReport || !detailedAnalysis) {
-      console.error("Data for generating AI content is incomplete.");
+  const generateAIContent = async (generalReportData, detailedAnalysisData, userMessages) => {
+    if (!selectedConversationId) {
+      console.error("No conversation selected.");
       return;
     }
+    if (!generalReportData || !detailedAnalysisData || userMessages.length === 0) {
+      console.error("Data for generating AI content is incomplete.");
+      setLoading(false);
+      return;
+    }
+
+
+    
+    setLoading(true);
+    const prompt = createAIPrompt(generalReportData, detailedAnalysisData, userMessages);
+
   
-    const prompt = createAIPrompt(generalReport, detailedAnalysis);
+
   
+    
     try {
       const { GoogleGenerativeAI } = await import('@google/generative-ai');
       const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
       const genAI = new GoogleGenerativeAI(API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-  
+      
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = await response.text();
       setGeneratedText(text);
     } catch (error) {
       console.error('Error loading GoogleGenerativeAI or generating content:', error);
+    } finally {
+      setLoading(false);
     }
   };
+
+const formatAIGeneratedText = (generatedText) => {
+  const sections = generatedText.split("**").filter(text => text.trim() !== "");
+  
+  return (
+    <>
+      {sections.map((section, index) => {
+        if (section.startsWith("General Analysis:") || section.startsWith("Detailed Analysis Findings:")) {
+          return <h3 key={index}>{section}</h3>;
+        } else if (section.startsWith("Examples from the conversation:")) {
+          const messages = section.split("\n").filter(text => text.trim() !== "" && !text.startsWith("Examples from"));
+          return (
+            <div key={index}>
+              <h4>Examples from the conversation:</h4>
+              <ul>
+                {messages.map((msg, msgIndex) => (
+                  <li key={msgIndex}>{msg}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        } else if (section.startsWith("Personalized Recommendations:") || section.startsWith("Overall Improvement Tips:")) {
+          const items = section.split("*").filter(text => text.trim() !== "");
+          return (
+            <div key={index}>
+              <h4>{items.shift()}</h4>
+              <ul>
+                {items.map((item, itemIndex) => (
+                  <li key={itemIndex}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        } else {
+          return <p key={index}>{section}</p>;
+        }
+      })}
+    </>
+  );
+};
+
+
 
   return (
     <div className="analysis-report-container">
@@ -136,7 +229,8 @@ function AnalysisReport() {
             </div>
           )}
           <h2>Generated Recommendations</h2>
-          {generatedText ? <p>{generatedText}</p> : <p>Loading recommendations...</p>}
+          {generatedText ? formatAIGeneratedText(generatedText) : <p>Loading recommendations...</p>}
+
         </>
       )}
     </div>
