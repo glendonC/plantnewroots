@@ -4,6 +4,8 @@ const WritingConversation = require('../models/WritingConversation');
 const { analyzeSentiment, analyzeText } = require('../services/sentimentAnalysisService');
 const authenticate = require('../middleware/authenticate');
 
+const ConversationAnalysis = require('../models/ConversationAnalysis');
+
 router.get('/report', authenticate, async (req, res) => {
   try {
     const conversations = await WritingConversation.find({
@@ -75,5 +77,51 @@ router.post('/analyze', async (req, res) => {
     res.status(500).json({ error: 'Failed to analyze conversation' });
   }
 });
+
+router.get('/:conversationId', authenticate, async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const analysis = await ConversationAnalysis.findOne({ conversationId });
+
+    if (!analysis) {
+      return res.status(404).json({ message: 'Analysis data not found for the specified conversation ID' });
+    }
+
+    res.json(analysis);
+  } catch (error) {
+    console.error('Error fetching analysis data:', error);
+    res.status(500).json({ error: 'Failed to fetch analysis data' });
+  }
+});
+
+
+router.post('/saveGeneratedText', authenticate, async (req, res) => {
+  try {
+    const { conversationId, generatedText } = req.body;
+
+    if (!conversationId || !generatedText) {
+      return res.status(400).json({ error: 'conversationId and generatedText are required' });
+    }
+
+    let analysis = await ConversationAnalysis.findOne({ conversationId });
+    if (!analysis) {
+      analysis = new ConversationAnalysis({
+        conversationId,
+        generatedText,
+      });
+    } else {
+      analysis.generatedText = generatedText;
+    }
+
+    await analysis.save();
+
+    res.json({ message: 'Generated text saved successfully' });
+  } catch (error) {
+    console.error('Error saving generated text:', error);
+    res.status(500).json({ error: 'Failed to save generated text' });
+  }
+});
+
+
 
 module.exports = router;
