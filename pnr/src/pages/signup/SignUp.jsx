@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+
 import './signup.css';
 
 function SignUp() {
@@ -18,7 +19,7 @@ function SignUp() {
         },
         body: JSON.stringify({ username, email, password }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log('Sign up successful', data);
@@ -31,46 +32,56 @@ function SignUp() {
       console.error('Error during sign up:', error.message);
     }
   };
-  
+
   return (
-    <div className="signup-container">
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter your username"
-            required
-          />
+    <div className="container">
+      <div className="hero-image-wrapper wrapper">
+        <div className="bg-img">
+          <img src="./login.jpg" alt="" />
         </div>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            required
-          />
+        <div className="front-img">
+          <img src="./login.jpg" alt="" />
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Create a password"
-            required
-          />
-        </div>
-        <button type="submit">Sign Up</button>
-      </form>
+      </div>
+      <div className="content-wrapper wrapper">
+        <nav>
+          <p>From tiny seedlings grow <a href="#">mighty trees.</a></p>
+        </nav>
+        <header>
+          <h1>Signup</h1>
+          <div className="form-wrapper">
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                placeholder="your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+              <input
+                type="email"
+                placeholder="your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <input
+                type="password"
+                placeholder="your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button type="submit">signup</button>
+            </form>
+            <p>"Plant new roots with courage, for in the soil of change, opportunities bloom."</p>
+            <p>Already have an account? <Link to="/login">Login</Link></p>
+          </div>
+        </header>
+        <footer>
+          <p>Plant your roots <span>today</span></p>
+        </footer>
+      </div>
     </div>
   );
 }
