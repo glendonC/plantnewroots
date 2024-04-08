@@ -28,32 +28,36 @@ import { useAuth } from './contexts/AuthContext';
 
 function App() {
   const location = useLocation();
-  const showFooter = location.pathname !== "/";
   const { isLoggedIn } = useAuth();
 
+  // Determine if the user is on the login page
+  const isLoginPage = location.pathname === "/login" || location.pathname === "/signup";
+  
   return (
     <>
-    <Menu />
-    <AnimatePresence mode="wait">
-      <Routes>
-        <Route path="/" element={<Navigate replace to="/login" />} />
-        <Route path="/login" element={isLoggedIn ? <Navigate replace to="/home" /> : <Login />} />
-        <Route path="/signup" element={isLoggedIn ? <Navigate replace to="/home" /> : <SignUp />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/works" element={<Works />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/conversationchoices" element={<ConversationChoices />} />
-        <Route path="/analysispage" element={<AnalysisReport />} />
-        <Route path="/daily" element={<DailyWritingConversation />} />
-        <Route path="/professional" element={<ProfessionalWritingConversation />} />
-        <Route path="/cultural" element={<CulturalWritingConversation />} />
-        <Route path="/sample-blog" element={<SampleBlog />} />
-      </Routes>
-    </AnimatePresence>
-    <Footer />
-  </>
+      {/* Render Menu only if not on the login page */}
+      {!isLoginPage && <Menu />}
+      <AnimatePresence mode="wait">
+        <Routes>
+          <Route path="/" element={<Navigate replace to="/login" />} />
+          <Route path="/login" element={isLoggedIn ? <Navigate replace to="/home" /> : <Login />} />
+          <Route path="/signup" element={isLoggedIn ? <Navigate replace to="/home" /> : <SignUp />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/works" element={<Works />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/conversationchoices" element={<ConversationChoices />} />
+          <Route path="/analysispage" element={<AnalysisReport />} />
+          <Route path="/daily" element={<DailyWritingConversation />} />
+          <Route path="/professional" element={<ProfessionalWritingConversation />} />
+          <Route path="/cultural" element={<CulturalWritingConversation />} />
+          <Route path="/sample-blog" element={<SampleBlog />} />
+        </Routes>
+      </AnimatePresence>
+      {/* Render Footer only if not on the login page */}
+      {!isLoginPage && <Footer />}
+    </>
   );
 }
 
