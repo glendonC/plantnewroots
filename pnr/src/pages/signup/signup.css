@@ -11,15 +11,7 @@
   font-family: "Neue Montreal", sans-serif;
 }
 
-html,
-body {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  background: #0f0f0f;
-}
-
-.container {
+.signup-container {
   width: 100%;
   height: 100%;
   display: flex;
@@ -242,7 +234,7 @@ header h2 {
 /* responsiveness */
 
 @media (max-width: 900px) {
-  .container {
+  .signup-container {
     flex-direction: column;
   }
 

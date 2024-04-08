@@ -41,7 +41,7 @@ function Login() {
   };
 
   return (
-    <div className="container">
+    <div className="login-container">
       <div className="hero-image-wrapper wrapper">
         <div className="bg-img">
           <img src="./login.jpg" alt="" />

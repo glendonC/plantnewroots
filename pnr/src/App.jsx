@@ -13,7 +13,7 @@ import ConversationChoices from "./pages/conversationchoices/ConversationChoices
 import SampleBlog from "./pages/sampleblog/SampleBlog";
 
 import Login from "./pages/login/Login";
-import SignUp from "./pages/signup/Signup";
+import SignUp from "./pages/signup/SignUp";
 
 import DailyWritingConversation from './pages/agents/daily/DailyWritingConversation';
 import ProfessionalWritingConversation from './pages/agents/professional/ProfessionalWritingConversation';
