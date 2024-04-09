@@ -79,3 +79,39 @@
     padding: 1em 0;
   }
 }
+
+.contact-subscribe .contact-row .contact-col .level-selection {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+
+.contact-subscribe .contact-row .contact-col  .level-selection ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.contact-subscribe .contact-row .contact-col  .level-selection li {
+  margin-right: 50px;
+  padding: 8px 16px;
+  
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: black;
+}
+
+.contact-subscribe .contact-row .contact-col .level-selection li:last-child {
+  margin-right: 0;
+}
+
+.contact-subscribe .contact-row .contact-col  .level-selection li:hover,
+.contact-subscribe .contact-row .contact-col  .level-selection li.active {
+  background-color: #f0f0f0;
+}
+
+.contact-subscribe .contact-row .contact-col .level-selection li.active {
+  background-color: orange; /* Same as hover state */
+  /* Add other styles here to differentiate selected item, if needed */
+}

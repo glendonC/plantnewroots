@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Transition from "../../components/transition/Transition";
 
 import "./profile.css";
@@ -7,6 +7,15 @@ import MagneticButton from "../../components/magneticbutton/MagneticButton";
 
 const Profile = () => {
   const username = localStorage.getItem('username');
+
+  const [selectedLevel, setSelectedLevel] = useState("");
+
+  const handleLevelChange = (level) => {
+    setSelectedLevel(level);
+    localStorage.setItem('selectedLevel', level);
+  };
+  
+
   return (
     <div className="contact page">
       <div className="container">
@@ -45,19 +54,24 @@ const Profile = () => {
           <div className="contact-row">
             <div className="contact-col">
               <p>
-                <span>Generate Report</span>
+                <span>Select Desired Content Level</span>
               </p>
             </div>
             <div className="contact-col">
               <h3>
-                Receive report on progress
+                Choose a level that you would like your content to reflect
               </h3>
               <p>
                 Your growth starts with failure and learning from it.
               </p>
-              <div className="input">
-                <input type="text" placeholder="Write how you feel!" />
-                <button>Submit</button>
+              <div className="level-selection">
+                <ul>
+                  <li className={selectedLevel === "Beginner" ? "active" : ""} onClick={() => handleLevelChange("Beginner")}>Beginner</li>
+                  <li className={selectedLevel === "Elementary" ? "active" : ""} onClick={() => handleLevelChange("Elementary")}>Elementary</li>
+                  <li className={selectedLevel === "Intermediate" ? "active" : ""} onClick={() => handleLevelChange("Intermediate")}>Intermediate</li>
+                  <li className={selectedLevel === "Advanced" ? "active" : ""} onClick={() => handleLevelChange("Advanced")}>Advanced</li>
+                  <li className={selectedLevel === "Fluent" ? "active" : ""} onClick={() => handleLevelChange("Fluent")}>Fluent</li>
+                </ul>
               </div>
             </div>
           </div>
