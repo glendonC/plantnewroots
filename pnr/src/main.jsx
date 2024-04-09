@@ -5,13 +5,15 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 
 import { AuthProvider } from './contexts/AuthContext';
-
+import { LevelProvider } from './contexts/LevelContext';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <LevelProvider> 
+          <App />
+        </LevelProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
