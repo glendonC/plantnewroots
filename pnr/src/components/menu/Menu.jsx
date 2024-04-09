@@ -142,7 +142,7 @@ const Menu = () => {
     <div className="menu-container" ref={menuContainer}>
       <div className="menu-bar">
         <div className="menu-logo" onClick={closeMenu}>
-          <Link to="/">plant new roots</Link>
+          <Link to="/home">plant new roots</Link>
         </div>
         <div className="menu-actions">
           <div className="contact-btn">
