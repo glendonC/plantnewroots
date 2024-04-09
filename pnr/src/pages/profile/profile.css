@@ -112,6 +112,14 @@
 }
 
 .contact-subscribe .contact-row .contact-col .level-selection li.active {
-  background-color: orange; /* Same as hover state */
-  /* Add other styles here to differentiate selected item, if needed */
+  background-color: orange;
+}
+
+
+.flag-icon {
+  width: 20px;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px; 
 }

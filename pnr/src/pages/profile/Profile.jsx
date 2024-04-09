@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Transition from "../../components/transition/Transition";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { US, KR, CN } from 'country-flag-icons/react/3x2';
+import { Dropdown } from 'react-bootstrap';
 import "./profile.css";
 
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
@@ -10,6 +12,17 @@ const Profile = () => {
 
   const [selectedLevel, setSelectedLevel] = useState(localStorage.getItem('selectedLevel') || "");
 
+  const [selectedLanguage, setSelectedLanguage] = useState(() => {
+    const storedLanguage = localStorage.getItem('selectedLanguage');
+    return storedLanguage || 'English';
+  });
+
+  const handleLanguageSelect = (language) => {
+    setSelectedLanguage(language);
+    localStorage.setItem('selectedLanguage', language);
+  };
+  
+  
   const handleLevelChange = (level) => {
     setSelectedLevel(level);
     localStorage.setItem('selectedLevel', level);
@@ -21,7 +34,21 @@ const Profile = () => {
       setSelectedLevel(savedLevel);
     }
   }, []); 
+
+  useEffect(() => {
+    const savedLevel = localStorage.getItem('selectedLevel');
+    if (savedLevel) {
+      setSelectedLevel(savedLevel);
+    }
+  }, []);
   
+  const languageFlags = {
+    English: <US className="flag-icon" />,
+    Korean: <KR className="flag-icon" />,
+    Chinese: <CN className="flag-icon" />,
+  };
+   const SelectedFlag = languageFlags[selectedLanguage];
+
   return (
     <div className="contact page">
       <div className="container">
@@ -52,6 +79,48 @@ const Profile = () => {
                   <input type="text" placeholder="New Password" />
                 </div>
               </form>
+            </div>
+          </div>
+        </section>
+
+        <section className="section contact-form">
+          <div className="contact-row">
+            <div className="contact-col">
+              <p>
+                <span>Select a language to study</span>
+              </p>
+            </div>
+            <div className="contact-col">
+              <Dropdown>
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  {SelectedFlag}
+                  {selectedLanguage}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => {
+                    setSelectedLanguage('English');
+                    handleLanguageSelect('English');
+                  }}>
+                    {languageFlags['English']}
+                    English
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => {
+                    setSelectedLanguage('Korean');
+                    handleLanguageSelect('Korean');
+                  }}>
+                    {languageFlags['Korean']}
+                    Korean
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => {
+                    setSelectedLanguage('Chinese');
+                    handleLanguageSelect('Chinese');
+                  }}>
+                    {languageFlags['Chinese']}
+                    Chinese
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
           </div>
         </section>
