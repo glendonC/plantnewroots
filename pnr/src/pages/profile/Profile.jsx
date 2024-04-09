@@ -8,14 +8,20 @@ import MagneticButton from "../../components/magneticbutton/MagneticButton";
 const Profile = () => {
   const username = localStorage.getItem('username');
 
-  const [selectedLevel, setSelectedLevel] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState(localStorage.getItem('selectedLevel') || "");
 
   const handleLevelChange = (level) => {
     setSelectedLevel(level);
     localStorage.setItem('selectedLevel', level);
   };
-  
 
+  React.useEffect(() => {
+    const savedLevel = localStorage.getItem('selectedLevel');
+    if (savedLevel) {
+      setSelectedLevel(savedLevel);
+    }
+  }, []); 
+  
   return (
     <div className="contact page">
       <div className="container">
