@@ -5,20 +5,18 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "@phosphor-icons/react";
 
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
-import { useLevel } from "../../contexts/LevelContext";
-import { useTargetLanguage } from "../../contexts/TargetLanguageContext";
+import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
 import "./blog.css";
 
 const Blog = () => {
-  const { selectedLevel } = useLevel();
-  const { selectedLanguage } = useTargetLanguage();
+  const { selectedLevel, selectedLanguage } = useLevelLanguage();
 
   return (
     <div className="blog page">
       <div className="container">
         <div className="blog-hero">
         <h1>
-            Curated {selectedLanguage || "Select a level"} content for <span>you</span> - <span>{selectedLevel || "Select a level"}</span>
+            Curated {selectedLanguage || "Select a language"} content for <span>you</span> - <span>{selectedLevel || "Select a level"}</span>
           </h1>
         </div>
 

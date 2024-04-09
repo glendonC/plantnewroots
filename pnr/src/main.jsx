@@ -7,16 +7,15 @@ import "./index.css";
 import { AuthProvider } from './contexts/AuthContext';
 import { LevelProvider } from './contexts/LevelContext';
 import { TargetLanguageProvider } from './contexts/TargetLanguageContext';
+import { LevelLanguageProvider } from './contexts/LevelLanguageContext'; // Import the new provider
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-      <LevelProvider> 
-          <TargetLanguageProvider>
-            <App />
-          </TargetLanguageProvider>
-        </LevelProvider>
+        <LevelLanguageProvider>
+          <App />
+        </LevelLanguageProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
