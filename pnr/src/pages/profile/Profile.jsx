@@ -1,12 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Transition from "../../components/transition/Transition";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { US, KR, CN } from 'country-flag-icons/react/3x2';
+import { Dropdown } from 'react-bootstrap';
 import "./profile.css";
 
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 
 const Profile = () => {
   const username = localStorage.getItem('username');
+
+  const [selectedLevel, setSelectedLevel] = useState(localStorage.getItem('selectedLevel') || "");
+
+  const [selectedLanguage, setSelectedLanguage] = useState(() => {
+    const storedLanguage = localStorage.getItem('selectedLanguage');
+    return storedLanguage || 'English';
+  });
+
+  const handleLanguageSelect = (language) => {
+    setSelectedLanguage(language);
+    localStorage.setItem('selectedLanguage', language);
+  };
+  
+  
+  const handleLevelChange = (level) => {
+    setSelectedLevel(level);
+    localStorage.setItem('selectedLevel', level);
+  };
+
+  React.useEffect(() => {
+    const savedLevel = localStorage.getItem('selectedLevel');
+    if (savedLevel) {
+      setSelectedLevel(savedLevel);
+    }
+  }, []); 
+
+  useEffect(() => {
+    const savedLevel = localStorage.getItem('selectedLevel');
+    if (savedLevel) {
+      setSelectedLevel(savedLevel);
+    }
+  }, []);
+  
+  const languageFlags = {
+    English: <US className="flag-icon" />,
+    Korean: <KR className="flag-icon" />,
+    Chinese: <CN className="flag-icon" />,
+  };
+   const SelectedFlag = languageFlags[selectedLanguage];
+
   return (
     <div className="contact page">
       <div className="container">
@@ -41,23 +83,70 @@ const Profile = () => {
           </div>
         </section>
 
+        <section className="section contact-form">
+          <div className="contact-row">
+            <div className="contact-col">
+              <p>
+                <span>Select a language to study</span>
+              </p>
+            </div>
+            <div className="contact-col">
+              <Dropdown>
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  {SelectedFlag}
+                  {selectedLanguage}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => {
+                    setSelectedLanguage('English');
+                    handleLanguageSelect('English');
+                  }}>
+                    {languageFlags['English']}
+                    English
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => {
+                    setSelectedLanguage('Korean');
+                    handleLanguageSelect('Korean');
+                  }}>
+                    {languageFlags['Korean']}
+                    Korean
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => {
+                    setSelectedLanguage('Chinese');
+                    handleLanguageSelect('Chinese');
+                  }}>
+                    {languageFlags['Chinese']}
+                    Chinese
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          </div>
+        </section>
+
         <section className="contact-subscribe">
           <div className="contact-row">
             <div className="contact-col">
               <p>
-                <span>Generate Report</span>
+                <span>Select Desired Content Level</span>
               </p>
             </div>
             <div className="contact-col">
               <h3>
-                Receive report on progress
+                Choose a level that you would like your content to reflect
               </h3>
               <p>
                 Your growth starts with failure and learning from it.
               </p>
-              <div className="input">
-                <input type="text" placeholder="Write how you feel!" />
-                <button>Submit</button>
+              <div className="level-selection">
+                <ul>
+                  <li className={selectedLevel === "Beginner" ? "active" : ""} onClick={() => handleLevelChange("Beginner")}>Beginner</li>
+                  <li className={selectedLevel === "Elementary" ? "active" : ""} onClick={() => handleLevelChange("Elementary")}>Elementary</li>
+                  <li className={selectedLevel === "Intermediate" ? "active" : ""} onClick={() => handleLevelChange("Intermediate")}>Intermediate</li>
+                  <li className={selectedLevel === "Advanced" ? "active" : ""} onClick={() => handleLevelChange("Advanced")}>Advanced</li>
+                  <li className={selectedLevel === "Fluent" ? "active" : ""} onClick={() => handleLevelChange("Fluent")}>Fluent</li>
+                </ul>
               </div>
             </div>
           </div>

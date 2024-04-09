@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-
+import Transition from "../../components/transition/Transition";
 import './signup.css';
 
 function SignUp() {
@@ -86,4 +86,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default Transition(SignUp);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-
+import Transition from "../../components/transition/Transition";
 import './login.css'; // Import your CSS file
 
 function Login() {
@@ -86,4 +86,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Transition(Login);
