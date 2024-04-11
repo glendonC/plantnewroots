@@ -5,11 +5,15 @@ import Transition from "../../components/transition/Transition";
 import WorkImg1 from "../../assets/images/work/writing.jpg";
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 import "./sample-blog.css";
+import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
+
 
 function SampleBlog() {
   const { id } = useParams();
   const { story } = useStory();
-  const { title, subtitle, selectedLanguage } = story;
+  const { title, subtitle } = story;
+  const { selectedLevel, selectedLanguage } = useLevelLanguage();
+
 
   const [content, setContent] = useState('');
 
@@ -27,19 +31,20 @@ function SampleBlog() {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
       let prompt = '';
+      const levelDescriptor = selectedLevel.toLowerCase() === 'elementary' ? 'basic' : selectedLevel.toLowerCase();
 
       switch (title.toLowerCase()) {
         case "learning new words":
-          prompt = `Generate 5 new words with their translations and an example of each being used in context in ${selectedLanguage}.`;
+          prompt = `Generate 5 ${levelDescriptor} words with their translations and an example of each being used in context in ${selectedLanguage}.`;
           break;
         case "learning new grammar":
-          prompt = `Generate 5 new grammar points with their translations and an example of each being used in context in ${selectedLanguage}.`;
+          prompt = `Generate 5 ${levelDescriptor} grammar points with their explanations and an example of each being used in context in ${selectedLanguage}.`;
           break;
         case "exploring culture":
           prompt = `Generate a brief 5-10 sentence post about some part of the language relating to the culture to enhance the user's perspective on the culture in ${selectedLanguage}.`;
           break;
         default:
-          prompt = `Create a lesson around the topic "${title}" for ${subtitle}.`;
+          prompt = `Create a ${levelDescriptor} lesson around the topic "${title}" for ${subtitle}, tailored to a ${selectedLanguage} language learner.`;
           break;
       }
 
