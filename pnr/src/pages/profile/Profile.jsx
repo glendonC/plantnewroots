@@ -78,6 +78,9 @@ const Profile = () => {
                   <input type="text" placeholder="New Username" />
                 </div>
                 <div className="input">
+                  <input type="text" placeholder="New Email" />
+                </div>
+                <div className="input">
                   <input type="text" placeholder="New Password" />
                 </div>
               </form>
