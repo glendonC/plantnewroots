@@ -25,17 +25,14 @@ import { AnimatePresence } from "framer-motion";
 
 import { useAuth } from './contexts/AuthContext';
 
-
 function App() {
   const location = useLocation();
   const { isLoggedIn } = useAuth();
 
-  // Determine if the user is on the login page
   const isLoginPage = location.pathname === "/login" || location.pathname === "/signup";
   
   return (
     <>
-      {/* Render Menu only if not on the login page */}
       {!isLoginPage && <Menu />}
       <AnimatePresence mode="wait">
         <Routes>
@@ -52,10 +49,9 @@ function App() {
           <Route path="/daily" element={<DailyWritingConversation />} />
           <Route path="/professional" element={<ProfessionalWritingConversation />} />
           <Route path="/cultural" element={<CulturalWritingConversation />} />
-          <Route path="/sample-blog" element={<SampleBlog />} />
+          <Route path="/sample-blog/:id" element={<SampleBlog />} />
         </Routes>
       </AnimatePresence>
-      {/* Render Footer only if not on the login page */}
       {!isLoginPage && <Footer />}
     </>
   );

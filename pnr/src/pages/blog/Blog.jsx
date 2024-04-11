@@ -1,202 +1,81 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Transition from "../../components/transition/Transition";
-
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "@phosphor-icons/react";
-
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
+import { useStory } from "../../contexts/StoryContext";
+
 import "./blog.css";
 
 const Blog = () => {
   const { selectedLevel, selectedLanguage } = useLevelLanguage();
+  const { setStory } = useStory();
+  const navigate = useNavigate();
+  const [stories, setStories] = useState([]);
+  const handleStorySelect = (story) => {
+    setStory(story);
+    navigate(`/sample-blog/${story.id}`);
+  };
+  
 
+  useEffect(() => {
+    console.log("Selected Language:", selectedLanguage);
+  console.log("Selected Level:", selectedLevel);
+  const generateDefaultStories = () => {
+    if (!selectedLanguage || !selectedLevel) {
+      console.error("Language or level not selected.");
+      return [];
+    }
+  
+    const defaultStories = [
+      { id: 1, title: "Learning New Words", subtitle: "Expand your vocabulary with these engaging stories." },
+      { id: 2, title: "Learning New Grammar", subtitle: "Master grammar rules with fun and informative content." },
+      { id: 3, title: "Exploring Culture", subtitle: "Discover the rich cultural heritage of various regions." },
+    ];
+  
+    return defaultStories;
+  };
+
+    setStories(generateDefaultStories());
+  }, [selectedLanguage, selectedLevel]);
+  console.log("Stories:", stories);
   return (
     <div className="blog page">
       <div className="container">
         <div className="blog-hero">
-        <h1>
+          <h1>
             Curated {selectedLanguage || "Select a language"} content for <span>you</span> - <span>{selectedLevel || "Select a level"}</span>
           </h1>
         </div>
 
         <section className="blogs">
-          <div className="blog-row">
-            <div className="blog-col">
-              <div className="blog-item">
-                <div className="blog-divider">
-                  <div className="b-div-1"></div>
-                  <div className="b-div-2"></div>
-                </div>
-
-                <div className="blog-title-wrapper">
-                  <div className="blog-title">
-                    <h3>
-                      <Link to="/sample-blog">
-                        Story 1
-                      </Link>
-                    </h3>
-                    <p>
-                      <span>Story 1 Subtitle</span>
-                    </p>
+          {stories.map((story) => (
+            <div className="blog-row" key={story.id}>
+              <div className="blog-col">
+                <div className="blog-item" onClick={() => handleStorySelect(story)} role="button" tabIndex="0">
+                  <div className="blog-divider">
+                    <div className="b-div-1"></div>
+                    <div className="b-div-2"></div>
                   </div>
 
+                  <div className="blog-title-wrapper">
+                    <div className="blog-title">
+                      <h3>{story.title}</h3>
+                      <p><span>{story.subtitle}</span></p>
+                    </div>
+                    
                   <div className="blog-arrow">
                     <ArrowRight size={32} weight="light" color="#fff" />
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="blog-col">
-              <div className="blog-item">
-                <div className="blog-divider">
-                  <div className="b-div-1"></div>
-                  <div className="b-div-2"></div>
-                </div>
-
-                <div className="blog-title-wrapper">
-                  <div className="blog-title">
-                    <h3>
-                      <Link to="/sample-blog">
-                      Story 2
-                      </Link>
-                    </h3>
-                    <p>
-                      <span>Story 2 Subtitle</span>
-                    </p>
-                  </div>
-
-                  <div className="blog-arrow">
-                    <ArrowRight size={32} weight="light" color="#fff" />
-                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="blog-row">
-            <div className="blog-col">
-              <div className="blog-item">
-                <div className="blog-divider">
-                  <div className="b-div-1"></div>
-                  <div className="b-div-2"></div>
-                </div>
-
-                <div className="blog-title-wrapper">
-                  <div className="blog-title">
-                    <h3>
-                      <Link to="/sample-blog">
-                      Story 3
-                      </Link>
-                    </h3>
-                    <p>
-                      <span>Story 3 Subtitle</span>
-                    </p>
-                  </div>
-
-                  <div className="blog-arrow">
-                    <ArrowRight size={32} weight="light" color="#fff" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="blog-col">
-              <div className="blog-item">
-                <div className="blog-divider">
-                  <div className="b-div-1"></div>
-                  <div className="b-div-2"></div>
-                </div>
-
-                <div className="blog-title-wrapper">
-                  <div className="blog-title">
-                    <h3>
-                      <Link to="/sample-blog">
-                      Story 4
-                      </Link>
-                    </h3>
-                    <p>
-                      <span>Story 4 Subtitle</span>
-                    </p>
-                  </div>
-
-                  <div className="blog-arrow">
-                    <ArrowRight size={32} weight="light" color="#fff" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="blog-row">
-            <div className="blog-col">
-              <div className="blog-item">
-                <div className="blog-divider">
-                  <div className="b-div-1"></div>
-                  <div className="b-div-2"></div>
-                </div>
-
-                <div className="blog-title-wrapper">
-                  <div className="blog-title">
-                    <h3>
-                      <Link to="/sample-blog">
-                      Story 5
-                      </Link>
-                    </h3>
-                    <p>
-                      <span>Story 5 Subtitle</span>
-                    </p>
-                  </div>
-
-                  <div className="blog-arrow">
-                    <ArrowRight size={32} weight="light" color="#fff" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="blog-col">
-              <div className="blog-item">
-                <div className="blog-divider">
-                  <div className="b-div-1"></div>
-                  <div className="b-div-2"></div>
-                </div>
-
-                <div className="blog-title-wrapper">
-                  <div className="blog-title">
-                    <h3>
-                      <Link to="/sample-blog">
-                      Story 6
-                      </Link>
-                    </h3>
-                    <p>
-                      <span>Story 6 Subtitle</span>
-                    </p>
-                  </div>
-
-                  <div className="blog-arrow">
-                    <ArrowRight size={32} weight="light" color="#fff" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>          
+          ))}
         </section>
 
-        <section className="about-contact">
-          <div className="about-contact-copy">
-            <h2>Any suggestions?</h2>
-            <p>
-              <span>
-                We want to hear your feedback! Message us @ plantnewroots@gmail.com!
-              </span>
-            </p>
 
-            <br />
-            <p>
-              <span>+1 I-Luv-Learning</span>
-            </p>
-            {/* <p>
-              <span>Instagram • Twitter</span>
-            </p> */}
-          </div>
-        </section>
         <MagneticButton />
       </div>
     </div>
