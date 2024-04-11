@@ -101,14 +101,52 @@ const Works = () => {
           }}
         >
           <div className="work-copy-wrapper">
-            <h1>Try. Fail. Learn.</h1>
-          </div>
-          <div className="work-copy-wrapper">
-            <h1>Birth • Present</h1>
+            <h1>Learn through Trying</h1>
           </div>
         </section>
 
+        
+
         <section className="project-list">
+
+        <div className="project-list-row">
+            <div className="project-list-col">
+              <div
+                className="project-item"
+                onMouseOver={() => handleMouseOver(1)}
+              >
+                <div className="project-img">
+                  <Link to="/conversationchoices">
+                    <img src={WorkImg1} alt="" />
+                  </Link>
+                </div>
+                <div className="project-copy copy-pos-right">
+                  <h2>Reading Conversation</h2>
+                </div>
+              </div>
+            </div>
+            <div className="project-list-col whitespace-col"></div>
+          </div>
+
+          <div className="project-list-row">
+            <div className="project-list-col whitespace-col"></div>
+            <div className="project-list-col">
+              <div
+                className="project-item"
+                onMouseOver={() => handleMouseOver(2)}
+              >
+                <div className="project-img">
+                  <Link to="/conversationchoices">
+                    <img src={WorkImg1} alt="" />
+                  </Link>
+                </div>
+                <div className="project-copy copy-pos-left">
+                  <h2>Writing Conversation</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="project-list-row">
             <div className="project-list-col">
               <div
@@ -121,12 +159,13 @@ const Works = () => {
                   </Link>
                 </div>
                 <div className="project-copy copy-pos-right">
-                  <h2>Writing Conversation</h2>
+                  <h2>Listening Conversation</h2>
                 </div>
               </div>
             </div>
             <div className="project-list-col whitespace-col"></div>
           </div>
+
 
           <div className="project-list-row">
             <div className="project-list-col whitespace-col"></div>
