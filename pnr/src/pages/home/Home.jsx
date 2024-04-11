@@ -2,13 +2,11 @@ import React, { useEffect, useRef } from "react";
 import "./home.css";
 
 import Transition from "../../components/transition/Transition";
-import PortraitImg from "../../assets/images/home/portrait.jpeg";
 
 import { gsap } from "gsap";
 
 const Home = () => {
   const heroCopyReveal = useRef();
-  const heroImageReveal = useRef();
   const heroTaglineReveal = useRef();
 
   useEffect(() => {
@@ -20,15 +18,6 @@ const Home = () => {
       delay: 0.35,
     });
 
-    heroImageReveal.current = gsap
-      .timeline({ paused: true })
-      .from(".hero-img", {
-        y: "1000",
-        rotate: -10,
-        duration: 1,
-        ease: "power3.out",
-        delay: 0.75,
-      });
 
     heroTaglineReveal.current = gsap
       .timeline({ paused: true })
@@ -41,14 +30,11 @@ const Home = () => {
       });
 
     heroCopyReveal.current.play();
-    heroImageReveal.current.play();
     heroTaglineReveal.current.play();
   }, []);
   return (
-    <section className="hero-section">
-      <div className="hero-img">
-        <img src={PortraitImg} alt="" />
-      </div>
+    <>
+     <section className="hero-section">
       <div className="hero-copy">
         <div className="hero-copy-wrapper">
           <h1>plant new</h1>
@@ -62,6 +48,8 @@ const Home = () => {
         <p>your story starts with seed</p>
       </div>
     </section>
+    </>
+   
   );
 };
 

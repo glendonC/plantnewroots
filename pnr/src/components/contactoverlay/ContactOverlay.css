@@ -1,0 +1,98 @@
+.contact-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #262625;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 100000;
+}
+
+.contact-overlay-about h2 {
+  color: #eae9e4;
+  font-family: "Timmons NY 2.005";
+  text-transform: uppercase;
+  font-weight: lighter;
+  font-size: 50px;
+}
+  
+.contact-overlay-content {
+  color: #eae9e4;
+  max-width: 800px;
+  width: 100%;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+.contact-overlay-form label {
+  color: #eae9e4;
+  font-size: 20px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.contact-overlay-form input[type="text"], .contact-overlay-form textarea {
+  width: 100%;
+  background: none;
+  outline: none;
+  border: 1px solid #eae9e4;
+  padding: 0.5em;
+  margin-bottom: 1em;
+  color: #eae9e4;
+  border-radius: 4px;
+}
+  
+.contact-overlay-form button {
+  background: #eae9e4;
+  color: #000;
+  border: 1px solid #eae9e4;
+  text-transform: uppercase;
+  padding: 0.5em 1em;
+  border-radius: 2em;
+  cursor: pointer;
+}
+
+.contact-overlay-back {
+  cursor: pointer;
+  color: #eae9e4;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-top: 20px;
+}
+
+.contact-overlay-form button {
+  background: #f0f0f0;
+  color: #333;
+  border: 2px solid #333;
+  padding: 0.5em 1em;
+  border-radius: 2em;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.contact-overlay-form button:hover {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+@media (max-width: 900px) {
+  .contact-overlay-content {
+    padding: 10px;
+  }
+
+  .contact-overlay-form input[type="text"], .contact-overlay-form textarea {
+    font-size: 14px;
+  }
+}
+  
+

@@ -73,7 +73,7 @@ const MagneticButton = () => {
 
   return (
     <div className="m-btn-wrapper" ref={wrapperRef}>
-      <Link to={isLoggedIn ? "/home" : "/login"}>
+      <Link to={"/home"}>
       <div className="m-btn" ref={btnRef}>
           <div className="arrow-right">
             <img

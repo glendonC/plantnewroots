@@ -32,7 +32,7 @@ function SampleBlog() {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
       let prompt = '';
-      const levelDescriptor = selectedLevel.toLowerCase() === 'elementary' ? 'basic' : selectedLevel.toLowerCase();
+      const levelDescriptor = selectedLevel;
 
       switch (title.toLowerCase()) {
         case "learning new words":
