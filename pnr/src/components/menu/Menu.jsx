@@ -10,6 +10,8 @@ import LinkPreviewImg2 from "../../assets/images/menu/learn.jpg";
 import LinkPreviewImg3 from "../../assets/images/menu/blog.jpg";
 import LinkPreviewImg4 from "../../assets/images/menu/profile.jpg";
 
+import MouseTrail from '../../components/mousetrail/MouseTrail';
+
 const Menu = () => {
   const menuLinks = [
     { path: "/about", label: "About" },
@@ -139,6 +141,8 @@ const Menu = () => {
   const username = localStorage.getItem('username');
   
   return (
+    <>
+    <MouseTrail/>
     <div className="menu-container" ref={menuContainer}>
       <div className="menu-bar">
         <div className="menu-logo" onClick={closeMenu}>
@@ -184,6 +188,8 @@ const Menu = () => {
         </div>
       </div>
     </div>
+    </>
+    
   );
 };
 

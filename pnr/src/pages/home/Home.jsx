@@ -2,13 +2,11 @@ import React, { useEffect, useRef } from "react";
 import "./home.css";
 
 import Transition from "../../components/transition/Transition";
-import MouseTrail from '../../components/mousetrail/MouseTrail';
 
 import { gsap } from "gsap";
 
 const Home = () => {
   const heroCopyReveal = useRef();
-  const heroImageReveal = useRef();
   const heroTaglineReveal = useRef();
 
   useEffect(() => {
@@ -36,7 +34,6 @@ const Home = () => {
   }, []);
   return (
     <>
-    <MouseTrail/>
      <section className="hero-section">
       <div className="hero-copy">
         <div className="hero-copy-wrapper">
