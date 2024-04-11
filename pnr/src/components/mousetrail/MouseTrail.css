@@ -1,0 +1,19 @@
+body {
+  background: #ffb503;
+}
+
+.mouse-trail-wrapper svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+}
+
+.mouse-trail-wrapper path {
+  fill: none;
+  stroke-width: 50;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

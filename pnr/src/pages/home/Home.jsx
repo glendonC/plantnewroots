@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import "./home.css";
 
 import Transition from "../../components/transition/Transition";
-import MouseTrail from '../components/MouseTrail';
+import MouseTrail from '../../components/mousetrail/MouseTrail';
 
 import { gsap } from "gsap";
 
@@ -35,7 +35,9 @@ const Home = () => {
     heroTaglineReveal.current.play();
   }, []);
   return (
-    <section className="hero-section">
+    <>
+    <MouseTrail/>
+     <section className="hero-section">
       <div className="hero-copy">
         <div className="hero-copy-wrapper">
           <h1>plant new</h1>
@@ -49,6 +51,8 @@ const Home = () => {
         <p>your story starts with seed</p>
       </div>
     </section>
+    </>
+   
   );
 };
 
