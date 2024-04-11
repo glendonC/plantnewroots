@@ -3,7 +3,9 @@ import Transition from "../../components/transition/Transition";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { US, KR, CN } from 'country-flag-icons/react/3x2';
 import { Dropdown } from 'react-bootstrap';
+import { LevelList, LevelItem } from './LevelSelectionStyles';
 import "./profile.css";
+
 
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 
@@ -128,30 +130,25 @@ const Profile = () => {
         <section className="contact-subscribe">
           <div className="contact-row">
             <div className="contact-col">
-              <p>
-                <span>Select Desired Content Level</span>
-              </p>
+              <p><span>Select Desired Content Level</span></p>
             </div>
             <div className="contact-col">
-              <h3>
-                Choose a level that you would like your content to reflect
-              </h3>
-              <p>
-                Your growth starts with failure and learning from it.
-              </p>
-              <div className="level-selection">
-                <ul>
-                  <li className={selectedLevel === "Beginner" ? "active" : ""} onClick={() => handleLevelChange("Beginner")}>Beginner</li>
-                  <li className={selectedLevel === "Elementary" ? "active" : ""} onClick={() => handleLevelChange("Elementary")}>Elementary</li>
-                  <li className={selectedLevel === "Intermediate" ? "active" : ""} onClick={() => handleLevelChange("Intermediate")}>Intermediate</li>
-                  <li className={selectedLevel === "Advanced" ? "active" : ""} onClick={() => handleLevelChange("Advanced")}>Advanced</li>
-                  <li className={selectedLevel === "Fluent" ? "active" : ""} onClick={() => handleLevelChange("Fluent")}>Fluent</li>
-                </ul>
-              </div>
+              <h3>Choose a level that you would like your content to reflect</h3>
+              <p>Your growth starts with failure and learning from it.</p>
+              <LevelList>
+                {["Beginner", "Elementary", "Intermediate", "Advanced", "Fluent"].map((level) => (
+                  <LevelItem
+                    key={level}
+                    $isActive={selectedLevel === level} // Using transient prop here
+                    onClick={() => handleLevelChange(level)}
+                  >
+                    {level}
+                  </LevelItem>
+                ))}
+              </LevelList>
             </div>
           </div>
         </section>
-
        
         <MagneticButton />
       </div>
