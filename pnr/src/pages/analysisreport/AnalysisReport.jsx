@@ -1,14 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import styled from 'styled-components';
+import { DropdownButton, Dropdown } from 'react-bootstrap';
 import './analysisreport.css';
 
+
 function AnalysisReport() {
-  const [generalReport, setGeneralReport] = useState(null);
-  const [detailedAnalysis, setDetailedAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [selectedConversationId, setSelectedConversationId] = useState('');
   const [generatedText, setGeneratedText] = useState('');
+
+  const StyledSelect = styled.select`
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 2px solid #007bff;
+  background-color: white;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease-in-out;
+
+  &:hover, &:focus {
+    border-color: #0056b3;
+    outline: none;
+  }
+`;
+
+const StyledDropdownButton = styled(DropdownButton)`
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 2px solid #007bff;
+  background-color: white;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease-in-out;
+
+  &:hover, &:focus {
+    border-color: #0056b3;
+    outline: none;
+  }
+`;
+
+const StyledDropdownItem = styled(Dropdown.Item)`
+  &:hover, &:focus {
+    background-color: #f0f0f0;
+  }
+`;
+
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -211,58 +255,60 @@ function AnalysisReport() {
 };
 
 
-  const formatAIGeneratedText = (generatedText) => {
-    const sections = generatedText.split("**").filter(text => text.trim() !== "");
-    
-    return (
-      <>
-        {sections.map((section, index) => {
-          if (section.startsWith("General Analysis:") || section.startsWith("Detailed Analysis Findings:")) {
-            return <h3 key={index}>{section}</h3>;
-          } else if (section.startsWith("Examples from the conversation:")) {
-            const messages = section.split("\n").filter(text => text.trim() !== "" && !text.startsWith("Examples from"));
-            return (
-              <div key={index}>
-                <h4>Examples from the conversation:</h4>
-                <ul>
-                  {messages.map((msg, msgIndex) => (
-                    <li key={msgIndex}>{msg}</li>
-                  ))}
-                </ul>
-              </div>
-            );
-          } else if (section.startsWith("Personalized Recommendations:") || section.startsWith("Overall Improvement Tips:")) {
-            const items = section.split("*").filter(text => text.trim() !== "");
-            return (
-              <div key={index}>
-                <h4>{items.shift()}</h4>
-                <ul>
-                  {items.map((item, itemIndex) => (
-                    <li key={itemIndex}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            );
-          } else {
-            return <p key={index}>{section}</p>;
-          }
-        })}
-      </>
-    );
-  };
+const formatAIGeneratedText = (generatedText) => {
+  const sections = generatedText.split("**").filter(text => text.trim() !== "");
+  
+  return (
+    <>
+      {sections.map((section, index) => {
+        if (section.startsWith("General Analysis:") || section.startsWith("Detailed Analysis Findings:")) {
+          return <h3 key={index}>{section}</h3>;
+        } else if (section.startsWith("Examples from the conversation:")) {
+          const messages = section.split("\n").filter(text => text.trim() !== "" && !text.startsWith("Examples from"));
+          return (
+            <div key={index}>
+              <h4>Examples from the conversation:</h4>
+              <ul>
+                {messages.map((msg, msgIndex) => (
+                  <li key={msgIndex}>{msg}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        } else if (section.startsWith("Personalized Recommendations:") || section.startsWith("Overall Improvement Tips:")) {
+          const items = section.split("*").filter(text => text.trim() !== "");
+          return (
+            <div key={index}>
+              <h4>{items.shift()}</h4>
+              <ul>
+                {items.map((item, itemIndex) => (
+                  <li key={itemIndex}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        } else {
+          return <p key={index} style={{ color: 'white' }}>{section}</p>;
+        }
+      })}
+    </>
+  );
+};
+
+
 
   return (
     <div className="analysis-report-container">
       <h1>Conversation Analysis Report</h1>
+      <StyledSelect onChange={handleConversationSelect} value={selectedConversationId}>
+  <option value="">Select a conversation</option>
+  {conversations.map((conversation) => (
+    <option key={conversation._id} value={conversation._id}>
+      {conversation.name} - {conversation.tag}
+    </option>
+  ))}
+</StyledSelect>
 
-      <select onChange={handleConversationSelect} value={selectedConversationId}>
-        <option value="">Select a conversation</option>
-        {conversations.map((conversation) => (
-          <option key={conversation._id} value={conversation._id}>
-            {conversation.name} - {conversation.tag}
-          </option>
-        ))}
-      </select>
 
       {loading ? (
   <p>Loading...</p>
