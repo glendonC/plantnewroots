@@ -5,13 +5,15 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import { AuthProvider } from './contexts/AuthContext';
 import { LevelLanguageProvider } from './contexts/LevelLanguageContext';
-
+import { StoryProvider } from './contexts/StoryContext.jsx';
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <LevelLanguageProvider>
+        <StoryProvider>
           <App />
+        </StoryProvider>
         </LevelLanguageProvider>
       </AuthProvider>
     </BrowserRouter>
