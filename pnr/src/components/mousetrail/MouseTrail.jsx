@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import './MouseTrail.css';
 
 const MouseTrail = () => {
+  const googleColors = ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'];
   useEffect(() => {
     const trails = document.querySelectorAll('.trail');
     const smoothPointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
@@ -44,7 +45,9 @@ const MouseTrail = () => {
   return (
     <div className="mouse-trail-wrapper">
       {Array(7).fill().map((_, index) => (
-        <svg key={index}><path d="" className="trail" style={{ stroke: `hsl(${index * 60}, 100%, 50%)` }}></path></svg>
+        <svg key={index}>
+          <path d="" className="trail" style={{ stroke: googleColors[index % googleColors.length] }}></path>
+        </svg>
       ))}
     </div>
   );
