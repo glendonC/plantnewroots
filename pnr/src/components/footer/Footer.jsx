@@ -8,33 +8,12 @@ const Footer = () => {
       <div className="container">
         <div className="footer-col">
           <div className="footer-item">
-            <a href="#">a</a>
-          </div>
-          <div className="footer-item">
-            <a href="#">b</a>
-          </div>
-          <div className="footer-item">
-            <a href="#">c</a>
-          </div>
-          <div className="footer-item">
-            <a href="#">d</a>
-          </div>
-          <div className="footer-item">
-            <a href="#">e</a>
+            <a href="#">Contact</a>
           </div>
         </div>
         <div className="footer-col">
           <div className="footer-item">
-            <a href="#">f</a>
-          </div>
-          <div className="footer-item">
-            <a href="#">g</a>
-          </div>
-          <div className="footer-item">
-            <a href="#">h</a>
-          </div>
-          <div className="footer-item">
-            <a href="#">i</a>
+            <a href="#">Est. Apr 2024</a>
           </div>
         </div>
       </div>
