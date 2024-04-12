@@ -5,7 +5,7 @@ import Transition from "../../components/transition/Transition";
 import WorkImg1 from "../../assets/images/work/writing.jpg";
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 import "./sample-blog.css";
-import { MetaLogo, XLogo } from "@phosphor-icons/react";
+import { NotionLogo, GoogleLogo } from "@phosphor-icons/react";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
 
 
@@ -84,12 +84,12 @@ function SampleBlog() {
           </div>
           <div className="s-blog-col sticky">
             <p id="blog-share">
-              <span>Share</span>
+              <span>Save Notes!</span>
               <div className="share-icon">
-                <MetaLogo size={18} weight="light" color="#fff" />
+                <GoogleLogo size={18} weight="light" color="#fff" />
               </div>
               <div className="share-icon">
-                <XLogo size={18} weight="light" color="#fff" />
+                <NotionLogo size={18} weight="light" color="#fff" />
               </div>
             </p>
   

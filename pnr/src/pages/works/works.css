@@ -25,6 +25,7 @@
 
 .project-list {
   position: relative;
+  margin-top: -20em;
 }
 
 .project-list-col {

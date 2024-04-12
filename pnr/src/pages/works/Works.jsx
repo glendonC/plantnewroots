@@ -8,10 +8,11 @@ import Marquee from "react-fast-marquee";
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 import { gsap } from "gsap";
 
-import WorkImg1 from "../../assets/images/work/writing.jpg";
-import WorkImg2 from "../../assets/images/work/speaking.jpg";
-import WorkImg3 from "../../assets/images/work/community.jpg";
-import WorkImg4 from "../../assets/images/work/collage.jpg";
+import WorkImg1 from "../../assets/images/work/reading.jpg";
+import WorkImg2 from "../../assets/images/work/writing.jpg";
+import WorkImg3 from "../../assets/images/work/listening.jpg";
+import WorkImg4 from "../../assets/images/work/speaking.jpg";
+import WorkImg5 from "../../assets/images/work/community.jpg";
 
 const Works = () => {
   const workCopyReveal = useRef();
@@ -101,15 +102,15 @@ const Works = () => {
           }}
         >
           <div className="work-copy-wrapper">
-            <h1>Try. Fail. Learn.</h1>
-          </div>
-          <div className="work-copy-wrapper">
-            <h1>Birth • Present</h1>
+            <h1>Learn through Trying</h1>
           </div>
         </section>
 
+        
+
         <section className="project-list">
-          <div className="project-list-row">
+
+        <div className="project-list-row">
             <div className="project-list-col">
               <div
                 className="project-item"
@@ -121,7 +122,7 @@ const Works = () => {
                   </Link>
                 </div>
                 <div className="project-copy copy-pos-right">
-                  <h2>Writing Conversation</h2>
+                  <h2>Reading Conversation</h2>
                 </div>
               </div>
             </div>
@@ -141,6 +142,45 @@ const Works = () => {
                   </Link>
                 </div>
                 <div className="project-copy copy-pos-left">
+                  <h2>Writing Conversation</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="project-list-row">
+            <div className="project-list-col">
+              <div
+                className="project-item"
+                onMouseOver={() => handleMouseOver(1)}
+              >
+                <div className="project-img">
+                  <Link to="/conversationchoices">
+                    <img src={WorkImg3} alt="" />
+                  </Link>
+                </div>
+                <div className="project-copy copy-pos-right">
+                  <h2>Listening Conversation</h2>
+                </div>
+              </div>
+            </div>
+            <div className="project-list-col whitespace-col"></div>
+          </div>
+
+
+          <div className="project-list-row">
+            <div className="project-list-col whitespace-col"></div>
+            <div className="project-list-col">
+              <div
+                className="project-item"
+                onMouseOver={() => handleMouseOver(2)}
+              >
+                <div className="project-img">
+                  <Link to="/conversationchoices">
+                    <img src={WorkImg4} alt="" />
+                  </Link>
+                </div>
+                <div className="project-copy copy-pos-left">
                   <h2>Speaking Conversation</h2>
                 </div>
               </div>
@@ -155,7 +195,7 @@ const Works = () => {
               >
                 <div className="project-img">
                   <Link to="/analysispage">
-                    <img src={WorkImg3} alt="" />
+                    <img src={WorkImg5} alt="" />
                   </Link>
                 </div>
                 <div className="project-copy copy-pos-right">
@@ -166,7 +206,7 @@ const Works = () => {
             <div className="project-list-col whitespace-col"></div>
           </div>
 
-          <div className="project-list-row">
+          {/* <div className="project-list-row">
             <div className="project-list-col whitespace-col"></div>
             <div className="project-list-col">
               <div
@@ -175,7 +215,7 @@ const Works = () => {
               >
                 <div className="project-img">
                   <Link to="/analysisreport">
-                    <img src={WorkImg4} alt="" />
+                    <img src={WorkImg5} alt="" />
                   </Link>
                 </div>
                 <div className="project-copy copy-pos-left">
@@ -183,7 +223,7 @@ const Works = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
         </section>
 

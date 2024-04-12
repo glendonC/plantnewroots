@@ -2,17 +2,12 @@ import React, { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import "./MagneticButton.css";
-
-import { useAuth } from '../../contexts/AuthContext';
-
 import gsap from "gsap";
 
 const MagneticButton = () => {
   const btnRef = useRef(null);
   const textRef = useRef(null);
   const wrapperRef = useRef(null);
-
-  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -23,7 +18,6 @@ const MagneticButton = () => {
 
     const moveEvent = (e) => {
       const wrapperRect = wrapper.getBoundingClientRect();
-      const btnRect = btn.getBoundingClientRect();
 
       const relX = e.clientX - (wrapperRect.left + wrapperRect.width / 2);
       const relY = e.clientY - (wrapperRect.top + wrapperRect.height / 2);

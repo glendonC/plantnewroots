@@ -12,8 +12,15 @@
   transform: translate(-50%, -50%);
   width: 300px;
   height: 300px;
-  border: 1px solid var(--color-text-secondary);
   border-radius: 100%;
+  border: 5px solid var(--color-text-secondary);
+  background: transparent;
+  transition: border-image-slice 0.5s ease, border-image-source 0.5s ease;
+}
+
+.m-btn:hover {
+  border: 5px solid;
+  background-clip: border-box;
 }
 
 .m-btn-copy {
@@ -40,6 +47,8 @@
   transition: 0.3s;
 }
 
+
 .m-btn:hover .arrow-right {
   right: -5%;
 }
+

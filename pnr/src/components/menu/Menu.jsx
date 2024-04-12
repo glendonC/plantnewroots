@@ -14,10 +14,10 @@ import MouseTrail from '../../components/mousetrail/MouseTrail';
 
 const Menu = () => {
   const menuLinks = [
-    { path: "/about", label: "About" },
     { path: "/works", label: "Learn" },
     { path: "/blog", label: "Blog" },
     { path: "/profile", label: "Profile" },
+    { path: "/about", label: "About" },
   ];
 
   const menuContainer = useRef();
@@ -152,6 +152,11 @@ const Menu = () => {
           <div className="contact-btn">
             <div className="btn">
               <Link to="/profile">{username}</Link>
+            </div>
+          </div>
+          <div className="logout-btn">
+            <div className="btn">
+              <Link to="/profile">Logout</Link>
             </div>
           </div>
           <div className="menu-toggle">

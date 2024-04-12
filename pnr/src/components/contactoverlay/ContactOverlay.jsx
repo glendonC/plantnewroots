@@ -27,12 +27,10 @@ const ContactOverlay = ({ isOpen, setIsOpen }) => {
     <div className="contact-overlay" style={{ opacity: 0, pointerEvents: "none" }}>
       <div className="contact-overlay-content">
         <div className="contact-overlay-form">
-        <div className="contact-overlay-about">
-          <p>
+          <div className="contact-overlay-about">
             <h2>Contact Us</h2>
-            We'd love to hear your thoughts!
-          </p>
-        </div>
+            <p>We'd love to hear your thoughts!</p>
+          </div>
           <form>
             <label htmlFor="fname">Name</label><br />
             <input type="text" id="fname" name="fname" placeholder="first + surname"/><br /><br />
