@@ -14,19 +14,19 @@ const About = () => {
     title: "",
     rows: [
       {
-        title: "Who is PNR meant for?",
+        title: "Who is this meant for?",
         content:
-          "test",
+          "anyone and everyone! 😤😤😤",
       },
       {
-        title: "Where did the name PNR come from?",
+        title: "Where did the name come from?",
         content:
-          "test",
+          "i planted a carrot and thought of a metaphor to language learning",
       },
       {
-        title: "How can I trust the AI's own accuracy?",
+        title: "Click me! 😉",
         content:
-          "test",
+          "I love you and you should too! 🫶",
       },
     ],
   };
@@ -34,17 +34,10 @@ const About = () => {
   return (
     <div className="about page">
       <div className="container">
-        <section className="about-marquee">
-          <Marquee>
-            <h1>
-              Progress over Perfection.
-            </h1>
-          </Marquee>
-        </section>
 
         <section className="about-intro">
           <h2>
-            random intro text
+            About Us
           </h2>
         </section>
 
@@ -52,15 +45,12 @@ const About = () => {
           <div className="about-row">
             <div className="about-col">
               <p>
-                <span>Est. 2024</span>
+                <span>Our Vision</span>
               </p>
             </div>
             <div className="about-col">
               <h3>
-                first paragraph about text
-              </h3>
-              <h3 style={{ textIndent: "100px" }}>
-                second paragraph about text
+              plant new roots began its development in April 2024 by glendon chin, a Korean/Chinese American who's currently writing this in the third person right now (so now i'll just switch to first person pov). put simply, learning a language (or multiple) will carry different meanings for each of us. as an example, i am currently studying korean right now and one of the goals that i am hellbent on reaching is being able to speak with my grandma whose first language isn't english. there's more to it, but i'll just leave it there for now. i knew it wouldn't be easy, but somewhere along the way i felt like with the growth of technology, we can create more intuitive resources to help us on our own language journeys :)
               </h3>
             </div>
           </div>
@@ -81,19 +71,28 @@ const About = () => {
           </div>
         </section>
 
+        <section className="about-marquee">
+          <Marquee>
+            <h1>
+              Progress over Perfection.
+            </h1>
+          </Marquee>
+        </section>
         <section className="about-contact">
           <div className="about-contact-copy">
-            <h2>Any suggestions?</h2>
+            <h2>Is there something else that you want to see added?</h2>
             <p>
               <span>
-                We want to hear your feedback! Message us @ plantnewroots@gmail.com!
+                We want to hear your feedback! Message us @ plantnewroots@gmail.com! 
               </span>
+              <br></br>
+              <span>(Hint: You can click the contact button at the button of the screen!)</span>
             </p>
 
             <br />
-            <p>
+            {/* <p>
               <span>+1 I-Luv-Learning</span>
-            </p>
+            </p> */}
             {/* <p>
               <span>Instagram • Twitter</span>
             </p> */}
