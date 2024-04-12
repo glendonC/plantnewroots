@@ -9,6 +9,7 @@ const Reading = () => {
   const [textLength, setTextLength] = useState('');
   const [content, setContent] = useState({ text: "", questions: [] });
   const [answers, setAnswers] = useState({});
+  const [expectedAnswers, setExpectedAnswers] = useState([]);
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
