@@ -9,26 +9,46 @@ const Reading = () => {
   const [content, setContent] = useState({ text: "", questions: [] });
   const [answers, setAnswers] = useState({});
   const [feedback, setFeedback] = useState("");
-
   const generateContent = async () => {
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    let prompt = `Generate a ${textLength} text about a general topic, followed by three comprehension questions, in ${selectedLanguage}.`;
 
+    let textPrompt = `Generate a detailed, factual ${textLength} story suitable for a ${selectedLevel} level student in ${selectedLanguage}.`;
+    
     try {
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const generatedText = await response.text();
-      const [text, ...questions] = generatedText.split("\n").filter(line => line.trim());
-      setContent({ text, questions: questions.map(question => ({ query: question })) });
-      setAnswers({});
+      const textResult = await model.generateContent(textPrompt);
+      const textResponse = await textResult.response;
+      const generatedText = await textResponse.text();
+      setContent({ text: generatedText, questions: [] });
+      await generateQuestions(generatedText);
     } catch (error) {
       console.error('Error generating content:', error);
       setContent({ text: "Failed to generate content.", questions: [] });
     }
   };
+  
+  const generateQuestions = async (text) => {
+    const { GoogleGenerativeAI } = await import('@google/generative-ai');
+    const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+    const genAI = new GoogleGenerativeAI(API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+    let questionPrompt = `Based on the following text: "${text}", generate three direct questions that can be clearly answered from the text.`;
+
+    try {
+      const questionResult = await model.generateContent(questionPrompt);
+      const questionResponse = await questionResult.response;
+      const questionsText = await questionResponse.text();
+      const questions = questionsText.split("\n").filter(q => q).map(query => ({ query }));
+      setContent(prev => ({ ...prev, questions }));
+    } catch (error) {
+      console.error('Error generating questions:', error);
+      setContent(prev => ({ ...prev, questions: [] }));
+    }
+  };
+  
 
   const handleAnswerChange = (index, value) => {
     setAnswers(prev => ({ ...prev, [index]: value }));
@@ -39,9 +59,11 @@ const Reading = () => {
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+    const prompt = `The text provided is: "${content.text}". Evaluate the following answers based on the text and questions provided: ${
+      content.questions.map((q, i) => `Question: ${q.query}, Answer: ${answers[i] || 'no answer provided'}`).join("; ")
+    }.`;
   
-    const prompt = `The text provided is: "${content.text}". The questions are: ${content.questions.map(q => q.query).join(", ")}. The answers given by the user are: ${Object.values(answers).join(", ")}. Please evaluate the correctness of these answers based on the text and questions provided.`;
-    
     console.log("Sending this prompt to AI:", prompt);
   
     try {
@@ -54,6 +76,7 @@ const Reading = () => {
       setFeedback("Failed to evaluate answers.");
     }
   };
+  
   
 
   return (
