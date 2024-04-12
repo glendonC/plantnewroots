@@ -10,6 +10,7 @@ const Reading = () => {
   const [content, setContent] = useState({ text: "", questions: [] });
   const [answers, setAnswers] = useState({});
   const [feedback, setFeedback] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const generateContent = async () => {
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
@@ -67,7 +68,6 @@ const Reading = () => {
     }
   };
   
-
   const handleAnswerChange = (index, value) => {
     setAnswers(prev => ({ ...prev, [index]: value }));
   };
@@ -78,6 +78,7 @@ const Reading = () => {
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
   
+    // Construct the prompt dynamically with placeholders for questions and answers
     const prompt = `The text provided is: "${content.text}". Evaluate the following answers based on the text and questions provided:\n${
       content.questions.map((q, i) => `Question: ${q.query}\nUser Answer: ${answers[i] || 'no answer provided'}`).join("\n")
     }`;
@@ -88,12 +89,47 @@ const Reading = () => {
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const evaluation = await response.text();
+      setSubmitted(true);
       setFeedback(evaluation);
     } catch (error) {
       console.error('Error evaluating answers:', error);
       setFeedback("Failed to evaluate answers.");
     }
   };
+  
+  const evaluateAnswers = async () => {
+    if (submitted) { // Check if answers have been submitted before evaluating
+      const { GoogleGenerativeAI } = await import('@google/generative-ai');
+      const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+      const genAI = new GoogleGenerativeAI(API_KEY);
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    
+// Construct the prompt dynamically with placeholders for questions and answers
+const prompt = `The text provided is: "${content.text}". Evaluate the following answers based on the text and questions provided:\n${
+    content.questions.map((q, i) => `Question ${i + 1}: ${q.query}\nExpected Answer: ${expectedAnswers[i]}\nUser Answer: ${answers[i] || 'no answer provided'}`).join("\n")
+  }`;
+  
+    
+      console.log("Sending this prompt to AI for evaluation:", prompt);
+    
+      try {
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const evaluation = await response.text();
+        setFeedback(evaluation);
+      } catch (error) {
+        console.error('Error evaluating answers:', error);
+        setFeedback("Failed to evaluate answers.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    evaluateAnswers(); // Evaluate answers whenever content, questions, or submitted state change
+  }, [content, submitted]);
+
+
+  
 
   return (
     <Container className="mt-4">
@@ -106,7 +142,7 @@ const Reading = () => {
         <Col md={6}>
           <Form>
             <Form.Group controlId="textLengthSelect">
-            <Form.Label style={{ fontSize: "1.2rem", color: "white" }}>Select text length:</Form.Label>
+              <Form.Label style={{ fontSize: "1.2rem", color: "white" }}>Select text length:</Form.Label>
               <Form.Control as="select" value={textLength} onChange={e => setTextLength(e.target.value)}>
                 <option value="">Select a length</option>
                 <option value="short">Short</option>
@@ -142,17 +178,15 @@ const Reading = () => {
           </div>
           {content.text && content.questions.length > 0 && (
             <Button variant="success" onClick={submitAnswers}>
-                Submit Answers
+              Submit Answers
             </Button>
-            )}
-          {feedback && (
-            <div className="mt-3">
-              <h3>Feedback</h3>
-              {content.questions.map((question, index) => (
-                <p key={index}>{question.query}: {feedback[index]}</p>
-              ))}
-            </div>
           )}
+{feedback && (
+  <div className="mt-3">
+    <h3>Feedback</h3>
+    <p>{feedback}</p>
+  </div>
+)}
         </Col>
       </Row>
       <MagneticButton />
