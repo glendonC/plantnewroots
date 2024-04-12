@@ -78,8 +78,7 @@ const Reading = () => {
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-  
-    // Construct the prompt dynamically with placeholders for questions and answers
+
     const prompt = `The text provided is: "${content.text}". Evaluate the following answers based on the text and questions provided:\n${
       content.questions.map((q, i) => `Question: ${q.query}\nUser Answer: ${answers[i] || 'no answer provided'}`).join("\n")
     }`;
@@ -99,13 +98,12 @@ const Reading = () => {
   };
   
   const evaluateAnswers = async () => {
-    if (submitted) { // Check if answers have been submitted before evaluating
+    if (submitted) {
       const { GoogleGenerativeAI } = await import('@google/generative-ai');
       const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
       const genAI = new GoogleGenerativeAI(API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     
-// Construct the prompt dynamically with placeholders for questions and answers
 const prompt = `The text provided is: "${content.text}". Evaluate the following answers based on the text and questions provided:\n${
     content.questions.map((q, i) => `Question ${i + 1}: ${q.query}\nExpected Answer: ${expectedAnswers[i]}\nUser Answer: ${answers[i] || 'no answer provided'}`).join("\n")
   }`;
@@ -126,7 +124,7 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
   };
 
   useEffect(() => {
-    evaluateAnswers(); // Evaluate answers whenever content, questions, or submitted state change
+    evaluateAnswers();
   }, [content, submitted]);
 
 
@@ -176,23 +174,28 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
                 />
               </div>
             ))}
+            {content.text && content.questions.length > 0 && (
+              <Button variant="success" onClick={submitAnswers}>
+                Submit Answers
+              </Button>
+            )}
           </div>
-          {content.text && content.questions.length > 0 && (
-            <Button variant="success" onClick={submitAnswers}>
-              Submit Answers
-            </Button>
+        </Col>
+        <Col md={4} className="align-self-start" style={{ marginTop: '-12px' }}>
+          {feedback && (
+            <div className="mt-3" style={{ border: '1px solid #ccc', padding: '10px' }}>
+              <h3>Feedback</h3>
+              {feedback.split('\n').map((feedbackLine, index) => (
+                <p key={index}>{feedbackLine}</p>
+              ))}
+            </div>
           )}
-{feedback && (
-  <div className="mt-3">
-    <h3>Feedback</h3>
-    <p>{feedback}</p>
-  </div>
-)}
         </Col>
       </Row>
       <MagneticButton />
     </Container>
   );
+  
 
   
 };
