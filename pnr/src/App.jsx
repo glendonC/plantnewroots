@@ -15,6 +15,8 @@ import SampleBlog from "./pages/sampleblog/SampleBlog";
 import Login from "./pages/login/Login";
 import SignUp from "./pages/signup/SignUp";
 
+import Reading from './pages/reading/Reading';
+
 import DailyWritingConversation from './pages/agents/daily/DailyWritingConversation';
 import ProfessionalWritingConversation from './pages/agents/professional/ProfessionalWritingConversation';
 import CulturalWritingConversation from './pages/agents/cultural/CulturalWritingConversation';
@@ -46,6 +48,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/conversationchoices" element={<ConversationChoices />} />
           <Route path="/analysispage" element={<AnalysisReport />} />
+          <Route path="/reading" element={<Reading />} />
           <Route path="/daily" element={<DailyWritingConversation />} />
           <Route path="/professional" element={<ProfessionalWritingConversation />} />
           <Route path="/cultural" element={<CulturalWritingConversation />} />
