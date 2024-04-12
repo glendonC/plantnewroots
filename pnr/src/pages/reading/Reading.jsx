@@ -140,9 +140,11 @@ const Reading = () => {
               </div>
             ))}
           </div>
-          <Button variant="success" onClick={submitAnswers}>
-            Submit Answers
-          </Button>
+          {content.text && content.questions.length > 0 && (
+            <Button variant="success" onClick={submitAnswers}>
+                Submit Answers
+            </Button>
+            )}
           {feedback && (
             <div className="mt-3">
               <h3>Feedback</h3>
