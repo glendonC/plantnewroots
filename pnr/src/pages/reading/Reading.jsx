@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
+import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 import Transition from "../../components/transition/Transition";
 
@@ -9,13 +10,29 @@ const Reading = () => {
   const [content, setContent] = useState({ text: "", questions: [] });
   const [answers, setAnswers] = useState({});
   const [feedback, setFeedback] = useState("");
+
   const generateContent = async () => {
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-    let textPrompt = `Generate a detailed, factual ${textLength} story suitable for a ${selectedLevel} level student in ${selectedLanguage}.`;
+  
+    let textPrompt = "";
+    
+    switch (textLength) {
+      case "short":
+        textPrompt = `Generate a detailed, factual 2-3 sentence story suitable for a ${selectedLevel} level student in ${selectedLanguage}.`;
+        break;
+      case "medium":
+        textPrompt = `Generate a detailed, factual 4-8 sentence story suitable for a ${selectedLevel} level student in ${selectedLanguage}.`;
+        break;
+      case "long":
+        textPrompt = `Generate a detailed, factual 9+ sentence story suitable for a ${selectedLevel} level student in ${selectedLanguage}.`;
+        break;
+      default:
+        console.error("Invalid text length selected.");
+        return;
+    }
     
     try {
       const textResult = await model.generateContent(textPrompt);
@@ -28,6 +45,7 @@ const Reading = () => {
       setContent({ text: "Failed to generate content.", questions: [] });
     }
   };
+  
   
   const generateQuestions = async (text) => {
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
@@ -59,10 +77,10 @@ const Reading = () => {
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-    const prompt = `The text provided is: "${content.text}". Evaluate the following answers based on the text and questions provided: ${
-      content.questions.map((q, i) => `Question: ${q.query}, Answer: ${answers[i] || 'no answer provided'}`).join("; ")
-    }.`;
+  
+    const prompt = `The text provided is: "${content.text}". Evaluate the following answers based on the text and questions provided:\n${
+      content.questions.map((q, i) => `Question: ${q.query}\nUser Answer: ${answers[i] || 'no answer provided'}`).join("\n")
+    }`;
   
     console.log("Sending this prompt to AI:", prompt);
   
@@ -76,42 +94,70 @@ const Reading = () => {
       setFeedback("Failed to evaluate answers.");
     }
   };
-  
-  
 
   return (
-    <div className="reading-page">
-      <h1>Reading Exercise</h1>
-      <p>Select text length:</p>
-      <select value={textLength} onChange={(e) => setTextLength(e.target.value)}>
-        <option value="">Select a length</option>
-        <option value="short">Short</option>
-        <option value="medium">Medium</option>
-        <option value="long">Long</option>
-      </select>
-      <button onClick={generateContent} disabled={!textLength} style={{ backgroundColor: textLength ? '#00f' : '#aaa' }}>
-        Generate Text
-      </button>
-      <div className="content-section">
-        <h2>Text for Reading</h2>
-        <p>{content.text}</p>
-        {content.questions.map((question, index) => (
-          <div key={index}>
-            <p>{question.query}</p>
-            <input
-              type="text"
-              placeholder="Your answer..."
-              value={answers[index] || ''}
-              onChange={(e) => handleAnswerChange(index, e.target.value)}
-            />
+    <Container className="mt-4">
+      <Row className="justify-content-md-center">
+        <Col xs={12}>
+          <h1 className="text-center">Reading Exercise</h1>
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center mt-3">
+        <Col md={6}>
+          <Form>
+            <Form.Group controlId="textLengthSelect">
+            <Form.Label style={{ fontSize: "1.2rem", color: "white" }}>Select text length:</Form.Label>
+              <Form.Control as="select" value={textLength} onChange={e => setTextLength(e.target.value)}>
+                <option value="">Select a length</option>
+                <option value="short">Short</option>
+                <option value="medium">Medium</option>
+                <option value="long">Long</option>
+              </Form.Control>
+            </Form.Group>
+          </Form>
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center mt-3">
+        <Col md={6}>
+          <Button variant="primary" onClick={generateContent} disabled={!textLength}>
+            Generate Text
+          </Button>
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center mt-3">
+        <Col md={6}>
+          <div className="content-section">
+            <p>{content.text}</p>
+            {content.questions.map((question, index) => (
+              <div key={index} className="mb-3">
+                <p>{question.query}</p>
+                <input
+                  type="text"
+                  placeholder="Your answer..."
+                  value={answers[index] || ''}
+                  onChange={(e) => handleAnswerChange(index, e.target.value)}
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <button onClick={submitAnswers}>Submit Answers</button>
-      {feedback && <p>{feedback}</p>}
+          <Button variant="success" onClick={submitAnswers}>
+            Submit Answers
+          </Button>
+          {feedback && (
+            <div className="mt-3">
+              <h3>Feedback</h3>
+              {content.questions.map((question, index) => (
+                <p key={index}>{question.query}: {feedback[index]}</p>
+              ))}
+            </div>
+          )}
+        </Col>
+      </Row>
       <MagneticButton />
-    </div>
+    </Container>
   );
+
+  
 };
 
 export default Transition(Reading);
