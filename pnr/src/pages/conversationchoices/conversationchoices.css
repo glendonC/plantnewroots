@@ -16,7 +16,7 @@ section.project-hero {
 
 .project-title {
   position: relative;
-  top: -100px;
+  top: 50px;
   text-align: center;
   z-index: 0;
 }
@@ -97,6 +97,7 @@ section.project-hero {
   padding: 0 !important;
   width: 100vw;
   max-width: 100vw;
+  
 }
 
 .conversationchoices .container, .work {
@@ -107,7 +108,9 @@ section.project-hero {
   padding-right: 0 !important;
   margin: 0 !important;
   box-sizing: border-box;
+  
 }
+
 
 img {
   width: 100%;
@@ -142,6 +145,7 @@ img {
   gap: 10em;
   transition: 1s;
   opacity: 0.5;
+  overflow: visible;
 }
 
 .prev {
@@ -151,6 +155,11 @@ img {
   background: gray;
   transform: rotate(10deg) scale(1);
   transition: transform 0.5s ease;
+  overflow: visible;
+}
+
+.work, .container {
+  overflow: visible;
 }
 
 .prev.active {
@@ -212,7 +221,7 @@ h1 {
   background: #0b1925;
   color: #fff;
   overflow: hidden;
-  left: -20px;
+  left: -10px;
   opacity: 0;
   transition: 0.2s;
 }
@@ -243,6 +252,8 @@ h1 {
 
 .work-item:hover .work-item-name h1 {
   color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
 
 }
 .work.hovered h1 {
