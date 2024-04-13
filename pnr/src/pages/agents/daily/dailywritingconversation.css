@@ -1,65 +1,83 @@
-.daily-conversation-container {
+.conversation-container {
+    height: 100vh;
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    max-width: 600px;
-    margin: 20px auto;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    overflow: hidden;
 }
 
-.messages-container {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    height: 400px;
+.mt-4 {
+    margin-top: 2rem !important;
+}
+
+.message-area {
+    margin-top: 20px;
     overflow-y: auto;
-    background-color: black;
-}
-
-.message {
-    max-width: 80%;
-    padding: 10px;
-    border-radius: 20px;
-    color: black;
-}
-
-.message.user {
-    align-self: flex-end;
-    background-color: #007bff;
-}
-
-.message.bot {
-    align-self: flex-start;
-    background-color: #666;
-}
-
-.input-container {
-    display: flex;
-    padding: 10px;
-    background-color: black;
-    border-top: 1px solid #ccc;
-}
-
-.input-container input {
     flex-grow: 1;
     padding: 10px;
+}
+
+.message-bubble {
+    max-width: 70%;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 15px;
+    color: #333;
+}
+
+.message-user {
+    background-color: #cfe9ff;
+    margin-left: auto;
     margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
+    text-align: right;
 }
 
-.input-container button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
+.message-bot {
+    background-color: #e1ffc7;
+    margin-left: 10px;
+    text-align: left;
 }
 
-.input-container button:hover {
-    background-color: #0056b3;
+.modal-content {
+    background-color: #333;
+    color: #fff;
+}
+
+.modal-header, .modal-body, .modal-footer {
+    border-color: #444;
+}
+
+.modal-body .form-control::placeholder { 
+    color: #fff;
+    opacity: 1;
+
+.modal-body .form-control:-ms-input-placeholder {
+    color: #fff;
+}
+
+.modal-body .form-control::-ms-input-placeholder { 
+    color: #fff;
+}
+
+
+.btn-outline-primary {
+    color: #fff;
+    border-color: #fff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #555;
+    border-color: #ddd;
+}
+
+.btn-outline-secondary {
+    color: #fff;
+    border-color: #fff;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #555;
+    border-color: #ddd;
 }

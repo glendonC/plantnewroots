@@ -117,7 +117,7 @@ const Works = () => {
                 onMouseOver={() => handleMouseOver(1)}
               >
                 <div className="project-img">
-                  <Link to="/conversationchoices">
+                  <Link to="/reading">
                     <img src={WorkImg1} alt="" />
                   </Link>
                 </div>
