@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Container, Row, Col, Button, Card, Form, InputGroup } from 'react-bootstrap';
 import './dailywritingconversation.css';
-
-
 import SaveConversationButton from '../../../components/saveconversationbutton/SaveConversationButton';
 
 function DailyWritingConversation() {
@@ -26,16 +25,6 @@ function DailyWritingConversation() {
         }
 
         setUserInput('');
-    };
-
-    const handleInputChange = (e) => {
-        setUserInput(e.target.value);
-    };
-
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            sendMessage();
-        }
     };
 
     const saveConversation = async () => {
@@ -101,39 +90,63 @@ function DailyWritingConversation() {
         }
     };
     
-    
-    
-      
+    const handleInputChange = (e) => {
+        setUserInput(e.target.value);
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    };
+
     return (
-        <div className="daily-conversation-container">
-            <h2>Daily Writing Conversation Practice</h2>
-            <div className="messages-container">
-                {messages.map((message, index) => (
-                    <div key={index} className={`message ${message.from}`}>
-                        {message.text}
+        <Container fluid className="mt-4">
+            <Row className="justify-content-md-center">
+                <Col xs={12}>
+                    <h1 className="text-center">Daily Writing Conversation</h1>
+                </Col>
+            </Row>
+            <Row className="justify-content-md-center">
+                <Col xs={12} md={8}>
+                    <div className="message-area">
+                        {messages.map((message, index) => (
+                            <div key={index} className={`message-bubble ${message.from === 'user' ? 'message-user' : 'message-bot'}`}>
+                                {message.text}
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
-            <div className="input-container">
-                <input
-                    type="text"
-                    value={userInput}
-                    onChange={handleInputChange}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Type your message here..."
-                />
-                <button onClick={sendMessage}>Send</button>
-            </div>
-            <input
-  type="text"
-  value={conversationName}
-  placeholder="Enter a name for this conversation"
-  onChange={(e) => setConversationName(e.target.value)}
-/>
-            <SaveConversationButton onSaveConversation={saveConversation} />
-        </div>
+                    <Form>
+                        <InputGroup className="mb-3">
+                            <Form.Control
+                                type="text"
+                                placeholder="Type your message here..."
+                                value={userInput}
+                                onChange={handleInputChange}
+                                onKeyPress={handleKeyPress}
+                            />
+                            <Button variant="outline-secondary" onClick={sendMessage}>
+                                Send
+                            </Button>
+                        </InputGroup>
+                    </Form>
+                </Col>
+            </Row>
+            <Row className="justify-content-md-center">
+                <Col xs={12} md={8}>
+                    <InputGroup className="mb-3">
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter a name for this conversation"
+                            value={conversationName}
+                            onChange={(e) => setConversationName(e.target.value)}
+                        />
+                        <SaveConversationButton onSaveConversation={saveConversation} />
+                    </InputGroup>
+                </Col>
+            </Row>
+        </Container>
     );
-    
 }
 
 export default DailyWritingConversation;
