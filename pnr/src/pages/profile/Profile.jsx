@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Transition from "../../components/transition/Transition";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { US, KR, CN } from 'country-flag-icons/react/3x2';
 import { Dropdown } from 'react-bootstrap';
 import { LevelList, LevelItem } from './LevelSelectionStyles';
