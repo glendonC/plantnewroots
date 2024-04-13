@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./conversationchoices.css";
 
 import Transition from "../../components/transition/Transition";
 import { ArrowRight } from "@phosphor-icons/react";
-import gsap from "gsap";
-
-import WorkImg1 from "../../assets/images/work/writing.jpg";
 import prev1 from './casualconvo.gif';
 import prev2 from './professionalconvo.gif';
 import prev3 from './culturalexchange.gif';
 
 import { useNavigate } from 'react-router-dom';
-
+import "./conversationchoices.css";
 
 const ConversationChoices = () => {
 
@@ -54,20 +50,17 @@ const ConversationChoices = () => {
         <>
 
 <div className="project page">
-      <section className="project-hero">
-        <img src={WorkImg1} alt="" />
-      </section>
+
 
       <div className="container">
         <section className="project-title">
           <h1>Conversation Practice</h1>
-          <p>3 Scenarios • Select One</p>
         </section>
         
         </div>
     </div>
 
-    <div className="container">
+    <div className="conversationchoices">
       <div className={`work ${workClass}`}>
         <div className="overlay" style={{ top: overlayPosition.top, left: overlayPosition.left }}>
           <div className={`prev${activePreview === 'prev-1' ? ' active' : ''}`} id="prev-1">

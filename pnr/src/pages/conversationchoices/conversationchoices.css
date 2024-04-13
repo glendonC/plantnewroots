@@ -1,3 +1,11 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
 section.project-hero {
   position: relative;
   width: 100%;
@@ -85,11 +93,20 @@ section.project-hero {
   }
 }
 
-.container1 {
-  height: 1000px; /* Set the height to 100% of the viewport height */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.conversationchoices .container {
+  padding: 0 !important;
+  width: 100vw;
+  max-width: 100vw;
+}
+
+.conversationchoices .container, .work {
+  width: 100vw;
+  height: 100vh;
+  padding-top: 50px;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box;
 }
 
 img {
@@ -102,7 +119,6 @@ img {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: #141414;
   padding: 6em 4em;
   transition: background-color 0.5s ease;
   overflow: hidden;
