@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Container, Row, Col, Button, Card, Form, InputGroup } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, InputGroup, Modal } from 'react-bootstrap';
+import { Save } from '@mui/icons-material';
 import './dailywritingconversation.css';
 import SaveConversationButton from '../../../components/saveconversationbutton/SaveConversationButton';
 
@@ -8,6 +9,7 @@ function DailyWritingConversation() {
     const [userInput, setUserInput] = useState('');
     const [messages, setMessages] = useState([]);
     const [conversationName, setConversationName] = useState('');
+    const [showModal, setShowModal] = useState(false);
 
     const conversationTag = "Daily Writing";
 
@@ -27,31 +29,33 @@ function DailyWritingConversation() {
         setUserInput('');
     };
 
+    const handleSaveClick = () => {
+        if (!conversationName) {
+            setShowModal(true);
+            return;
+        }
+        saveConversation();
+    };
     const saveConversation = async () => {
-        const userId = localStorage.getItem('userId');
-        const botId = '660a88e076ab4670bfd0bfc6';
-    
+        if (!conversationName) {
+            alert('Please enter a name for the conversation.');
+            return;
+        }
         const payload = {
-            participants: [userId, botId],
+            participants: [localStorage.getItem('userId'), '660a88e076ab4670bfd0bfc6'],
             messages: messages.map(message => ({
                 ...message,
-                from: message.from === 'user' ? userId : botId,
+                from: message.from === 'user' ? localStorage.getItem('userId') : '660a88e076ab4670bfd0bfc6',
             })),
             name: conversationName,
-            tag: conversationTag,
+            tag: "Daily Writing",
         };
     
         try {
             const response = await axios.post('/api/writingConversations/save', payload, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
+                headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}
             });
-    
-            const { conversationId } = response.data;
-            await saveUserMessages(conversationId);
-            
+            await saveUserMessages(response.data.conversationId); // Assuming ID is returned here
             alert('Conversation saved!');
         } catch (error) {
             console.error('Error saving conversation:', error);
@@ -59,21 +63,14 @@ function DailyWritingConversation() {
         }
     };
     
+
+    
     const saveUserMessages = async (conversationId) => {
-        const userId = localStorage.getItem('userId');
         const userMessages = messages.filter(message => message.from === 'user').map(message => message.text);
     
-        // console.log("Saving user messages with payload:", {
-        //     userId,
-        //     conversationId,
-        //     messages: userMessages,
-        //     name: conversationName,
-        //     tag: conversationTag,
-        // });
-
         try {
             await axios.post('/api/writingConversations/userMessages/save', {
-                userId,
+                userId: localStorage.getItem('userId'),
                 conversationId,
                 messages: userMessages,
                 name: conversationName,
@@ -89,6 +86,7 @@ function DailyWritingConversation() {
             console.error('Error saving user messages:', error);
         }
     };
+    
     
     const handleInputChange = (e) => {
         setUserInput(e.target.value);
@@ -128,23 +126,35 @@ function DailyWritingConversation() {
                             <Button variant="outline-secondary" onClick={sendMessage}>
                                 Send
                             </Button>
+                            <Button variant="outline-secondary" onClick={handleSaveClick}>
+                                <Save />
+                            </Button>
                         </InputGroup>
                     </Form>
                 </Col>
             </Row>
-            <Row className="justify-content-md-center">
-                <Col xs={12} md={8}>
-                    <InputGroup className="mb-3">
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter a name for this conversation"
-                            value={conversationName}
-                            onChange={(e) => setConversationName(e.target.value)}
-                        />
-                        <SaveConversationButton onSaveConversation={saveConversation} />
-                    </InputGroup>
-                </Col>
-            </Row>
+            <Modal show={showModal} onHide={() => setShowModal(false)} dialogClassName="modal-content">
+                <Modal.Header closeButton>
+                    <Modal.Title>Enter Conversation Name</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Control
+                        type="text"
+                        placeholder="Conversation name"
+                        value={conversationName}
+                        onChange={(e) => setConversationName(e.target.value)}
+                        style={{ background: '#333', color: '#fff' }}
+                    />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="outline-secondary" onClick={() => setShowModal(false)}>
+                        Close
+                    </Button>
+                    <Button variant="outline-primary" onClick={() => { if (conversationName) saveConversation(); setShowModal(false); }}>
+                        Save Conversation
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Container>
     );
 }

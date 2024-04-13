@@ -39,3 +39,45 @@
     margin-left: 10px;
     text-align: left;
 }
+
+.modal-content {
+    background-color: #333;
+    color: #fff;
+}
+
+.modal-header, .modal-body, .modal-footer {
+    border-color: #444;
+}
+
+.modal-body .form-control::placeholder { 
+    color: #fff;
+    opacity: 1;
+
+.modal-body .form-control:-ms-input-placeholder {
+    color: #fff;
+}
+
+.modal-body .form-control::-ms-input-placeholder { 
+    color: #fff;
+}
+
+
+.btn-outline-primary {
+    color: #fff;
+    border-color: #fff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #555;
+    border-color: #ddd;
+}
+
+.btn-outline-secondary {
+    color: #fff;
+    border-color: #fff;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #555;
+    border-color: #ddd;
+}
