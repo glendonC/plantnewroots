@@ -18,27 +18,39 @@ const ConversationChoices = () => {
   const navigate = useNavigate();
 
   const handleMouseOver = (index) => {
-      // Update active preview
-      setActivePreview(`prev-${index + 1}`);
+    setActivePreview(`prev-${index + 1}`);
+    const positions = [
+        { top: '50%', left: '50%', className: 'work bg-color-red hovered' },
+        { top: '0%', left: '13.25%', className: 'work bg-color-blue hovered' },
+        { top: '-50%', left: '-23.5%', className: 'work bg-color-green hovered' },
+    ];
 
-      // Add hovered class to work and adjust overlay position and color
-      const positions = [
-          { top: '50%', left: '50%', className: 'work bg-color-red hovered' },
-          { top: '0%', left: '13.25%', className: 'work bg-color-blue hovered' },
-          { top: '-50%', left: '-23.5%', className: 'work bg-color-green hovered' },
-      ];
+    const { top, left, className } = positions[index];
+    setOverlayPosition({ top, left });
 
-      const { top, left, className } = positions[index];
-      setOverlayPosition({ top, left });
-      setWorkClass(className);
+    document.body.style.backgroundColor = className.split(' ')[2];
+    positions.forEach(position => {
+        const prevClassName = position.className.split(' ')[2];
+        if (prevClassName !== className.split(' ')[2]) {
+            document.body.classList.remove(prevClassName);
+        }
+    });
+
+    setWorkClass(className);
+};
+
+
+const handleMouseOut = () => {
+  setActivePreview('prev-2');
+  setWorkClass('work');
+  setOverlayPosition({ top: '0%', left: '13.25%' });
+  document.body.style.backgroundColor = '';
+};
+useEffect(() => {
+  return () => {
+      document.body.style.backgroundColor = '';
   };
-
-  const handleMouseOut = () => {
-      // Reset to default state
-      setActivePreview('prev-2');
-      setWorkClass('work');
-      setOverlayPosition({ top: '0%', left: '13.25%' });
-  };
+}, []);
 
   const navigateToConversation = (path) => {
     navigate(path);

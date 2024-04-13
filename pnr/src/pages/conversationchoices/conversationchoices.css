@@ -287,16 +287,18 @@ h1 {
 }
 
 .bg-color-red {
-  background-color: rgb(164, 250, 249);
+  background: linear-gradient(45deg, #DB4437, #F4B400);
 }
 
 .bg-color-blue {
-  background-color: rgb(246, 250, 164);
+  background: linear-gradient(45deg, #4285F4, #0F9D58);
 }
 
 .bg-color-green {
-  background-color: rgb(250, 164, 164);
+  background: linear-gradient(45deg, #0F9D58, #DB4437);
 }
+
+
 
 @media (max-width: 900px) {
   .work {
