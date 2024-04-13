@@ -35,6 +35,7 @@ function DailyWritingConversation() {
         }
         saveConversation();
     };
+
     const saveConversation = async () => {
         if (!conversationName) {
             alert('Please enter a name for the conversation.');
@@ -54,7 +55,7 @@ function DailyWritingConversation() {
             const response = await axios.post('/api/writingConversations/save', payload, {
                 headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}
             });
-            await saveUserMessages(response.data.conversationId); // Assuming ID is returned here
+            await saveUserMessages(response.data.conversationId);
             alert('Conversation saved!');
         } catch (error) {
             console.error('Error saving conversation:', error);
@@ -93,45 +94,56 @@ function DailyWritingConversation() {
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
+            e.preventDefault(); 
             sendMessage();
         }
     };
 
     return (
-        <Container fluid className="mt-4">
-            <Row className="justify-content-md-center">
-                <Col xs={12}>
-                    <h1 className="text-center">Daily Writing Conversation</h1>
-                </Col>
-            </Row>
-            <Row className="justify-content-md-center">
-                <Col xs={12} md={8}>
-                    <div className="message-area">
-                        {messages.map((message, index) => (
-                            <div key={index} className={`message-bubble ${message.from === 'user' ? 'message-user' : 'message-bot'}`}>
-                                {message.text}
-                            </div>
-                        ))}
-                    </div>
-                    <Form>
-                        <InputGroup className="mb-3">
-                            <Form.Control
-                                type="text"
-                                placeholder="Type your message here..."
-                                value={userInput}
-                                onChange={handleInputChange}
-                                onKeyPress={handleKeyPress}
-                            />
-                            <Button variant="outline-secondary" onClick={sendMessage}>
-                                Send
-                            </Button>
-                            <Button variant="outline-secondary" onClick={handleSaveClick}>
-                                <Save />
-                            </Button>
-                        </InputGroup>
-                    </Form>
-                </Col>
-            </Row>
+        <div className="conversation-container">
+            <Container fluid className="mt-4">
+                <Row className="justify-content-md-center">
+                    <Col xs={12}>
+                        <h1 className="text-center">Daily Writing Conversation</h1>
+                    </Col>
+                </Row>
+                <Row className="justify-content-md-center flex-grow-1">
+                    <Col xs={12} md={8}>
+                        <div className="message-area">
+                            {messages.map((message, index) => (
+                                <div key={index} className={`message-bubble ${message.from === 'user' ? 'message-user' : 'message-bot'}`}>
+                                    {message.text}
+                                </div>
+                            ))}
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+
+            <Container fluid>
+                <Row className="justify-content-md-center">
+                    <Col xs={12} md={8}>
+                        <Form>
+                            <InputGroup className="mb-3">
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Type your message here..."
+                                    value={userInput}
+                                    onChange={handleInputChange}
+                                    onKeyPress={handleKeyPress}
+                                />
+                                <Button variant="outline-secondary" onClick={sendMessage}>
+                                    Send
+                                </Button>
+                                <Button variant="outline-secondary" onClick={handleSaveClick}>
+                                    <Save />
+                                </Button>
+                            </InputGroup>
+                        </Form>
+                    </Col>
+                </Row>
+            </Container>
+
             <Modal show={showModal} onHide={() => setShowModal(false)} dialogClassName="modal-content">
                 <Modal.Header closeButton>
                     <Modal.Title>Enter Conversation Name</Modal.Title>
@@ -154,7 +166,7 @@ function DailyWritingConversation() {
                     </Button>
                 </Modal.Footer>
             </Modal>
-        </Container>
+        </div>
     );
 }
 
