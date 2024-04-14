@@ -121,11 +121,12 @@ const Speaking = () => {
         }
     };
     
-    return (
+    return  (
         <Container className="mt-4">
             <Row className="justify-content-md-center">
                 <Col xs={12}>
                     <h1 className="text-center">Speaking Exercise</h1>
+                    <h4 className="text-center">Language: {selectedLanguage}</h4>
                 </Col>
             </Row>
             <Row className="justify-content-md-center">
@@ -135,7 +136,7 @@ const Speaking = () => {
                         onClick={isRecording ? stopRecording : startRecording}
                         className="mb-3"
                     >
-                        {isRecording ? 'Stop Recording' : 'Start Recording'}
+                        {isRecording ? 'Stop Message' : 'Start Message'}
                     </Button>
                 </Col>
             </Row>
