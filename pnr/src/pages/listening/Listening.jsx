@@ -3,6 +3,7 @@ import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 import Transition from "../../components/transition/Transition";
+import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 
 const Listening = () => {
   const { selectedLevel, selectedLanguage } = useLevelLanguage();
@@ -12,6 +13,8 @@ const Listening = () => {
   const [expectedAnswers, setExpectedAnswers] = useState([]);
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
+
+  const [speechReady, setSpeechReady] = useState(false);
 
   const generateContent = async () => {
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
@@ -42,11 +45,33 @@ const Listening = () => {
       const generatedText = await textResponse.text();
       setContent({ text: generatedText, questions: [] });
       await generateQuestions(generatedText);
+      setSpeechReady(true);
     } catch (error) {
       console.error('Error generating content:', error);
       setContent({ text: "Failed to generate content.", questions: [] });
     }
   };
+
+  const handlePlayAudio = async () => {
+      const response = await fetch('/api/text-to-speech/synthesize', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ text: content.text })
+      });
+
+      if (response.ok) {
+          const { audioBase64 } = await response.json();
+          const audioBlob = new Blob([Uint8Array.from(atob(audioBase64), c => c.charCodeAt(0))], { type: 'audio/mp3' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          const audio = new Audio(audioUrl);
+          audio.play();
+      } else {
+          alert("Failed to play audio. Please try again.");
+      }
+  };
+
   
   
   const generateQuestions = async (text) => {
@@ -104,9 +129,9 @@ const Listening = () => {
       const genAI = new GoogleGenerativeAI(API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     
-const prompt = `The text provided is: "${content.text}". Evaluate the following answers based on the text and questions provided:\n${
-    content.questions.map((q, i) => `Question ${i + 1}: ${q.query}\nExpected Answer: ${expectedAnswers[i]}\nUser Answer: ${answers[i] || 'no answer provided'}`).join("\n")
-  }`;
+      const prompt = `The text provided is: "${content.text}". Evaluate the following answers based on the text and questions provided:\n${
+          content.questions.map((q, i) => `Question ${i + 1}: ${q.query}\nExpected Answer: ${expectedAnswers[i]}\nUser Answer: ${answers[i] || 'no answer provided'}`).join("\n")
+        }`;
   
     
       console.log("Sending this prompt to AI for evaluation:", prompt);
@@ -149,37 +174,41 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
                 <option value="long">Long</option>
               </Form.Control>
             </Form.Group>
+            <Button variant="primary" onClick={generateContent} disabled={!textLength}>
+              Generate Text
+            </Button>
           </Form>
         </Col>
       </Row>
       <Row className="justify-content-md-center mt-3">
         <Col md={6}>
-          <Button variant="primary" onClick={generateContent} disabled={!textLength}>
-            Generate Text
-          </Button>
-        </Col>
-      </Row>
-      <Row className="justify-content-md-center mt-3">
-        <Col md={6}>
-          <div className="content-section">
-            <p>{content.text}</p>
-            {content.questions.map((question, index) => (
-              <div key={index} className="mb-3">
-                <p>{question.query}</p>
-                <input
-                  type="text"
-                  placeholder="Your answer..."
-                  value={answers[index] || ''}
-                  onChange={(e) => handleAnswerChange(index, e.target.value)}
-                />
-              </div>
-            ))}
-            {content.text && content.questions.length > 0 && (
-              <Button variant="success" onClick={submitAnswers}>
-                Submit Answers
-              </Button>
-            )}
-          </div>
+          {speechReady && (
+            <Button variant="secondary" onClick={handlePlayAudio}>
+              Play Audio
+            </Button>
+          )}
+          {submitted && (
+            <div className="content-section">
+              <h4>Text Content:</h4>
+              <p>{content.text}</p>
+            </div>
+          )}
+          {content.questions.map((question, index) => (
+            <div key={index} className="mb-3">
+              <label>{question.query}</label>
+              <input
+                type="text"
+                placeholder="Your answer..."
+                value={answers[index] || ''}
+                onChange={(e) => handleAnswerChange(index, e.target.value)}
+              />
+            </div>
+          ))}
+          {content.questions.length > 0 && (
+            <Button variant="success" onClick={submitAnswers}>
+              Submit Answers
+            </Button>
+          )}
         </Col>
         <Col md={4} className="align-self-start" style={{ marginTop: '-12px' }}>
           {feedback && (
