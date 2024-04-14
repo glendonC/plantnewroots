@@ -3,7 +3,6 @@ import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 import Transition from "../../components/transition/Transition";
-import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 
 const Listening = () => {
   const { selectedLevel, selectedLanguage } = useLevelLanguage();
@@ -53,26 +52,26 @@ const Listening = () => {
   };
 
   const handlePlayAudio = async () => {
-      const response = await fetch('/api/text-to-speech/synthesize', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ text: content.text })
-      });
 
-      if (response.ok) {
-          const { audioBase64 } = await response.json();
-          const audioBlob = new Blob([Uint8Array.from(atob(audioBase64), c => c.charCodeAt(0))], { type: 'audio/mp3' });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          const audio = new Audio(audioUrl);
-          audio.play();
-      } else {
-          alert("Failed to play audio. Please try again.");
-      }
+    const response = await fetch('/api/text-to-speech/synthesize', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text: content.text, language: selectedLanguage })
+    });
+
+    if (response.ok) {
+        const { audioBase64 } = await response.json();
+        const audioBlob = new Blob([Uint8Array.from(atob(audioBase64), c => c.charCodeAt(0))], { type: 'audio/mp3' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        audio.play();
+    } else {
+        alert("Failed to play audio. Please try again.");
+    }
   };
 
-  
   
   const generateQuestions = async (text) => {
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
