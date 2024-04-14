@@ -113,12 +113,13 @@ const Listening = () => {
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const evaluation = await response.text();
-      setSubmitted(true);
       setFeedback(evaluation);
+      setSubmitted(true);
     } catch (error) {
       console.error('Error evaluating answers:', error);
       setFeedback("Failed to evaluate answers.");
-    }
+      setSubmitted(false);
+    }    
   };
   
   const evaluateAnswers = async () => {
