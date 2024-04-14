@@ -8,14 +8,13 @@ const speechClient = new SpeechClient();
 
 router.post('/transcribe', upload.single('audio'), async (req, res) => {
     const audioBytes = req.file.buffer.toString('base64');
+    const languageCode = req.body.language || 'en-US';
 
     const audio = {
         content: audioBytes,
     };
     const config = {
-        encoding: 'LINEAR16',
-        sampleRateHertz: 16000,
-        languageCode: 'en-US', // need to later dynamically set to the target language
+        languageCode: languageCode,
     };
     const request = {
         audio: audio,
@@ -27,10 +26,10 @@ router.post('/transcribe', upload.single('audio'), async (req, res) => {
         const transcription = response.results
             .map(result => result.alternatives[0].transcript)
             .join('\n');
-        res.send({ transcription });
+        res.json({ transcription });
     } catch (error) {
         console.error('Failed to transcribe audio:', error);
-        res.status(500).send('Failed to transcribe audio');
+        res.status(500).json({ error: 'Failed to transcribe audio', details: error.message });
     }
 });
 
