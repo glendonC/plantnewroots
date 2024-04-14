@@ -108,7 +108,7 @@ const Listening = () => {
     }`;
   
     console.log("Sending this prompt to AI:", prompt);
-  
+
     try {
       const result = await model.generateContent(prompt);
       const response = await result.response;
@@ -153,8 +153,6 @@ const Listening = () => {
   }, [content, submitted]);
 
 
-  
-
   return (
     <Container className="mt-4">
       <Row className="justify-content-md-center">
@@ -163,30 +161,33 @@ const Listening = () => {
         </Col>
       </Row>
       <Row className="justify-content-md-center mt-3">
-        <Col md={6}>
-          <Form>
-            <Form.Group controlId="textLengthSelect">
-              <Form.Label style={{ fontSize: "1.2rem", color: "white" }}>Select text length:</Form.Label>
-              <Form.Control as="select" value={textLength} onChange={e => setTextLength(e.target.value)}>
-                <option value="">Select a length</option>
-                <option value="short">Short</option>
-                <option value="medium">Medium</option>
-                <option value="long">Long</option>
-              </Form.Control>
-            </Form.Group>
-            <Button variant="primary" onClick={generateContent} disabled={!textLength}>
-              Generate Text
-            </Button>
+      <Col md={6} className="d-flex justify-content-center">
+        <Form className="w-100">
+          <Form.Group controlId="textLengthSelect">
+            <Form.Label style={{ fontSize: "1.2rem", color: "white" }}>Select text length:</Form.Label>
+            <Form.Control as="select" value={textLength} onChange={e => setTextLength(e.target.value)}>
+              <option value="">Select a length</option>
+              <option value="short">Short</option>
+              <option value="medium">Medium</option>
+              <option value="long">Long</option>
+            </Form.Control>
+          </Form.Group>
+            <div className="d-flex justify-content-between">
+              <Button variant="primary" onClick={generateContent} disabled={!textLength} style={{ marginTop: '20px' }}>
+                Generate Text
+              </Button>
+              {speechReady && (
+                <Button variant="secondary" onClick={handlePlayAudio} style={{ marginTop: '20px', marginLeft: '20px' }}>
+                  Play Audio
+                </Button>
+              )}
+            </div>
           </Form>
         </Col>
       </Row>
+
       <Row className="justify-content-md-center mt-3">
         <Col md={6}>
-          {speechReady && (
-            <Button variant="secondary" onClick={handlePlayAudio}>
-              Play Audio
-            </Button>
-          )}
           {submitted && (
             <div className="content-section">
               <h4>Text Content:</h4>
@@ -194,16 +195,18 @@ const Listening = () => {
             </div>
           )}
           {content.questions.map((question, index) => (
-            <div key={index} className="mb-3">
+            <div key={index} className="mb-3" style={{ color: 'white' }}>
               <label>{question.query}</label>
               <input
                 type="text"
                 placeholder="Your answer..."
                 value={answers[index] || ''}
                 onChange={(e) => handleAnswerChange(index, e.target.value)}
+                style={{ color: 'white' }}
               />
             </div>
           ))}
+
           {content.questions.length > 0 && (
             <Button variant="success" onClick={submitAnswers}>
               Submit Answers
