@@ -5,6 +5,7 @@ const userRoutes = require('./routes/userRoutes');
 const dialogRoutes = require('./routes/dialogRoutes');
 const conversationRoutes = require('./routes/writingConversationRoutes');
 const writingAnalysisRoutes = require('./routes/writingAnalysisRoutes');
+const textToSpeechRoutes = require('./routes/textToSpeechRoutes');
 
 const app = express();
 
@@ -26,6 +27,8 @@ app.use('/api/dialog', dialogRoutes);
 app.use('/api/writingConversations', conversationRoutes);
 
 app.use('/api/analysis', writingAnalysisRoutes);
+
+app.use('/api/text-to-speech', textToSpeechRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
