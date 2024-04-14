@@ -22,6 +22,9 @@ import ProfessionalWritingConversation from './pages/agents/professional/Profess
 import CulturalWritingConversation from './pages/agents/cultural/CulturalWritingConversation';
 
 import Listening from './pages/listening/Listening'
+
+import Speaking from './pages/speaking/Speaking'
+
 import AnalysisReport from './pages/analysisreport/AnalysisReport'
 
 import { AnimatePresence } from "framer-motion";
@@ -54,6 +57,7 @@ function App() {
           <Route path="/professional" element={<ProfessionalWritingConversation />} />
           <Route path="/cultural" element={<CulturalWritingConversation />} />
           <Route path="/listening" element={<Listening />} />
+          <Route path="/speaking" element={<Speaking />} />
           <Route path="/sample-blog/:id" element={<SampleBlog />} />
         </Routes>
       </AnimatePresence>
