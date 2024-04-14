@@ -158,6 +158,7 @@ const Listening = () => {
       <Row className="justify-content-md-center">
         <Col xs={12}>
           <h1 className="text-center">Listening Exercise</h1>
+          <h4 className="text-center">Language: {selectedLanguage}</h4>
         </Col>
       </Row>
       <Row className="justify-content-md-center mt-3">
