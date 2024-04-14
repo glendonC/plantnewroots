@@ -6,18 +6,27 @@ const client = new TextToSpeechClient();
 router.post('/synthesize', async (req, res) => {
     const { text, language } = req.body;
 
-    const languageCodeMap = {
-        'English': 'en-US',
-        'Chinese (Mandarin, China)': 'zh-CN',
-        'Chinese (Mandarin, Taiwan)': 'zh-TW',
+    const voiceSettings = {
+        'English': { code: 'en-US', voice: 'en-US-Wavenet-F', gender: 'FEMALE', rate: 1.0, pitch: 0 },
+        'Chinese (Mandarin, China)': { code: 'zh-CN', voice: 'zh-CN-Wavenet-A', gender: 'FEMALE', rate: 0.9, pitch: 0 },
+        'Chinese (Mandarin, Taiwan)': { code: 'zh-TW', voice: 'zh-TW-Wavenet-A', gender: 'FEMALE', rate: 0.9, pitch: 0 },
+        'Korean': { code: 'ko-KR', voice: 'ko-KR-Wavenet-A', gender: 'FEMALE', rate: 0.9, pitch: 0 },
     };
-    
-    const voiceLanguageCode = languageCodeMap[language] || 'en-US';
+
+    const settings = voiceSettings[language] || voiceSettings['English'];
 
     const request = {
         input: { text },
-        voice: { languageCode: voiceLanguageCode, ssmlGender: 'NEUTRAL' },
-        audioConfig: { audioEncoding: 'MP3' },
+        voice: {
+            languageCode: settings.code,
+            name: settings.voice,
+            ssmlGender: settings.gender,
+        },
+        audioConfig: {
+            audioEncoding: 'MP3',
+            speakingRate: settings.rate,
+            pitch: settings.pitch,
+        },
     };
 
     try {
@@ -30,8 +39,5 @@ router.post('/synthesize', async (req, res) => {
         res.status(500).send('Failed to synthesize speech');
     }
 });
-
-module.exports = router;
-
 
 module.exports = router;
