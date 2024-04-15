@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
 import "./menu.css";
-
-import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 
 import DefaultPreviewImg from "../../assets/images/menu/default.jpg";
@@ -25,6 +25,14 @@ const Menu = () => {
   const menuAnimation = useRef();
   const menuLinksAnimation = useRef();
   const revealHoveredLinkImg = useRef();
+
+  const { logout, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const toggleMenu = () => {
     document.querySelector(".hamburger-icon").classList.toggle("active");
@@ -98,18 +106,17 @@ const Menu = () => {
         img.alt = "";
         imgContainer.appendChild(img);
         previewContainer.appendChild(imgContainer);
-
+    
         gsap.to(imgContainer, {
           top: "0%",
           left: "0%",
-          rotate: 0,
           duration: 1.25,
           ease: "power3.out",
           onComplete: () => {
             gsap.delayedCall(2, () => {
               const allImgContainers =
                 previewContainer.querySelectorAll(".bind-new-img");
-
+    
               if (allImgContainers.length > 1) {
                 Array.from(allImgContainers)
                   .slice(0, -1)
@@ -122,10 +129,11 @@ const Menu = () => {
             });
           },
         });
-
+    
         lastHoveredIndex = index;
       }
     };
+    
 
     menuLinkItems.forEach((item, index) => {
       item.addEventListener("mouseover", () => handleMouseOver(index));
@@ -155,21 +163,20 @@ const Menu = () => {
             </div>
           </div>
           <div className="logout-btn">
-            <div className="btn">
-              <Link to="/profile">Logout</Link>
+              <button onClick={handleLogout} className="btn">Logout</button>
             </div>
-          </div>
           <div className="menu-toggle">
             <button className="hamburger-icon" onClick={toggleMenu}></button>
           </div>
         </div>
       </div>
       <div className="menu">
-        <div className="link-preview-img">
-          <img src={DefaultPreviewImg} alt="" />
-
-          <div className="bind-new-img">
-            <img src={LinkPreviewImg1} alt="" />
+        <div className="blob-container">
+          <div className="link-preview-img">
+            <img src={DefaultPreviewImg} alt="" />
+            <div className="bind-new-img">
+              <img src={LinkPreviewImg1} alt="" />
+            </div>
           </div>
         </div>
         <div className="menu-col">

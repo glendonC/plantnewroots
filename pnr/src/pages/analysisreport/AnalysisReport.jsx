@@ -116,11 +116,10 @@ const StyledDropdownItem = styled(Dropdown.Item)`
   
   
 
-
-  const handleConversationSelect = (event) => {
-    setSelectedConversationId(event.target.value);
+  const handleConversationSelect = (selectedConversationId) => {
+    setSelectedConversationId(selectedConversationId);
   };
-
+  
   const fetchGeneralReport = async (conversationId) => {
     try {
       const response = await axios.get(`/api/analysis/report/${conversationId}`, {
@@ -298,18 +297,21 @@ const formatAIGeneratedText = (generatedText) => {
 
 
 return (
-  <div className="page-container d-flex flex-column vh-100">
+  <div className="page-container d-flex flex-column mh-100">
     <div className="analysis-report-container flex-grow-1">
       <h1>Conversation Analysis Report</h1>
-      <StyledSelect onChange={handleConversationSelect} value={selectedConversationId}>
-        <option value="">Select a conversation</option>
-        {conversations.map((conversation) => (
-          <option key={conversation._id} value={conversation._id}>
+      <Dropdown onSelect={handleConversationSelect}>
+      <Dropdown.Toggle variant="primary" id="conversation-dropdown">
+        {selectedConversationId ? conversations.find(conversation => conversation._id === selectedConversationId)?.name : 'Select a conversation'}
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        {conversations.map(conversation => (
+          <Dropdown.Item key={conversation._id} eventKey={conversation._id}>
             {conversation.name} - {conversation.tag}
-          </option>
+          </Dropdown.Item>
         ))}
-      </StyledSelect>
-
+      </Dropdown.Menu>
+    </Dropdown>
       {loading ? (
         <p>Loading...</p>
       ) : (
