@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
-import { Button, Form, Container, Row, Col } from 'react-bootstrap';
+import { Button, Form, Container, Row, Col, Dropdown } from 'react-bootstrap';
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 import Transition from "../../components/transition/Transition";
 
@@ -140,17 +140,17 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
       </Row>
       <Row className="justify-content-md-center mt-3">
         <Col md={6}>
-          <Form>
-            <Form.Group controlId="textLengthSelect">
-              <Form.Label style={{ fontSize: "1.2rem", color: "white" }}>Select text length:</Form.Label>
-              <Form.Control as="select" value={textLength} onChange={e => setTextLength(e.target.value)}>
-                <option value="">Select a length</option>
-                <option value="short">Short</option>
-                <option value="medium">Medium</option>
-                <option value="long">Long</option>
-              </Form.Control>
-            </Form.Group>
-          </Form>
+          <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic-text-length">
+              Select text length: {textLength || "Choose..."}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => setTextLength('short')}>Short</Dropdown.Item>
+              <Dropdown.Item onClick={() => setTextLength('medium')}>Medium</Dropdown.Item>
+              <Dropdown.Item onClick={() => setTextLength('long')}>Long</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Col>
       </Row>
       <Row className="justify-content-md-center mt-3">

@@ -4,7 +4,7 @@ export const LevelList = styled.ul`
   list-style: none;
   padding: 0;
   display: flex;
-  flex-direction: column; /* Change to row for a horizontal list */
+  flex-direction: column;
   margin: 20px 0;
 `;
 

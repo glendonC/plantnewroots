@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
-import { Button, Form, Container, Row, Col } from 'react-bootstrap';
+import { Button, Form, Container, Row, Col, Dropdown } from 'react-bootstrap';
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 import Transition from "../../components/transition/Transition";
 
@@ -165,15 +165,20 @@ const Listening = () => {
       <Row className="justify-content-md-center mt-3">
       <Col md={6} className="d-flex justify-content-center">
         <Form className="w-100">
-          <Form.Group controlId="textLengthSelect">
-            <Form.Label style={{ fontSize: "1.2rem", color: "white" }}>Select text length:</Form.Label>
-            <Form.Control as="select" value={textLength} onChange={e => setTextLength(e.target.value)}>
-              <option value="">Select a length</option>
-              <option value="short">Short</option>
-              <option value="medium">Medium</option>
-              <option value="long">Long</option>
-            </Form.Control>
-          </Form.Group>
+        <Form.Group controlId="dropdown-textLengthSelect">
+          <Form.Label style={{ fontSize: "1.2rem", color: "white" }}>Select text length:</Form.Label>
+          <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic-text-length">
+              Select text length: {textLength || "Choose..."}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => setTextLength('short')}>Short</Dropdown.Item>
+              <Dropdown.Item onClick={() => setTextLength('medium')}>Medium</Dropdown.Item>
+              <Dropdown.Item onClick={() => setTextLength('long')}>Long</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Form.Group>
             <div className="d-flex justify-content-between">
               <Button variant="primary" onClick={generateContent} disabled={!textLength} style={{ marginTop: '20px' }}>
                 Generate Text
