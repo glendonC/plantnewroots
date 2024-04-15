@@ -106,18 +106,17 @@ const Menu = () => {
         img.alt = "";
         imgContainer.appendChild(img);
         previewContainer.appendChild(imgContainer);
-
+    
         gsap.to(imgContainer, {
           top: "0%",
           left: "0%",
-          rotate: 0,
           duration: 1.25,
           ease: "power3.out",
           onComplete: () => {
             gsap.delayedCall(2, () => {
               const allImgContainers =
                 previewContainer.querySelectorAll(".bind-new-img");
-
+    
               if (allImgContainers.length > 1) {
                 Array.from(allImgContainers)
                   .slice(0, -1)
@@ -130,10 +129,11 @@ const Menu = () => {
             });
           },
         });
-
+    
         lastHoveredIndex = index;
       }
     };
+    
 
     menuLinkItems.forEach((item, index) => {
       item.addEventListener("mouseover", () => handleMouseOver(index));

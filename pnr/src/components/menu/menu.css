@@ -168,7 +168,6 @@
   left: 50%;
   width: 400px;
   height: 500px;
-  transform: rotate(10deg);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
 }
 
@@ -180,7 +179,6 @@
   position: absolute;
   top: 125%;
   left: -50%;
-  transform: rotate(-30deg);
   width: 100%;
   height: 100%;
 }
