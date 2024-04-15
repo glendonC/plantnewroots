@@ -102,7 +102,7 @@ function DailyWritingConversation() {
     return (
         <div className="conversation-container">
             <Container fluid className="mt-4">
-                <Row className="justify-content-md-center">
+                <Row className="justify-content-md-center pt-5">
                     <Col xs={12}>
                         <h1 className="text-center">Daily Writing Conversation</h1>
                     </Col>
