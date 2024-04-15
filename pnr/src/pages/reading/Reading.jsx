@@ -131,7 +131,8 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
   
 
   return (
-    <Container className="mt-4">
+    <Container className="mt-4 d-flex flex-column vh-100">
+      <div className="flex-grow-1">
       <Row className="justify-content-md-center">
         <Col xs={12}>
           <h1 className="text-center">Reading Exercise</h1>
@@ -192,7 +193,8 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
           )}
         </Col>
       </Row>
-      <MagneticButton />
+      </div>
+      <MagneticButton className="mt-auto"/>
     </Container>
   );
   

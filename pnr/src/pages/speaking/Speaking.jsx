@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button, Container, Row, Col, Card } from 'react-bootstrap';
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
+import MagneticButton from "../../components/magneticbutton/MagneticButton";
 
 const Speaking = () => {
     const { selectedLevel, selectedLanguage } = useLevelLanguage();
@@ -122,7 +123,9 @@ const Speaking = () => {
     };
     
     return  (
-        <Container className="mt-4">
+        <>
+        <Container className="mt-4 d-flex flex-column vh-100">
+            <div className="flex-grow-1">
             <Row className="justify-content-md-center">
                 <Col xs={12}>
                     <h1 className="text-center">Speaking Exercise</h1>
@@ -164,7 +167,11 @@ const Speaking = () => {
                     </Card>
                 </Col>
             </Row>
+            </div>
+            <MagneticButton className="mt-auto"/>
         </Container>
+        </>
+        
     );
 };
 

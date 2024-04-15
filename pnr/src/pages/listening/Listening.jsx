@@ -154,7 +154,8 @@ const Listening = () => {
 
 
   return (
-    <Container className="mt-4">
+    <Container className="mt-4 d-flex flex-column vh-100">
+      <div className="flex-grow-1">
       <Row className="justify-content-md-center">
         <Col xs={12}>
           <h1 className="text-center">Listening Exercise</h1>
@@ -225,7 +226,9 @@ const Listening = () => {
           )}
         </Col>
       </Row>
-      <MagneticButton />
+      </div>
+      
+      <MagneticButton className="mt-auto"/>
     </Container>
   );
   
