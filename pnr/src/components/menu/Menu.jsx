@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
 import "./menu.css";
-
-import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 
 import DefaultPreviewImg from "../../assets/images/menu/default.jpg";
@@ -25,6 +25,14 @@ const Menu = () => {
   const menuAnimation = useRef();
   const menuLinksAnimation = useRef();
   const revealHoveredLinkImg = useRef();
+
+  const { logout, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const toggleMenu = () => {
     document.querySelector(".hamburger-icon").classList.toggle("active");
@@ -155,10 +163,8 @@ const Menu = () => {
             </div>
           </div>
           <div className="logout-btn">
-            <div className="btn">
-              <Link to="/profile">Logout</Link>
+              <button onClick={handleLogout} className="btn">Logout</button>
             </div>
-          </div>
           <div className="menu-toggle">
             <button className="hamburger-icon" onClick={toggleMenu}></button>
           </div>
