@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
-import { Button, Form, Container, Row, Col } from 'react-bootstrap';
+import { Button, Form, Container, Row, Col, Dropdown } from 'react-bootstrap';
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 import Transition from "../../components/transition/Transition";
 
@@ -154,80 +154,85 @@ const Listening = () => {
 
 
   return (
-    <Container className="mt-4">
-      <Row className="justify-content-md-center">
-        <Col xs={12}>
-          <h1 className="text-center">Listening Exercise</h1>
-          <h4 className="text-center">Language: {selectedLanguage}</h4>
-        </Col>
-      </Row>
-      <Row className="justify-content-md-center mt-3">
-      <Col md={6} className="d-flex justify-content-center">
-        <Form className="w-100">
-          <Form.Group controlId="textLengthSelect">
-            <Form.Label style={{ fontSize: "1.2rem", color: "white" }}>Select text length:</Form.Label>
-            <Form.Control as="select" value={textLength} onChange={e => setTextLength(e.target.value)}>
-              <option value="">Select a length</option>
-              <option value="short">Short</option>
-              <option value="medium">Medium</option>
-              <option value="long">Long</option>
-            </Form.Control>
-          </Form.Group>
-            <div className="d-flex justify-content-between">
-              <Button variant="primary" onClick={generateContent} disabled={!textLength} style={{ marginTop: '20px' }}>
-                Generate Text
-              </Button>
-              {speechReady && (
-                <Button variant="secondary" onClick={handlePlayAudio} style={{ marginTop: '20px', marginLeft: '20px' }}>
-                  Play Audio
+    <Container className="mt-4 d-flex flex-column min-vh-100">
+      <div className="flex-grow-1">
+        <Row className="justify-content-md-center">
+          <Col xs={12}>
+            <h1 className="text-center">Listening Exercise</h1>
+            <h4 className="text-center">Language: {selectedLanguage}</h4>
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center mt-3">
+          <Col md={6} className="d-flex justify-content-center">
+            <Form className="w-100">
+              <Form.Group controlId="dropdown-textLengthSelect">
+                <Form.Label style={{ fontSize: "1.2rem", color: "white" }}>Select text length:</Form.Label>
+                <Dropdown>
+                  <Dropdown.Toggle variant="success" id="dropdown-basic-text-length">
+                    Select text length: {textLength || "Choose..."}
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => setTextLength('short')}>Short</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setTextLength('medium')}>Medium</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setTextLength('long')}>Long</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Form.Group>
+              <div className="d-flex justify-content-between">
+                <Button variant="primary" onClick={generateContent} disabled={!textLength} style={{ marginTop: '20px' }}>
+                  Generate Text
                 </Button>
-              )}
-            </div>
-          </Form>
-        </Col>
-      </Row>
-
-      <Row className="justify-content-md-center mt-3">
-        <Col md={6}>
-          {submitted && (
-            <div className="content-section">
-              <h4>Text Content:</h4>
-              <p>{content.text}</p>
-            </div>
-          )}
-          {content.questions.map((question, index) => (
-            <div key={index} className="mb-3" style={{ color: 'white' }}>
-              <label>{question.query}</label>
-              <input
-                type="text"
-                placeholder="Your answer..."
-                value={answers[index] || ''}
-                onChange={(e) => handleAnswerChange(index, e.target.value)}
-                style={{ color: 'white' }}
-              />
-            </div>
-          ))}
-
-          {content.questions.length > 0 && (
-            <Button variant="success" onClick={submitAnswers}>
-              Submit Answers
-            </Button>
-          )}
-        </Col>
-        <Col md={4} className="align-self-start" style={{ marginTop: '-12px' }}>
-          {feedback && (
-            <div className="mt-3" style={{ border: '1px solid #ccc', padding: '10px' }}>
-              <h3>Feedback</h3>
-              {feedback.split('\n').map((feedbackLine, index) => (
-                <p key={index}>{feedbackLine}</p>
-              ))}
-            </div>
-          )}
-        </Col>
-      </Row>
-      <MagneticButton />
+                {speechReady && (
+                  <Button variant="secondary" onClick={handlePlayAudio} style={{ marginTop: '20px', marginLeft: '20px' }}>
+                    Play Audio
+                  </Button>
+                )}
+              </div>
+            </Form>
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center mt-3">
+          <Col md={6}>
+            {submitted && (
+              <div className="content-section">
+                <h4>Text Content:</h4>
+                <p>{content.text}</p>
+              </div>
+            )}
+            {content.questions.map((question, index) => (
+              <div key={index} className="mb-3" style={{ color: 'white' }}>
+                <label>{question.query}</label>
+                <input
+                  type="text"
+                  placeholder="Your answer..."
+                  value={answers[index] || ''}
+                  onChange={(e) => handleAnswerChange(index, e.target.value)}
+                  style={{ color: 'white' }}
+                />
+              </div>
+            ))}
+            {content.questions.length > 0 && (
+              <Button variant="success" onClick={submitAnswers}>
+                Submit Answers
+              </Button>
+            )}
+          </Col>
+          <Col md={4} className="align-self-start" style={{ marginTop: '-12px' }}>
+            {feedback && (
+              <div className="mt-3" style={{ border: '1px solid #ccc', padding: '10px' }}>
+                <h3>Feedback</h3>
+                {feedback.split('\n').map((feedbackLine, index) => (
+                  <p key={index}>{feedbackLine}</p>
+                ))}
+              </div>
+            )}
+          </Col>
+        </Row>
+      </div>
+      <MagneticButton className="mt-auto"/>
     </Container>
   );
+  
   
 
   

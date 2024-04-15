@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button, Container, Row, Col, Card } from 'react-bootstrap';
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
+import MagneticButton from "../../components/magneticbutton/MagneticButton";
 
 const Speaking = () => {
     const { selectedLevel, selectedLanguage } = useLevelLanguage();
@@ -121,51 +122,55 @@ const Speaking = () => {
         }
     };
     
-    return  (
-        <Container className="mt-4">
-            <Row className="justify-content-md-center">
-                <Col xs={12}>
-                    <h1 className="text-center">Speaking Exercise</h1>
-                    <h4 className="text-center">Language: {selectedLanguage}</h4>
-                </Col>
-            </Row>
-            <Row className="justify-content-md-center">
-                <Col md={8} className="text-center">
-                    <Button
-                        variant={isRecording ? "danger" : "primary"}
-                        onClick={isRecording ? stopRecording : startRecording}
-                        className="mb-3"
-                    >
-                        {isRecording ? 'Stop Message' : 'Start Message'}
-                    </Button>
-                </Col>
-            </Row>
-            <Row className="justify-content-md-center">
-                <Col md={8}>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Your Transcript:</Card.Title>
-                            <Card.Text style={{ color: 'black' }}>
-                                {transcript || "Your recorded text will appear here..."}
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-            <Row className="justify-content-md-center mt-3">
-                <Col md={8}>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Bot Response:</Card.Title>
-                            <Card.Text style={{ color: 'black' }}>
-                                {response || "Dialogflow's response will appear here..."}
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
+    return (
+        <Container className="mt-4 d-flex flex-column min-vh-100">
+            <div className="flex-grow-1">
+                <Row className="justify-content-md-center">
+                    <Col xs={12}>
+                        <h1 className="text-center">Speaking Exercise</h1>
+                        <h4 className="text-center">Language: {selectedLanguage}</h4>
+                    </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                    <Col md={8} className="text-center">
+                        <Button
+                            variant={isRecording ? "danger" : "primary"}
+                            onClick={isRecording ? stopRecording : startRecording}
+                            className="mb-3"
+                        >
+                            {isRecording ? 'Stop Message' : 'Start Message'}
+                        </Button>
+                    </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                    <Col md={8}>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Your Transcript:</Card.Title>
+                                <Card.Text style={{ color: 'black' }}>
+                                    {transcript || "Your recorded text will appear here..."}
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
+                <Row className="justify-content-md-center mt-3">
+                    <Col md={8}>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>Bot Response:</Card.Title>
+                                <Card.Text style={{ color: 'black' }}>
+                                    {response || "Dialogflow's response will appear here..."}
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
+            </div>
+            <MagneticButton className="mt-auto"/>
         </Container>
     );
+    
 };
 
 export default Speaking;

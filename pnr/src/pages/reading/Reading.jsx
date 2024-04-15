@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
-import { Button, Form, Container, Row, Col } from 'react-bootstrap';
+import { Button, Form, Container, Row, Col, Dropdown } from 'react-bootstrap';
 import MagneticButton from "../../components/magneticbutton/MagneticButton";
 import Transition from "../../components/transition/Transition";
 
@@ -131,68 +131,70 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
   
 
   return (
-    <Container className="mt-4">
-      <Row className="justify-content-md-center">
-        <Col xs={12}>
-          <h1 className="text-center">Reading Exercise</h1>
-        </Col>
-      </Row>
-      <Row className="justify-content-md-center mt-3">
-        <Col md={6}>
-          <Form>
-            <Form.Group controlId="textLengthSelect">
-              <Form.Label style={{ fontSize: "1.2rem", color: "white" }}>Select text length:</Form.Label>
-              <Form.Control as="select" value={textLength} onChange={e => setTextLength(e.target.value)}>
-                <option value="">Select a length</option>
-                <option value="short">Short</option>
-                <option value="medium">Medium</option>
-                <option value="long">Long</option>
-              </Form.Control>
-            </Form.Group>
-          </Form>
-        </Col>
-      </Row>
-      <Row className="justify-content-md-center mt-3">
-        <Col md={6}>
-          <Button variant="primary" onClick={generateContent} disabled={!textLength}>
-            Generate Text
-          </Button>
-        </Col>
-      </Row>
-      <Row className="justify-content-md-center mt-3">
-        <Col md={6}>
-          <div className="content-section">
-            <p>{content.text}</p>
-            {content.questions.map((question, index) => (
-              <div key={index} className="mb-3">
-                <p>{question.query}</p>
-                <input
-                  type="text"
-                  placeholder="Your answer..."
-                  value={answers[index] || ''}
-                  onChange={(e) => handleAnswerChange(index, e.target.value)}
-                />
-              </div>
-            ))}
-            {content.text && content.questions.length > 0 && (
-              <Button variant="success" onClick={submitAnswers}>
-                Submit Answers
-              </Button>
-            )}
-          </div>
-        </Col>
-        <Col md={4} className="align-self-start" style={{ marginTop: '-12px' }}>
-          {feedback && (
-            <div className="mt-3" style={{ border: '1px solid #ccc', padding: '10px' }}>
-              <h3>Feedback</h3>
-              {feedback.split('\n').map((feedbackLine, index) => (
-                <p key={index}>{feedbackLine}</p>
+    <Container className="mt-4 d-flex flex-column min-vh-100">
+      <div className="flex-grow-1">
+        <Row className="justify-content-md-center">
+          <Col xs={12}>
+            <h1 className="text-center">Reading Exercise</h1>
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center mt-3">
+          <Col md={6}>
+            <Dropdown>
+              <Dropdown.Toggle variant="success" id="dropdown-basic-text-length">
+                Select text length: {textLength || "Choose..."}
+              </Dropdown.Toggle>
+  
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => setTextLength('short')}>Short</Dropdown.Item>
+                <Dropdown.Item onClick={() => setTextLength('medium')}>Medium</Dropdown.Item>
+                <Dropdown.Item onClick={() => setTextLength('long')}>Long</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center mt-3">
+          <Col md={6}>
+            <Button variant="primary" onClick={generateContent} disabled={!textLength}>
+              Generate Text
+            </Button>
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center mt-3">
+          <Col md={6}>
+            <div className="content-section">
+              <p>{content.text}</p>
+              {content.questions.map((question, index) => (
+                <div key={index} className="mb-3">
+                  <p>{question.query}</p>
+                  <input
+                    type="text"
+                    placeholder="Your answer..."
+                    value={answers[index] || ''}
+                    onChange={(e) => handleAnswerChange(index, e.target.value)}
+                  />
+                </div>
               ))}
+              {content.text && content.questions.length > 0 && (
+                <Button variant="success" onClick={submitAnswers}>
+                  Submit Answers
+                </Button>
+              )}
             </div>
-          )}
-        </Col>
-      </Row>
-      <MagneticButton />
+          </Col>
+          <Col md={4} className="align-self-start" style={{ marginTop: '-12px' }}>
+            {feedback && (
+              <div className="mt-3" style={{ border: '1px solid #ccc', padding: '10px' }}>
+                <h3>Feedback</h3>
+                {feedback.split('\n').map((feedbackLine, index) => (
+                  <p key={index}>{feedbackLine}</p>
+                ))}
+              </div>
+            )}
+          </Col>
+        </Row>
+      </div>
+      <MagneticButton className="mt-auto"/>
     </Container>
   );
   

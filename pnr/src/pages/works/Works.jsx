@@ -205,26 +205,6 @@ const Works = () => {
             </div>
             <div className="project-list-col whitespace-col"></div>
           </div>
-
-          {/* <div className="project-list-row">
-            <div className="project-list-col whitespace-col"></div>
-            <div className="project-list-col">
-              <div
-                className="project-item"
-                onMouseOver={() => handleMouseOver(4)}
-              >
-                <div className="project-img">
-                  <Link to="/analysisreport">
-                    <img src={WorkImg5} alt="" />
-                  </Link>
-                </div>
-                <div className="project-copy copy-pos-left">
-                  <h2>Collage</h2>
-                </div>
-              </div>
-            </div>
-          </div> */}
-
         </section>
 
         <div

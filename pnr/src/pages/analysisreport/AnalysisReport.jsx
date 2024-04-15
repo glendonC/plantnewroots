@@ -3,6 +3,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { DropdownButton, Dropdown } from 'react-bootstrap';
 import './analysisreport.css';
+import MagneticButton from '../../components/magneticbutton/MagneticButton';
 
 
 function AnalysisReport() {
@@ -296,36 +297,38 @@ const formatAIGeneratedText = (generatedText) => {
 };
 
 
-
-  return (
-    <div className="analysis-report-container">
+return (
+  <div className="page-container d-flex flex-column vh-100">
+    <div className="analysis-report-container flex-grow-1">
       <h1>Conversation Analysis Report</h1>
       <StyledSelect onChange={handleConversationSelect} value={selectedConversationId}>
-  <option value="">Select a conversation</option>
-  {conversations.map((conversation) => (
-    <option key={conversation._id} value={conversation._id}>
-      {conversation.name} - {conversation.tag}
-    </option>
-  ))}
-</StyledSelect>
-
+        <option value="">Select a conversation</option>
+        {conversations.map((conversation) => (
+          <option key={conversation._id} value={conversation._id}>
+            {conversation.name} - {conversation.tag}
+          </option>
+        ))}
+      </StyledSelect>
 
       {loading ? (
-  <p>Loading...</p>
-) : (
-  <>
-    {generatedText ? (
-      <div>
-        <h2>Generated Recommendations</h2>
-        {formatAIGeneratedText(generatedText)}
-      </div>
-    ) : (
-      <p>No recommendations generated yet.</p>
-    )}
-  </>
-)}
+        <p>Loading...</p>
+      ) : (
+        <>
+          {generatedText ? (
+            <div>
+              <h2>Generated Recommendations</h2>
+              {formatAIGeneratedText(generatedText)}
+            </div>
+          ) : (
+            <p>No recommendations generated yet.</p>
+          )}
+        </>
+      )}
     </div>
-  );
+    <MagneticButton className="mt-auto"/>
+  </div>
+);
+
 }
 
 export default AnalysisReport;
