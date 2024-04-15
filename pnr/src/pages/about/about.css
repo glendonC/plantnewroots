@@ -154,3 +154,68 @@
     width: 100%;
   }
 }
+
+.about {
+  --color-bg: #c0c0c0;
+  --color-section-1: #fff;
+  --color-section-2: #ff3d01;
+  --color-section-3: #5922cc;
+  --color-section-4: #000;
+  --color-section-5: #2935f8;
+}
+
+
+.map {
+  position: fixed;
+  width: 20%;
+  margin: 50px 0;
+  padding: 0 20px;
+}
+
+.sections {
+  position: absolute;
+  width: 80%;
+  height: 100%;
+  left: 20%;
+  padding: 30px 20px 0px 0px;
+}
+
+.map > div {
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1.5px solid #000;
+  border-radius: 20px;
+  transition: height 0.5s;
+}
+
+.map > div p {
+  margin: 0;
+}
+
+.s-1 {
+  background: var(--color-section-1);
+}
+
+.s-2 {
+  background: var(--color-section-2);
+  color: #fff;
+}
+
+.s-3 {
+  background: var(--color-section-3);
+  color: #fff;
+}
+
+.s-4 {
+  background: var(--color-section-4);
+  color: #fff;
+}
+
+.s-5 {
+  background: var(--color-section-5);
+  color: #fff;
+}
