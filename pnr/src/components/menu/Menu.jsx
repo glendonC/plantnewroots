@@ -171,11 +171,12 @@ const Menu = () => {
         </div>
       </div>
       <div className="menu">
-        <div className="link-preview-img">
-          <img src={DefaultPreviewImg} alt="" />
-
-          <div className="bind-new-img">
-            <img src={LinkPreviewImg1} alt="" />
+        <div className="blob-container">
+          <div className="link-preview-img">
+            <img src={DefaultPreviewImg} alt="" />
+            <div className="bind-new-img">
+              <img src={LinkPreviewImg1} alt="" />
+            </div>
           </div>
         </div>
         <div className="menu-col">
