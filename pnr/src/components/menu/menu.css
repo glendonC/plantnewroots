@@ -172,6 +172,10 @@
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
 }
 
+.menu-link-item:hover .menu-link-item-holder .menu-link {
+  color: #c24628;
+}
+
 .bind-new-img {
   position: absolute;
   top: 125%;
