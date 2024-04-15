@@ -18,7 +18,7 @@ body {
   width: 100%;
   height: 100%;
   background-color: var(--color-bg);
-  font-family: "Wremena";
+  font-family: "Monument Extended";
   overflow-x: hidden;
 }
 
@@ -27,7 +27,7 @@ h1 {
   font-size: 150px;
   font-weight: 500;
   color: #fff;
-  font-family: "Rosseta";
+  font-family: "Monument Extended";
   line-height: 100%;
 }
 
@@ -67,7 +67,7 @@ a {
 
 span {
   text-transform: uppercase;
-  font-family: "Inter";
+  font-family: "Monument Extended";
   font-size: 0.8em;
   font-weight: 500;
   color: #fff;
@@ -101,7 +101,7 @@ img {
 }
 
 .btn a {
-  font-family: "Inter";
+  font-family: "Monument Extended";
   font-size: 12px;
   line-height: 100%;
 }
@@ -111,7 +111,7 @@ textarea {
   width: 100%;
   padding: 1em 0;
   color: var(--color-text-primary);
-  font-family: "Wremena";
+  font-family: "Monument Extended";
   font-size: 1.25em;
   border: none;
   outline: none;
@@ -120,7 +120,7 @@ textarea {
 }
 
 ::placeholder {
-  font-family: "Wremena";
+  font-family: "Monument Extended";
 }
 
 .input {
