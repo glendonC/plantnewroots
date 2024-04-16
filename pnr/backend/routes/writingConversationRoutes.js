@@ -75,7 +75,7 @@ router.post('/userMessages/save', async (req, res) => {
 router.get('/userMessages/:conversationId', authenticate, async (req, res) => {
   try {
     const { conversationId } = req.params;
-    const userId = req.user.id;
+    const userId = req.user._id;
     const conversation = await Conversation.findById(conversationId);
 
     if (!conversation) {
