@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
-import { Button, Container, Row, Col, Dropdown } from 'react-bootstrap';
+import { Button, Container, Row, Col, Dropdown, Modal, Form } from 'react-bootstrap';
 import HomeButton from "../../components/homebutton/HomeButton";
 import Transition from "../../components/transition/Transition";
+import axios from 'axios';
 
 const Reading = () => {
   const { selectedLevel, selectedLanguage } = useLevelLanguage();
@@ -12,6 +13,9 @@ const Reading = () => {
   const [expectedAnswers, setExpectedAnswers] = useState([]);
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [sessionName, setSessionName] = useState('');
+  const [showSaveModal, setShowSaveModal] = useState(false);
+
 
   const generateContent = async () => {
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
@@ -127,7 +131,38 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
     evaluateAnswers();
   }, [content, submitted]);
 
+  const saveReadingSession = async () => {
+    if (!sessionName) {
+        alert('Please provide a name for the session.');
+        return;
+    }
+    const payload = {
+        name: sessionName,
+        text: content.text,
+        questions: content.questions,
+        answers: Object.values(answers)
+    };
 
+
+    try {
+        console.log("Sending data:", payload); 
+        const response = await axios.post('/api/readingSessions/save', payload, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }        
+        });
+        console.log('Session saved successfully:', response.data);
+        alert('Reading session saved successfully!');
+        setShowSaveModal(false);
+        setSessionName('');
+    } catch (error) {
+        console.error('Failed to save the session:', error.response ? error.response.data : error);
+        alert('Failed to save the reading session.');
+    }
+};
+
+  
   
 
   return (
@@ -191,8 +226,37 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
                 ))}
               </div>
             )}
+            <Button variant="info" onClick={() => setShowSaveModal(true)}>Save Session</Button>
           </Col>
         </Row>
+
+        <Modal
+  show={showSaveModal}
+  onHide={() => setShowSaveModal(false)}
+  style={{ backgroundColor: "#333" }}
+>
+  <Modal.Header closeButton>
+    <Modal.Title>Save Reading Session</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <Form>
+      <Form.Group>
+        <Form.Label>Session Name</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Enter a name for this session"
+          value={sessionName}
+          onChange={(e) => setSessionName(e.target.value)}
+        />
+      </Form.Group>
+    </Form>
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowSaveModal(false)}>Close</Button>
+    <Button variant="primary" onClick={() => saveReadingSession()}>Save Session</Button>
+  </Modal.Footer>
+</Modal>
+
       </div>
       <HomeButton className="mt-auto"/>
     </Container>
