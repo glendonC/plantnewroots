@@ -17,7 +17,8 @@
   }
   
   .map {
-    position: fixed;
+    position: absolute;
+    left: 0;
     width: 20%;
     margin: 50px 0;
     padding: 0 20px;

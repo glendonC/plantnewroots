@@ -33,28 +33,34 @@ const About = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
 
   useEffect(() => {
-    const sectionHeights = sections.current.map(section => section.clientHeight * 0.5);
-    const accumulatedHeights = sectionHeights.reduce((acc, height, i) => {
-      acc.push((acc[i - 1] || 0) + sections.current[i].clientHeight);
-      return acc;
-    }, []);
-
     const handleScroll = () => {
       const scrollPos = window.scrollY;
-      const newActiveIndex = accumulatedHeights.findIndex((height, i) => scrollPos < height && (i === 0 || scrollPos >= accumulatedHeights[i - 1]));
+      const windowHeight = window.innerHeight;
 
-      if (newActiveIndex !== activeIndex) {
-        if (activeIndex !== -1) mapItems.current[activeIndex].style.height = '100px';
-        mapItems.current[newActiveIndex].style.height = `${sectionHeights[newActiveIndex]}px`;
-        setActiveIndex(newActiveIndex);
-      }
+      const newActiveIndex = sections.current.findIndex((section, i) => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        const sectionBottom = sectionTop + sectionHeight;
+
+        const isInView = scrollPos >= sectionTop - windowHeight / 2 && scrollPos < sectionBottom - windowHeight / 2;
+
+        if (isInView) {
+          mapItems.current[i].style.height = `${sectionHeight * 0.5}px`;
+        } else {
+          mapItems.current[i].style.height = '100px';
+        }
+
+        return isInView;
+      });
+
+      setActiveIndex(newActiveIndex);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [activeIndex]);
+  }, []);
 
-  const sectionTitles = ['Intro', 'Story', 'Vision', 'FAQ', 'Contact'];
+  const sectionTitles = ['Story', 'Vision', 'FAQ'];
 
   return (
     <div className="about page">
@@ -69,6 +75,11 @@ const About = () => {
         <div className="sections">
           <section ref={el => sections.current[0] = el} className="about-intro about-section">
             <h2>About Us</h2>
+            <div className="about-col">
+                <h3>
+                  plant new roots began its development in April 2024 by glendon chin, a Korean/Chinese American who's currently writing this in the third person right now (so now i'll just switch to first person pov). put simply, learning a language (or multiple) will carry different meanings for each of us. as an example, i am currently studying korean right now and one of the goals that i am hellbent on reaching is being able to speak with my grandma whose first language isn't english. there's more to it, but i'll just leave it there for now. i knew it wouldn't be easy, but somewhere along the way i felt like with the growth of technology, we can create more intuitive resources to help us on our own language journeys :)
+                </h3>
+              </div>
           </section>
 
           <section ref={el => sections.current[1] = el} className="about-intro-copy about-section">
