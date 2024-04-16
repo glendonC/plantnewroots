@@ -45,6 +45,7 @@ const Works = () => {
     WorkImg2,
     WorkImg3,
     WorkImg4,
+    WorkImg5,
   ];
 
   const handleMouseOver = (index) => {
@@ -127,7 +128,7 @@ const Works = () => {
 
           <div className="project-list-row">
             <div className="project-list-col">
-              <div className="project-item" onMouseOver={() => handleMouseOver(1)}>
+              <div className="project-item" onMouseOver={() => handleMouseOver(2)}>
                 <div className="project-img works-blob">
                   <Link to="/conversationchoices">
                     <img src={WorkImg2} alt="Reading Conversation" />
@@ -144,7 +145,7 @@ const Works = () => {
             <div className="project-list-col">
               <div
                 className="project-item"
-                onMouseOver={() => handleMouseOver(1)}
+                onMouseOver={() => handleMouseOver(3)}
               >
                 <div className="project-img">
                 <div className="project-img works-blob">
@@ -162,7 +163,7 @@ const Works = () => {
 
           <div className="project-list-row">
             <div className="project-list-col">
-              <div className="project-item" onMouseOver={() => handleMouseOver(1)}>
+              <div className="project-item" onMouseOver={() => handleMouseOver(4)}>
                 <div className="project-img works-blob">
                   <Link to="/speaking">
                     <img src={WorkImg4} alt="Reading Conversation" />
@@ -177,7 +178,7 @@ const Works = () => {
 
           <div className="project-list-row">
             <div className="project-list-col">
-              <div className="project-item" onMouseOver={() => handleMouseOver(1)}>
+              <div className="project-item" onMouseOver={() => handleMouseOver(5)}>
                 <div className="project-img works-blob">
                   <Link to="/analysispage">
                     <img src={WorkImg5} alt="Reading Conversation" />
