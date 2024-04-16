@@ -7,6 +7,7 @@ const conversationRoutes = require('./routes/writingConversationRoutes');
 const writingAnalysisRoutes = require('./routes/writingAnalysisRoutes');
 const textToSpeechRoutes = require('./routes/textToSpeechRoutes');
 const speechToTextRoutes = require('./routes/speechToTextRoutes');
+const readingSessionRoutes = require('./routes/readingSessionRoutes');
 
 const app = express();
 
@@ -28,6 +29,8 @@ app.use('/api/dialog', dialogRoutes);
 app.use('/api/writingConversations', conversationRoutes);
 
 app.use('/api/analysis', writingAnalysisRoutes);
+
+app.use('/api/readingSessions', readingSessionRoutes);
 
 app.use('/api/text-to-speech', textToSpeechRoutes);
 
