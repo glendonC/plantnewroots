@@ -11,6 +11,38 @@ function AnalysisReport() {
   const [selectedConversationId, setSelectedConversationId] = useState('');
   const [generatedText, setGeneratedText] = useState('');
 
+  const [readingSessions, setReadingSessions] = useState([]);
+
+  const [selectedWritingSessionId, setSelectedWritingSessionId] = useState('');
+const [selectedReadingSessionId, setSelectedReadingSessionId] = useState('');
+
+const handleWritingConversationSelect = (eventKey) => {
+    setSelectedWritingSessionId(eventKey);
+    setSelectedReadingSessionId('');
+};
+
+const handleReadingSessionSelect = (eventKey) => {
+    setSelectedReadingSessionId(eventKey);
+    setSelectedWritingSessionId('');
+};
+
+
+useEffect(() => {
+  const fetchReadingSessions = async () => {
+    try {
+      const response = await axios.get('/api/readingSessions', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+      });
+      setReadingSessions(response.data);
+    } catch (error) {
+      console.error('Failed to fetch reading sessions:', error);
+    }
+  };
+
+  fetchReadingSessions();
+}, []);
+
+
   useEffect(() => {
     const fetchConversations = async () => {
       try {
@@ -39,36 +71,37 @@ function AnalysisReport() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!selectedConversationId) return;
+    const currentSessionId = selectedWritingSessionId || selectedReadingSessionId;
   
+    if (!currentSessionId) return;
+  
+    const fetchData = async () => {
       setLoading(true);
       try {
         let generalReportData, detailedAnalysisData, generatedText;
-        const savedReport = await fetchSavedReport(selectedConversationId);
+        const savedReport = await fetchSavedReport(currentSessionId);
         if (savedReport) {
           generatedText = savedReport.generatedText;
           setGeneratedText(generatedText);
-        } else if (!generatedText) {
-          generalReportData = await fetchGeneralReport(selectedConversationId);
-          detailedAnalysisData = await fetchDetailedAnalysis(selectedConversationId);
-          const userMessages = await fetchUserMessages(selectedConversationId);
+        } else {
+          generalReportData = await fetchGeneralReport(currentSessionId);
+          detailedAnalysisData = await fetchDetailedAnalysis(currentSessionId);
+          const userMessages = await fetchUserMessages(currentSessionId);
           if (!generalReportData || !detailedAnalysisData || !userMessages || userMessages.length === 0) {
             throw new Error('Data for generating AI content is incomplete.');
           }
           generatedText = await generateAIContent(generalReportData, detailedAnalysisData, userMessages);
         }
       } catch (error) {
-          console.error('Error fetching data for AI content generation:', error);
+        console.error('Error fetching data for AI content generation:', error);
       } finally {
-          setLoading(false);
+        setLoading(false);
       }
-  };
-  
-    
+    };
   
     fetchData();
-  }, [selectedConversationId]);
+  }, [selectedWritingSessionId, selectedReadingSessionId]);
+  
   
   
 
@@ -259,22 +292,40 @@ return (
         <h1>Conversation Analysis Report</h1>
       </Col>
     </Row>
+   
     <Row className="justify-content-md-center py-3">
-      <Col xs={12} md={8} lg={6}>
-        <Dropdown onSelect={handleConversationSelect}>
-          <Dropdown.Toggle variant="primary" id="conversation-dropdown">
-            {selectedConversationId ? conversations.find(conversation => conversation._id === selectedConversationId)?.name : 'Select a conversation'}
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            {conversations.map(conversation => (
-              <Dropdown.Item key={conversation._id} eventKey={conversation._id}>
+  <Col xs={12} md={8} lg={6}>
+    <h3>Select Writing Conversation:</h3>
+    <Dropdown onSelect={handleWritingConversationSelect}>
+    <Dropdown.Toggle variant="primary" id="writing-dropdown">
+        {selectedWritingSessionId ? conversations.find(conversation => conversation._id === selectedWritingSessionId)?.name : 'Select a writing conversation'}
+    </Dropdown.Toggle>
+    <Dropdown.Menu>
+        {conversations.map(conversation => (
+            <Dropdown.Item key={conversation._id} eventKey={conversation._id}>
                 {conversation.name} - {conversation.tag}
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
-      </Col>
-    </Row>
+            </Dropdown.Item>
+        ))}
+    </Dropdown.Menu>
+</Dropdown>
+
+<Dropdown onSelect={handleReadingSessionSelect}>
+    <Dropdown.Toggle variant="secondary" id="reading-dropdown">
+        {selectedReadingSessionId ? readingSessions.find(session => session._id === selectedReadingSessionId)?.name : 'Select a reading session'}
+    </Dropdown.Toggle>
+    <Dropdown.Menu>
+        {readingSessions.map(session => (
+            <Dropdown.Item key={session._id} eventKey={session._id}>
+                {session.name}
+            </Dropdown.Item>
+        ))}
+    </Dropdown.Menu>
+</Dropdown>
+
+  </Col>
+</Row>
+
+
     <Row className="justify-content-md-center">
       <Col xs={12} md={8}>
         {loading ? (
