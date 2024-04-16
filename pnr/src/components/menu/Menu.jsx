@@ -170,9 +170,10 @@ const Menu = () => {
           </div>
         </div>
       </div>
+      
       <div className="menu">
         <div className="blob-container">
-          <div className="link-preview-img">
+        <div className="link-preview-img preview-image" style={{ backgroundImage: `url(${DefaultPreviewImg})` }}>
             <img src={DefaultPreviewImg} alt="" />
             <div className="bind-new-img">
               <img src={LinkPreviewImg1} alt="" />
