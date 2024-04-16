@@ -6,7 +6,7 @@ import { LevelList, LevelItem } from './LevelSelectionStyles';
 import "./profile.css";
 
 
-import MagneticButton from "../../components/magneticbutton/MagneticButton";
+import HomeButton from "../../components/homebutton/HomeButton";
 
 const Profile = () => {
   const username = localStorage.getItem('username');
@@ -152,7 +152,7 @@ const Profile = () => {
           </div>
         </section>
        
-        <MagneticButton />
+        <HomeButton />
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import Transition from "../../components/transition/Transition";
 
 import Faq from "react-faq-component";
 import Marquee from "react-fast-marquee";
-import MagneticButton from "../../components/magneticbutton/MagneticButton";
+import HomeButton from "../../components/homebutton/HomeButton";
 
 import PortraitImg from "../../assets/images/home/portrait.jpeg";
 
@@ -42,39 +42,40 @@ const About = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPos = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const docHeight = document.documentElement.scrollHeight;
-      const adjustedHeight = Math.min(scrollPos, docHeight - windowHeight);
-  
-      const map = document.querySelector('.map');
-      map.style.top = `${Math.max(50, adjustedHeight)}px`;
-  
-      const newActiveIndex = sections.current.findIndex((section, i) => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        const sectionBottom = sectionTop + sectionHeight;
-        const isInView = scrollPos >= sectionTop - windowHeight / 2 && scrollPos < sectionBottom - windowHeight / 2;
-  
-        if (isInView) {
-          mapItems.current[i].style.height = 'calc(100vh - 100px)';
-          mapItems.current[i].classList.add('active');
-        } else {
-          mapItems.current[i].style.height = '100px';
-          mapItems.current[i].classList.remove('active');
+        const scrollPos = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const docHeight = document.documentElement.scrollHeight;
+        const adjustedHeight = Math.min(scrollPos, docHeight - windowHeight);
+
+        const map = document.querySelector('.map');
+        if (map) {
+            map.style.top = `${Math.max(50, adjustedHeight)}px`;
         }
-        return isInView;
-      });
-  
-      setActiveIndex(newActiveIndex);
+
+        const newActiveIndex = sections.current.findIndex((section, i) => {
+            if (!mapItems.current[i]) return false;
+
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            const sectionBottom = sectionTop + sectionHeight;
+            const isInView = scrollPos >= sectionTop - windowHeight / 2 && scrollPos < sectionBottom - windowHeight / 2;
+
+            if (isInView) {
+                mapItems.current[i].style.height = 'calc(100vh - 100px)';
+                mapItems.current[i].classList.add('active');
+            } else {
+                mapItems.current[i].style.height = '100px';
+                mapItems.current[i].classList.remove('active');
+            }
+            return isInView;
+        });
+
+        setActiveIndex(newActiveIndex);
     };
-  
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
-  
-  
 
   const sectionTitles = ['Story', 'Vision', 'FAQ'];
 
@@ -152,7 +153,7 @@ const About = () => {
             </div>
           </section>
 
-          <MagneticButton />
+          <HomeButton />
 
         </div>
       </div>

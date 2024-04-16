@@ -3,7 +3,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { DropdownButton, Dropdown } from 'react-bootstrap';
 import './analysisreport.css';
-import MagneticButton from '../../components/magneticbutton/MagneticButton';
+import HomeButton from '../../components/homebutton/HomeButton';
 
 
 function AnalysisReport() {
@@ -327,7 +327,7 @@ return (
         </>
       )}
     </div>
-    <MagneticButton className="mt-auto"/>
+    <HomeButton className="mt-auto"/>
   </div>
 );
 

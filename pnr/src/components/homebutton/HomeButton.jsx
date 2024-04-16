@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import "./MagneticButton.css";
+import "./HomeButton.css";
 import gsap from "gsap";
 
-const MagneticButton = () => {
+const HomeButton = () => {
   const btnRef = useRef(null);
   const textRef = useRef(null);
   const wrapperRef = useRef(null);
@@ -87,4 +87,4 @@ const MagneticButton = () => {
   );
 };
 
-export default MagneticButton;
+export default HomeButton;

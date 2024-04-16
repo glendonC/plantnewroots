@@ -5,7 +5,7 @@ import Transition from "../../components/transition/Transition";
 import { Link } from "react-router-dom";
 
 import Marquee from "react-fast-marquee";
-import MagneticButton from "../../components/magneticbutton/MagneticButton";
+import HomeButton from "../../components/homebutton/HomeButton";
 import { gsap } from "gsap";
 
 import WorkImg1 from "../../assets/images/work/reading.jpg";
@@ -110,35 +110,27 @@ const Works = () => {
 
         <section className="project-list">
 
-        <div className="project-list-row">
-            <div className="project-list-col">
-              <div
-                className="project-item"
-                onMouseOver={() => handleMouseOver(1)}
-              >
-                <div className="project-img">
-                  <Link to="/reading">
-                    <img src={WorkImg1} alt="" />
-                  </Link>
-                </div>
-                <div className="project-copy copy-pos-right">
-                  <h2>Reading Conversation</h2>
+          <div className="project-list-row">
+              <div className="project-list-col">
+                <div className="project-item" onMouseOver={() => handleMouseOver(1)}>
+                  <div className="project-img works-blob">
+                    <Link to="/reading">
+                      <img src={WorkImg1} alt="Reading Conversation" />
+                    </Link>
+                  </div>
+                  <div className="project-copy copy-pos-right">
+                    <h2>Reading Conversation</h2>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="project-list-col whitespace-col"></div>
-          </div>
 
           <div className="project-list-row">
-            <div className="project-list-col whitespace-col"></div>
             <div className="project-list-col">
-              <div
-                className="project-item"
-                onMouseOver={() => handleMouseOver(2)}
-              >
-                <div className="project-img">
+              <div className="project-item" onMouseOver={() => handleMouseOver(1)}>
+                <div className="project-img works-blob">
                   <Link to="/conversationchoices">
-                    <img src={WorkImg2} alt="" />
+                    <img src={WorkImg2} alt="Reading Conversation" />
                   </Link>
                 </div>
                 <div className="project-copy copy-pos-left">
@@ -155,29 +147,25 @@ const Works = () => {
                 onMouseOver={() => handleMouseOver(1)}
               >
                 <div className="project-img">
+                <div className="project-img works-blob">
                   <Link to="/listening">
                     <img src={WorkImg3} alt="" />
                   </Link>
+                  </div>
                 </div>
                 <div className="project-copy copy-pos-right">
                   <h2>Listening Conversation</h2>
                 </div>
               </div>
             </div>
-            <div className="project-list-col whitespace-col"></div>
           </div>
 
-
           <div className="project-list-row">
-            <div className="project-list-col whitespace-col"></div>
             <div className="project-list-col">
-              <div
-                className="project-item"
-                onMouseOver={() => handleMouseOver(2)}
-              >
-                <div className="project-img">
+              <div className="project-item" onMouseOver={() => handleMouseOver(1)}>
+                <div className="project-img works-blob">
                   <Link to="/speaking">
-                    <img src={WorkImg4} alt="" />
+                    <img src={WorkImg4} alt="Reading Conversation" />
                   </Link>
                 </div>
                 <div className="project-copy copy-pos-left">
@@ -189,13 +177,10 @@ const Works = () => {
 
           <div className="project-list-row">
             <div className="project-list-col">
-              <div
-                className="project-item"
-                onMouseOver={() => handleMouseOver(3)}
-              >
-                <div className="project-img">
+              <div className="project-item" onMouseOver={() => handleMouseOver(1)}>
+                <div className="project-img works-blob">
                   <Link to="/analysispage">
-                    <img src={WorkImg5} alt="" />
+                    <img src={WorkImg5} alt="Reading Conversation" />
                   </Link>
                 </div>
                 <div className="project-copy copy-pos-right">
@@ -203,7 +188,6 @@ const Works = () => {
                 </div>
               </div>
             </div>
-            <div className="project-list-col whitespace-col"></div>
           </div>
         </section>
 
@@ -226,7 +210,7 @@ const Works = () => {
             handleResetPreivew();
           }}
         >
-          <MagneticButton />
+          <HomeButton />
         </div>
       </div>
     </div>

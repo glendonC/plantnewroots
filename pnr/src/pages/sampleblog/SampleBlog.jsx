@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useStory } from "../../contexts/StoryContext";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Transition from "../../components/transition/Transition";
 import WorkImg1 from "../../assets/images/work/writing.jpg";
-import MagneticButton from "../../components/magneticbutton/MagneticButton";
+import HomeButton from "../../components/homebutton/HomeButton";
 import "./sample-blog.css";
 import { NotionLogo, GoogleLogo } from "@phosphor-icons/react";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
@@ -99,7 +99,7 @@ function SampleBlog() {
           </div>
         </div>
   
-        <MagneticButton />
+        <HomeButton />
       </div>
     </div>
   );

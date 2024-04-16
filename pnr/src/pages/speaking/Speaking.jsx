@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button, Container, Row, Col, Card } from 'react-bootstrap';
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
-import MagneticButton from "../../components/magneticbutton/MagneticButton";
+import HomeButton from "../../components/homebutton/HomeButton";
 
 const Speaking = () => {
     const { selectedLevel, selectedLanguage } = useLevelLanguage();
@@ -167,7 +167,7 @@ const Speaking = () => {
                     </Col>
                 </Row>
             </div>
-            <MagneticButton className="mt-auto"/>
+            <HomeButton className="mt-auto"/>
         </Container>
     );
     

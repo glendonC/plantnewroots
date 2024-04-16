@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
 import { Button, Form, Container, Row, Col, Dropdown } from 'react-bootstrap';
-import MagneticButton from "../../components/magneticbutton/MagneticButton";
+import HomeButton from "../../components/homebutton/HomeButton";
 import Transition from "../../components/transition/Transition";
 
 const Reading = () => {
@@ -194,7 +194,7 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
           </Col>
         </Row>
       </div>
-      <MagneticButton className="mt-auto"/>
+      <HomeButton className="mt-auto"/>
     </Container>
   );
   
