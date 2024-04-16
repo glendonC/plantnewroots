@@ -20,12 +20,20 @@
 
 .about-col:nth-child(2) {
   flex: 3;
+  margin-left: 50px;
 }
 
 .about-intro h2 {
   text-indent: 500px;
   margin: 2em 0;
 }
+
+.about-intro h3 {
+  font-family: "Inter";
+  font-weight: 200 !important;
+  font-size: 35px;
+}
+
 
 .about-intro-copy,
 .about-portrait,

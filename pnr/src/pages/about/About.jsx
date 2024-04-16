@@ -22,6 +22,14 @@ const About = () => {
         content: "i planted a carrot and thought of a metaphor to language learning",
       },
       {
+        title: "What if I don't know what language I want to study?",
+        content: "there's no harm in trying any of them and seeing what you like!",
+      },
+      {
+        title: "How do I select the language that I want to study?",
+        content: "You can set your target language and level in your profile!",
+      },
+      {
         title: "Click me! 😉",
         content: "I love you and you should too! 🫶",
       },
@@ -84,13 +92,13 @@ const About = () => {
           <section ref={el => sections.current[0] = el} className="about-intro about-section">
             <h2>About Us</h2>
             <div className="about-col">
-            <p>
+                <p>
                   <span>Our Story</span>
                 </p>
               </div>
               <div className="about-col">
                 <h3>
-                  plant new roots began its development in April 2024 by glendon chin, a Korean/Chinese American who's currently writing this in the third person right now (so now i'll just switch to first person pov). put simply, learning a language (or multiple) will carry different meanings for each of us. as an example, i am currently studying korean right now and one of the goals that i am hellbent on reaching is being able to speak with my grandma whose first language isn't english. there's more to it, but i'll just leave it there for now. i knew it wouldn't be easy, but somewhere along the way i felt like with the growth of technology, we can create more intuitive resources to help us on our own language journeys :)
+                  plant new roots began its development in April 2024 by glendon chin, a Korean/Chinese American who's currently writing this in the third person right now (so now i'll just switch to first person pov). put simply, learning a language (or multiple) will carry different meanings for each of us. as an example, i am currently studying korean right now and one of the goals that i so dearly want to reach is being able to speak with my grandma whose first language isn't english. there's more to it, but i'll just leave it there for now. i knew it wouldn't be easy, but somewhere along the way i felt like with the growth of technology, we can create more intuitive resources to help us on our own language journeys :)
                 </h3>
               </div>
           </section>
@@ -104,7 +112,7 @@ const About = () => {
               </div>
               <div className="about-col">
                 <h3>
-                  Reading, Writing, Listening, Speaking - we're basically training all four elements like the Avatar now that I think about it. Anyways, 
+                  Reading, Writing, Listening, Speaking - we're basically training all four elements like the Avatar now that I think about it. The goal is to provide the resources for everyone to practice their target language in each category because we all have our own weaknesses when it comes to practicing certain modules. I am no exception to this as I find myself struggling to speak Korean and have often fell back on purely memorizing words and grammar points. In the future, I hope to implement sub-like modules into each of these to enable a greater experience such as vocabulary studying, pronunciation practice, etc. Moreover, I want to make plant new roots a platform not just designated for learning languages, but finding meaning through that journey and open everyone up to learning more about the culture(s) associated with them.
                 </h3>
               </div>
             </div>
@@ -113,17 +121,18 @@ const About = () => {
           <section ref={el => sections.current[2] = el} className="about-portrait about-section">
             <div className="about-row">
               <div className="about-col">
+                <div className="about-portrait-img">
+                  <img src={PortraitImg} alt="Portrait of Glendon Chin" />
+                </div>
               </div>
               <div className="about-col">
-                <div className="about-portrait-img">
-                  <img src={PortraitImg} alt="" />
-                </div>
                 <div className="faqs">
                   <Faq data={data} />
                 </div>
               </div>
             </div>
           </section>
+
 
           <section ref={el => sections.current[3] = el} className="about-marquee about-section">
             <Marquee>
