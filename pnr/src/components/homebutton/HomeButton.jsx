@@ -69,12 +69,6 @@ const HomeButton = () => {
     <div className="m-btn-wrapper" ref={wrapperRef}>
       <Link to={"/home"}>
       <div className="m-btn" ref={btnRef}>
-          <div className="arrow-right">
-            <img
-              src="https://assets-global.website-files.com/61385c793ab59f1f6a3372f7/613b078390142aafe0cdc267_arrow-next_white.svg"
-              alt=""
-            />
-          </div>
           <div className="m-btn-copy">
             <p ref={textRef}>
               {" "}
