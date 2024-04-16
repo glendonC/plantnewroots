@@ -52,6 +52,7 @@
 .modal-body .form-control::placeholder { 
     color: #fff;
     opacity: 1;
+}
 
 .modal-body .form-control:-ms-input-placeholder {
     color: #fff;
@@ -80,4 +81,8 @@
 .btn-outline-secondary:hover {
     background-color: #555;
     border-color: #ddd;
+}
+
+.conversation-container .raised-input-bar {
+    margin-bottom: 100px;
 }

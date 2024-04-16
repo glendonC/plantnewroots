@@ -20,12 +20,20 @@
 
 .about-col:nth-child(2) {
   flex: 3;
+  margin-left: 50px;
 }
 
 .about-intro h2 {
   text-indent: 500px;
   margin: 2em 0;
 }
+
+.about-intro h3 {
+  font-family: "Inter";
+  font-weight: 200 !important;
+  font-size: 35px;
+}
+
 
 .about-intro-copy,
 .about-portrait,
@@ -153,4 +161,52 @@
   .about-contact-copy {
     width: 100%;
   }
+}
+
+.about {
+  --color-bg: #c0c0c0;
+  --color-section-1: #487a7b;
+  --color-section-2: #d66045;
+  --color-section-3: #d4af70;
+}
+
+
+
+.map div.active {
+  border-color: #ff3d01;
+}
+
+.map {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  width: 20%;
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding: 0 20px;
+  z-index: 1000;
+}
+
+.sections {
+  position: absolute;
+  width: 80%;
+  height: 100%;
+  left: 20%;
+  padding: 30px 20px 0px 0px;
+}
+
+.map > div {
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1.5px solid #000;
+  border-radius: 20px;
+  transition: height 0.5s;
+}
+
+.map > div p {
+  margin: 0;
 }
