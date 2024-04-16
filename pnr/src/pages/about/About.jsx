@@ -36,29 +36,37 @@ const About = () => {
     const handleScroll = () => {
       const scrollPos = window.scrollY;
       const windowHeight = window.innerHeight;
-
+      const docHeight = document.documentElement.scrollHeight;
+      const adjustedHeight = Math.min(scrollPos, docHeight - windowHeight);
+  
+      const map = document.querySelector('.map');
+      map.style.top = `${Math.max(50, adjustedHeight)}px`;
+  
       const newActiveIndex = sections.current.findIndex((section, i) => {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.clientHeight;
         const sectionBottom = sectionTop + sectionHeight;
-
         const isInView = scrollPos >= sectionTop - windowHeight / 2 && scrollPos < sectionBottom - windowHeight / 2;
-
+  
         if (isInView) {
-          mapItems.current[i].style.height = `${sectionHeight * 0.5}px`;
+          mapItems.current[i].style.height = 'calc(100vh - 100px)';
+          mapItems.current[i].classList.add('active');
         } else {
           mapItems.current[i].style.height = '100px';
+          mapItems.current[i].classList.remove('active');
         }
-
         return isInView;
       });
-
+  
       setActiveIndex(newActiveIndex);
     };
-
+  
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  
+  
+  
 
   const sectionTitles = ['Story', 'Vision', 'FAQ'];
 
@@ -76,6 +84,11 @@ const About = () => {
           <section ref={el => sections.current[0] = el} className="about-intro about-section">
             <h2>About Us</h2>
             <div className="about-col">
+            <p>
+                  <span>Our Story</span>
+                </p>
+              </div>
+              <div className="about-col">
                 <h3>
                   plant new roots began its development in April 2024 by glendon chin, a Korean/Chinese American who's currently writing this in the third person right now (so now i'll just switch to first person pov). put simply, learning a language (or multiple) will carry different meanings for each of us. as an example, i am currently studying korean right now and one of the goals that i am hellbent on reaching is being able to speak with my grandma whose first language isn't english. there's more to it, but i'll just leave it there for now. i knew it wouldn't be easy, but somewhere along the way i felt like with the growth of technology, we can create more intuitive resources to help us on our own language journeys :)
                 </h3>
@@ -91,7 +104,7 @@ const About = () => {
               </div>
               <div className="about-col">
                 <h3>
-                  plant new roots began its development in April 2024 by glendon chin, a Korean/Chinese American who's currently writing this in the third person right now (so now i'll just switch to first person pov). put simply, learning a language (or multiple) will carry different meanings for each of us. as an example, i am currently studying korean right now and one of the goals that i am hellbent on reaching is being able to speak with my grandma whose first language isn't english. there's more to it, but i'll just leave it there for now. i knew it wouldn't be easy, but somewhere along the way i felt like with the growth of technology, we can create more intuitive resources to help us on our own language journeys :)
+                  Reading, Writing, Listening, Speaking - we're basically training all four elements like the Avatar now that I think about it. Anyways, 
                 </h3>
               </div>
             </div>

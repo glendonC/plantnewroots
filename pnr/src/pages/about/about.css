@@ -157,19 +157,26 @@
 
 .about {
   --color-bg: #c0c0c0;
-  --color-section-1: #fff;
-  --color-section-2: #ff3d01;
-  --color-section-3: #5922cc;
-  --color-section-4: #000;
-  --color-section-5: #2935f8;
+  --color-section-1: #487a7b;
+  --color-section-2: #d66045;
+  --color-section-3: #d4af70;
 }
 
 
+
+.map div.active {
+  border-color: #ff3d01;
+}
+
 .map {
   position: fixed;
+  top: 50px;
+  left: 0;
   width: 20%;
-  margin: 50px 0;
+  height: calc(100vh - 100px);
+  overflow-y: auto;
   padding: 0 20px;
+  z-index: 1000;
 }
 
 .sections {
@@ -194,28 +201,4 @@
 
 .map > div p {
   margin: 0;
-}
-
-.s-1 {
-  background: var(--color-section-1);
-}
-
-.s-2 {
-  background: var(--color-section-2);
-  color: #fff;
-}
-
-.s-3 {
-  background: var(--color-section-3);
-  color: #fff;
-}
-
-.s-4 {
-  background: var(--color-section-4);
-  color: #fff;
-}
-
-.s-5 {
-  background: var(--color-section-5);
-  color: #fff;
 }
