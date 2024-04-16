@@ -5,7 +5,7 @@ import Transition from "../../components/transition/Transition";
 
 import Faq from "react-faq-component";
 import Marquee from "react-fast-marquee";
-import MagneticButton from "../../components/magneticbutton/MagneticButton";
+import HomeButton from "../../components/homebutton/HomeButton";
 
 import PortraitImg from "../../assets/images/home/portrait.jpeg";
 
@@ -153,7 +153,7 @@ const About = () => {
             </div>
           </section>
 
-          <MagneticButton />
+          <HomeButton />
 
         </div>
       </div>

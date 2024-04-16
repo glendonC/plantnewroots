@@ -5,7 +5,7 @@ import Transition from "../../components/transition/Transition";
 import { Link } from "react-router-dom";
 
 import Marquee from "react-fast-marquee";
-import MagneticButton from "../../components/magneticbutton/MagneticButton";
+import HomeButton from "../../components/homebutton/HomeButton";
 import { gsap } from "gsap";
 
 import WorkImg1 from "../../assets/images/work/reading.jpg";
@@ -226,7 +226,7 @@ const Works = () => {
             handleResetPreivew();
           }}
         >
-          <MagneticButton />
+          <HomeButton />
         </div>
       </div>
     </div>

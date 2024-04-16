@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Transition from "../../components/transition/Transition";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "@phosphor-icons/react";
-import MagneticButton from "../../components/magneticbutton/MagneticButton";
+import HomeButton from "../../components/homebutton/HomeButton";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
 import { useStory } from "../../contexts/StoryContext";
 
@@ -76,7 +76,7 @@ const Blog = () => {
         </section>
 
 
-        <MagneticButton />
+        <HomeButton />
       </div>
     </div>
   );
