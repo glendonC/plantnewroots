@@ -3,6 +3,33 @@ const router = express.Router();
 const ReadingSession = require('../models/ReadingSession');
 const authenticate = require('../middleware/authenticate');
 
+router.get('/', authenticate, async (req, res) => {
+    try {
+        const userId = req.user._id; 
+        const readingSessions = await ReadingSession.find({ userId: userId });
+        res.json(readingSessions);
+    } catch (error) {
+        console.error("Failed to fetch reading sessions:", error);
+        res.status(500).send({ message: "Failed to fetch reading sessions" });
+    }
+});
+
+router.get('/:id', authenticate, async (req, res) => {
+    try {
+        const session = await ReadingSession.findById(req.params.id);
+        if (!session) {
+            return res.status(404).send({ message: "Reading session not found" });
+        }
+        if (session.userId.toString() !== req.user._id.toString()) {
+            return res.status(403).send({ message: "Unauthorized access to this reading session" });
+        }
+        res.json(session);
+    } catch (error) {
+        console.error("Failed to fetch the reading session:", error);
+        res.status(500).send({ message: "Failed to fetch the reading session" });
+    }
+});
+
 router.post('/save', authenticate, async (req, res) => {
     try {
         const { name, text, questions, answers } = req.body;
