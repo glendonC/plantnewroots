@@ -82,3 +82,7 @@
     background-color: #555;
     border-color: #ddd;
 }
+
+.conversation-container .raised-input-bar {
+    margin-bottom: 100px;
+}

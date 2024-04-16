@@ -120,29 +120,30 @@ function DailyWritingConversation() {
                 </Row>
             </Container>
 
-            <Container fluid>
-                <Row className="justify-content-md-center">
-                    <Col xs={12} md={8}>
-                        <Form>
-                            <InputGroup className="mb-3">
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Type your message here..."
-                                    value={userInput}
-                                    onChange={handleInputChange}
-                                    onKeyPress={handleKeyPress}
-                                />
-                                <Button variant="outline-secondary" onClick={sendMessage}>
-                                    Send
-                                </Button>
-                                <Button variant="outline-secondary" onClick={handleSaveClick}>
-                                    <Save />
-                                </Button>
-                            </InputGroup>
-                        </Form>
-                    </Col>
-                </Row>
-            </Container>
+            <Container fluid className="mt-4 raised-input-bar">
+    <Row className="justify-content-md-center">
+        <Col xs={12} md={8}>
+            <Form>
+                <InputGroup className="mb-3">
+                    <Form.Control
+                        type="text"
+                        placeholder="Type your message here..."
+                        value={userInput}
+                        onChange={handleInputChange}
+                        onKeyPress={handleKeyPress}
+                    />
+                    <Button variant="outline-secondary" onClick={sendMessage}>
+                        Send
+                    </Button>
+                    <Button variant="outline-secondary" onClick={handleSaveClick}>
+                        <Save />
+                    </Button>
+                </InputGroup>
+            </Form>
+        </Col>
+    </Row>
+</Container>
+
 
             <Modal show={showModal} onHide={() => setShowModal(false)} dialogClassName="modal-content">
                 <Modal.Header closeButton>
