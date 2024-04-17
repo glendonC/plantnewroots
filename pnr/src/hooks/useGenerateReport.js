@@ -15,24 +15,26 @@ const useGenerateReport = (sessionId, sessionType, token) => {
         setLoading(true);
         setError(null);
 
+        const baseURL = `/api/${sessionType}Analysis`;
+
         try {
-            const savedResponse = await axios.get(`/api/${sessionType}Analysis/${sessionId}`, {
+            const savedResponse = await axios.get(`${baseURL}/${sessionId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (savedResponse.data) {
                 setGeneratedText(savedResponse.data.generatedText);
             } else {
-                const generalReport = await axios.get(`/api/${sessionType}Analysis/report/${sessionId}`, {
+                const generalReport = await axios.get(`${baseURL}/report/${sessionId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                const detailedAnalysis = await axios.post(`/api/${sessionType}Analysis/analyze`, { sessionId }, {
+                const detailedAnalysis = await axios.post(`${baseURL}/analyze`, { sessionId }, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const userMessages = await axios.get(`/api/${sessionType}Conversations/userMessages/${sessionId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
-                if (!generalReport.data || !detailedAnalysis.data || !userMessages.data || userMessages.data.length === 0) {
+                if (!generalReport.data || !detailedAnalysis.data.detailedAnalysis || !userMessages.data.messages || userMessages.data.messages.length === 0) {
                     throw new Error('Data for generating AI content is incomplete.');
                 }
 
@@ -40,8 +42,8 @@ const useGenerateReport = (sessionId, sessionType, token) => {
                 setGeneratedText(generatedContent);
             }
         } catch (error) {
-            console.error('Error fetching data for AI content generation:', error);
-            setError(error.toString());
+            console.error('Error fetching data for AI content generation:', error.response ? error.response.data : error.message);
+            setError(error.response ? error.response.data.message : error.message);
         } finally {
             setLoading(false);
         }
