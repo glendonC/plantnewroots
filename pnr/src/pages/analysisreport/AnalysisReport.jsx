@@ -103,16 +103,13 @@ function AnalysisReport() {
     fetchData();
   }, [selectedWritingSessionId, selectedReadingSessionId]);
 
-  
-  
-
   const handleConversationSelect = (selectedConversationId) => {
     setSelectedConversationId(selectedConversationId);
   };
   
   const fetchGeneralReport = async (conversationId) => {
     try {
-      const response = await axios.get(`/api/analysis/report/${conversationId}`, {
+      const response = await axios.get(`/api/writingAnalysis/report/${conversationId}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -126,7 +123,7 @@ function AnalysisReport() {
 
   const fetchSavedReport = async (conversationId) => {
     try {
-        const response = await axios.get(`/api/analysis/${conversationId}`, {
+        const response = await axios.get(`/api/writingAnalysis/${conversationId}`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
         console.log("Saved Report Data:", response.data);
@@ -140,7 +137,7 @@ function AnalysisReport() {
   
   const fetchDetailedAnalysis = async (conversationId) => {
     try {
-      const response = await axios.post('/api/analysis/analyze', { conversationId }, {
+      const response = await axios.post('/api/writingAnalysis/analyze', { conversationId }, {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -232,7 +229,7 @@ function AnalysisReport() {
 
   const saveGeneratedText = async (conversationId, generatedText) => {
     try {
-        await axios.post('/api/analysis/saveGeneratedText', {
+        await axios.post('/api/writingAnalysis/saveGeneratedText', {
             conversationId,
             generatedText
         }, {

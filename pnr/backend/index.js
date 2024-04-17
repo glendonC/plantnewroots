@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const dialogRoutes = require('./routes/dialogRoutes');
-const conversationRoutes = require('./routes/writingConversationRoutes');
+const writingConversationRoutes = require('./routes/writingConversationRoutes');
 const writingAnalysisRoutes = require('./routes/writingAnalysisRoutes');
 const textToSpeechRoutes = require('./routes/textToSpeechRoutes');
 const speechToTextRoutes = require('./routes/speechToTextRoutes');
@@ -26,9 +26,9 @@ app.use('/api/users', userRoutes);
 
 app.use('/api/dialog', dialogRoutes);
 
-app.use('/api/writingConversations', conversationRoutes);
+app.use('/api/writingConversations', writingConversationRoutes);
 
-app.use('/api/analysis', writingAnalysisRoutes);
+app.use('/api/writingAnalysis', writingAnalysisRoutes);
 
 app.use('/api/readingSessions', readingSessionRoutes);
 
