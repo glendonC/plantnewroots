@@ -10,39 +10,38 @@ function AnalysisReport() {
   const [conversations, setConversations] = useState([]);
   const [selectedConversationId, setSelectedConversationId] = useState('');
   const [generatedText, setGeneratedText] = useState('');
-
   const [readingSessions, setReadingSessions] = useState([]);
-
   const [selectedWritingSessionId, setSelectedWritingSessionId] = useState('');
-const [selectedReadingSessionId, setSelectedReadingSessionId] = useState('');
+  const [selectedReadingSessionId, setSelectedReadingSessionId] = useState('');
 
-const handleWritingConversationSelect = (eventKey) => {
-    setSelectedWritingSessionId(eventKey);
-    setSelectedReadingSessionId('');
-};
-
-const handleReadingSessionSelect = (eventKey) => {
-    setSelectedReadingSessionId(eventKey);
-    setSelectedWritingSessionId('');
-};
-
-
-useEffect(() => {
-  const fetchReadingSessions = async () => {
-    try {
-      const response = await axios.get('/api/readingSessions', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-      });
-      setReadingSessions(response.data);
-    } catch (error) {
-      console.error('Failed to fetch reading sessions:', error);
-    }
+  // Handles selection of a writing conversation from the dropdown
+  const handleWritingConversationSelect = (eventKey) => {
+      setSelectedWritingSessionId(eventKey);
+      setSelectedReadingSessionId('');
   };
 
-  fetchReadingSessions();
-}, []);
+  // Handles selection of a reading session from the dropdown
+  const handleReadingSessionSelect = (eventKey) => {
+      setSelectedReadingSessionId(eventKey);
+      setSelectedWritingSessionId('');
+  };
 
+  // Fetches all reading sessions associated with the authenticated user from the backend
+  useEffect(() => {
+    const fetchReadingSessions = async () => {
+      try {
+        const response = await axios.get('/api/readingSessions', {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+        });
+        setReadingSessions(response.data);
+      } catch (error) {
+        console.error('Failed to fetch reading sessions:', error);
+      }
+    };
+    fetchReadingSessions();
+  }, []);
 
+  // Fetches all writing conversations that the authenticated user is part of, avoiding duplicates
   useEffect(() => {
     const fetchConversations = async () => {
       try {
@@ -65,32 +64,34 @@ useEffect(() => {
         console.error('Failed to fetch conversations:', error);
       }
     };
-    
-
     fetchConversations();
   }, []);
 
+  // Responds to changes in selected session IDs (writing or reading) and fetches relevant data to generate the analysis report
   useEffect(() => {
-    const currentSessionId = selectedWritingSessionId || selectedReadingSessionId;
-  
-    if (!currentSessionId) return;
-  
+    const currentSessionId = selectedWritingSessionId || selectedReadingSessionId; // Determines the current active session ID based on user selection
+
+    if (!currentSessionId) return; // Exits if no session is currently selected
+
     const fetchData = async () => {
       setLoading(true);
       try {
         let generalReportData, detailedAnalysisData, generatedText;
-        const savedReport = await fetchSavedReport(currentSessionId);
+        const savedReport = await fetchSavedReport(currentSessionId); // Attempts to fetch a previously saved report for the session
         if (savedReport) {
-          generatedText = savedReport.generatedText;
+          generatedText = savedReport.generatedText; // Uses existing generated text if available
           setGeneratedText(generatedText);
         } else {
+          // If no saved report, fetches all necessary data to generate a new report
           generalReportData = await fetchGeneralReport(currentSessionId);
           detailedAnalysisData = await fetchDetailedAnalysis(currentSessionId);
           const userMessages = await fetchUserMessages(currentSessionId);
+          
           if (!generalReportData || !detailedAnalysisData || !userMessages || userMessages.length === 0) {
             throw new Error('Data for generating AI content is incomplete.');
           }
-          generatedText = await generateAIContent(generalReportData, detailedAnalysisData, userMessages);
+          
+          generatedText = await generateAIContent(generalReportData, detailedAnalysisData, userMessages); // Generate new analysis content
         }
       } catch (error) {
         console.error('Error fetching data for AI content generation:', error);
@@ -98,10 +99,10 @@ useEffect(() => {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, [selectedWritingSessionId, selectedReadingSessionId]);
-  
+
   
   
 
