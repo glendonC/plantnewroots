@@ -5,6 +5,7 @@ const userRoutes = require('./routes/userRoutes');
 const dialogRoutes = require('./routes/dialogRoutes');
 const writingConversationRoutes = require('./routes/writingConversationRoutes');
 const writingAnalysisRoutes = require('./routes/writingAnalysisRoutes');
+const readingAnalysisRoutes = require('./routes/readingAnalysisRoutes');
 const textToSpeechRoutes = require('./routes/textToSpeechRoutes');
 const speechToTextRoutes = require('./routes/speechToTextRoutes');
 const readingSessionRoutes = require('./routes/readingSessionRoutes');
@@ -29,6 +30,8 @@ app.use('/api/dialog', dialogRoutes);
 app.use('/api/writingConversations', writingConversationRoutes);
 
 app.use('/api/writingAnalysis', writingAnalysisRoutes);
+
+app.use('/api/readingAnalysis', readingAnalysisRoutes);
 
 app.use('/api/readingSessions', readingSessionRoutes);
 
