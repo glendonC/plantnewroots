@@ -1,14 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const WritingConversation = require('../models/WritingConversation');
+const WritingConversationAnalysis = require('../models/WritingConversationAnalysis');
 const { analyzeSentiment, analyzeText } = require('../services/sentimentAnalysisService');
 const authenticate = require('../middleware/authenticate');
 
-const ConversationAnalysis = require('../models/ConversationAnalysis');
-
 router.get('/report', authenticate, async (req, res) => {
   try {
-    const conversations = await WritingConversation.find({
+    const conversations = await WritingConversationAnalysis.find({
       participants: req.user.id
     }).populate('participants messages.from');
     console.log('Fetched conversations:', conversations);
@@ -36,7 +34,7 @@ router.get('/report', authenticate, async (req, res) => {
 router.get('/report/:conversationId', authenticate, async (req, res) => {
   try {
     const { conversationId } = req.params;
-    const conversation = await WritingConversation.findById(conversationId).populate('participants messages.from');
+    const conversation = await WritingConversationAnalysis.findById(conversationId).populate('participants messages.from');
 
     if (!conversation) {
       return res.status(404).json({ message: 'Conversation not found' });
@@ -63,7 +61,7 @@ router.get('/report/:conversationId', authenticate, async (req, res) => {
 router.post('/analyze', async (req, res) => {
   try {
     const { conversationId } = req.body;
-    const conversation = await WritingConversation.findById(conversationId);
+    const conversation = await WritingConversationAnalysis.findById(conversationId);
 
     const analysisPromises = conversation.messages.map(message =>
       analyzeText(message.text)
@@ -81,7 +79,7 @@ router.post('/analyze', async (req, res) => {
 router.get('/:conversationId', authenticate, async (req, res) => {
   try {
     const { conversationId } = req.params;
-    const analysis = await ConversationAnalysis.findOne({ conversationId });
+    const analysis = await WritingConversationAnalysis.findOne({ conversationId });
 
     if (!analysis) {
       return res.status(404).json({ message: 'Analysis data not found for the specified conversation ID' });
@@ -103,9 +101,9 @@ router.post('/saveGeneratedText', authenticate, async (req, res) => {
       return res.status(400).json({ error: 'conversationId and generatedText are required' });
     }
 
-    let analysis = await ConversationAnalysis.findOne({ conversationId });
+    let analysis = await WritingConversationAnalysis.findOne({ conversationId });
     if (!analysis) {
-      analysis = new ConversationAnalysis({
+      analysis = new WritingConversationAnalysis({
         conversationId,
         generatedText,
       });
