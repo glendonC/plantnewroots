@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ConversationAnalysisSchema = new mongoose.Schema({
+const WritingConversationAnalysisSchema = new mongoose.Schema({
   conversationId: {
     type: String,
     required: true,
@@ -16,6 +16,6 @@ const ConversationAnalysisSchema = new mongoose.Schema({
   },
 });
 
-const ConversationAnalysis = mongoose.model('ConversationAnalysis', ConversationAnalysisSchema);
+const WritingConversationAnalysis = mongoose.model('WritingConversationAnalysis', WritingConversationAnalysisSchema);
 
-module.exports = ConversationAnalysis;
+module.exports = WritingConversationAnalysis;
