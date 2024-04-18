@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
-import {  DropdownButton, Container, Row, Col, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import './analysisreport.css';
 import HomeButton from '../../components/homebutton/HomeButton';
 
@@ -45,19 +44,19 @@ function AnalysisReport() {
   
       setLoading(true);
       try {
-        let generalReportData, detailedAnalysisData, generatedText;
+        let generalWritingReportData, detailedWritingAnalysisData, generatedText;
         const savedReport = await fetchSavedReport(selectedConversationId);
         if (savedReport) {
           generatedText = savedReport.generatedText;
           setGeneratedText(generatedText);
         } else if (!generatedText) {
-          generalReportData = await fetchGeneralReport(selectedConversationId);
-          detailedAnalysisData = await fetchDetailedAnalysis(selectedConversationId);
-          const userMessages = await fetchUserMessages(selectedConversationId);
-          if (!generalReportData || !detailedAnalysisData || !userMessages || userMessages.length === 0) {
+          generalWritingReportData = await fetchGeneralWritingReport(selectedConversationId);
+          detailedWritingAnalysisData = await fetchDetailedWritingAnalysis(selectedConversationId);
+          const userMessages = await fetchUserWritingMessages(selectedConversationId);
+          if (!generalWritingReportData || !detailedWritingAnalysisData || !userMessages || userMessages.length === 0) {
             throw new Error('Data for generating AI content is incomplete.');
           }
-          generatedText = await generateAIContent(generalReportData, detailedAnalysisData, userMessages);
+          generatedText = await generateAIContent(generalWritingReportData, detailedWritingAnalysisData, userMessages);
         }
       } catch (error) {
           console.error('Error fetching data for AI content generation:', error);
@@ -77,17 +76,17 @@ function AnalysisReport() {
     setSelectedConversationId(selectedConversationId);
   };
   
-  const fetchGeneralReport = async (conversationId) => {
+  const fetchGeneralWritingReport = async (conversationId) => {
     try {
       const response = await axios.get(`/api/analysis/report/${conversationId}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      console.log("General Report Data:", response.data);
+      console.log("General Writing Report Data:", response.data);
       return response.data;
     } catch (error) {
-      console.error('Failed to fetch general report:', error);
+      console.error('Failed to fetch general writing report:', error);
     }
   };
 
@@ -96,16 +95,16 @@ function AnalysisReport() {
         const response = await axios.get(`/api/analysis/${conversationId}`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
-        console.log("Saved Report Data:", response.data);
+        console.log("Saved Writing Report Data:", response.data);
         return response.data;
     } catch (error) {
-        console.error('Failed to fetch saved report:', error);
+        console.error('Failed to fetch saved writing report:', error);
         return null;
     }
 };
 
   
-  const fetchDetailedAnalysis = async (conversationId) => {
+  const fetchDetailedWritingAnalysis = async (conversationId) => {
     try {
       const response = await axios.post('/api/analysis/analyze', { conversationId }, {
         headers: {
@@ -120,7 +119,7 @@ function AnalysisReport() {
   };
   
 
-  const fetchUserMessages = async (conversationId) => {
+  const fetchUserWritingMessages = async (conversationId) => {
     try {
       const response = await axios.get(`/api/writingConversations/userMessages/${conversationId}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
@@ -140,7 +139,7 @@ function AnalysisReport() {
   };
   
 
-  const createAIPrompt = (generalReport, detailedAnalysis, userMessages) => {
+  const createAIPromptWriting = (generalReport, detailedAnalysis, userMessages) => {
     let prompt = `Analyze the following conversation data and provide specific feedback and recommendations for improvement:\n\n`;
   
     prompt += `General Analysis:\n- Average Sentiment Score: ${generalReport.sentimentScoreAverage} (${generalReport.sentimentScoreAverage < 0 ? "negative" : "positive or neutral"} tone)\n`;
@@ -161,21 +160,20 @@ function AnalysisReport() {
     return prompt;
   };
   
-  
 
-  const generateAIContent = async (generalReportData, detailedAnalysisData, userMessages) => {
+  const generateAIContent = async (generalWritingReportData, detailedWritingAnalysisData, userMessages) => {
     if (!selectedConversationId) {
       console.error("No conversation selected.");
       return;
     }
-    if (!generalReportData || !detailedAnalysisData || userMessages.length === 0) {
+    if (!generalWritingReportData || !detailedWritingAnalysisData || userMessages.length === 0) {
       console.error("Data for generating AI content is incomplete.");
       setLoading(false);
       return;
     }
   
     setLoading(true);
-    const prompt = createAIPrompt(generalReportData, detailedAnalysisData, userMessages);
+    const prompt = createAIPromptWriting(generalWritingReportData, detailedWritingAnalysisData, userMessages);
   
     try {
       const { GoogleGenerativeAI } = await import('@google/generative-ai');
@@ -212,7 +210,7 @@ function AnalysisReport() {
 };
 
 
-const formatAIGeneratedText = (generatedText) => {
+const formatAIGeneratedTextWriting = (generatedText) => {
   const sections = generatedText.split("**").filter(text => text.trim() !== "");
   
   return (
@@ -285,7 +283,7 @@ return (
             {generatedText ? (
               <div>
                 <h2>Generated Recommendations</h2>
-                {formatAIGeneratedText(generatedText)}
+                {formatAIGeneratedTextWriting(generatedText)}
               </div>
             ) : (
               <p>No recommendations generated yet.</p>
