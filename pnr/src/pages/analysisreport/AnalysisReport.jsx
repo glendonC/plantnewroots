@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Container, Row, Col, Dropdown } from 'react-bootstrap';
-import './analysisreport.css';
+import { Container, Row, Col } from 'react-bootstrap';
+import ConversationSelector from './ConversationSelector';
+import AIGeneratedContent from './AIGeneratedContent';
+import { useLoading } from '../../hooks/useLoading';
+import {
+  fetchGeneralWritingReport,
+  fetchDetailedWritingAnalysis,
+  fetchUserWritingMessages,
+  fetchSavedReport,
+  saveGeneratedText
+} from '../../services/writingAnalysisService';
+import { generateAIContent } from '../../services/aiContentService';
 import HomeButton from '../../components/homebutton/HomeButton';
-
-
+import './analysisreport.css';
+import axios from 'axios'
 function AnalysisReport() {
-  const [loading, setLoading] = useState(false);
+  const { loading, startLoading, stopLoading } = useLoading();
   const [conversations, setConversations] = useState([]);
   const [selectedConversationId, setSelectedConversationId] = useState('');
   const [generatedText, setGeneratedText] = useState('');
@@ -25,7 +34,6 @@ function AnalysisReport() {
             filteredConversations.push(conversation);
             seenIds.add(conversation.conversationId);
           }
-          // maybe need to handle user-message-only conversations or handle duplicates differently
         });
     
         setConversations(filteredConversations);
@@ -34,7 +42,6 @@ function AnalysisReport() {
       }
     };
     
-
     fetchConversations();
   }, []);
 
@@ -42,264 +49,63 @@ function AnalysisReport() {
     const fetchData = async () => {
       if (!selectedConversationId) return;
   
-      setLoading(true);
+      startLoading();
       try {
-        let generalWritingReportData, detailedWritingAnalysisData, generatedText;
+        let generatedText;
         const savedReport = await fetchSavedReport(selectedConversationId);
         if (savedReport) {
           generatedText = savedReport.generatedText;
           setGeneratedText(generatedText);
         } else if (!generatedText) {
-          generalWritingReportData = await fetchGeneralWritingReport(selectedConversationId);
-          detailedWritingAnalysisData = await fetchDetailedWritingAnalysis(selectedConversationId);
+          const generalWritingReportData = await fetchGeneralWritingReport(selectedConversationId);
+          const detailedWritingAnalysisData = await fetchDetailedWritingAnalysis(selectedConversationId);
           const userMessages = await fetchUserWritingMessages(selectedConversationId);
-          if (!generalWritingReportData || !detailedWritingAnalysisData || !userMessages || userMessages.length === 0) {
-            throw new Error('Data for generating AI content is incomplete.');
-          }
           generatedText = await generateAIContent(generalWritingReportData, detailedWritingAnalysisData, userMessages);
+          setGeneratedText(generatedText);
+          await saveGeneratedText(selectedConversationId, generatedText);
         }
       } catch (error) {
-          console.error('Error fetching data for AI content generation:', error);
+        console.error('Error fetching data for AI content generation:', error);
       } finally {
-          setLoading(false);
+        stopLoading();
       }
-  };
-  
-    
+    };
   
     fetchData();
   }, [selectedConversationId]);
-  
-  
 
   const handleConversationSelect = (selectedConversationId) => {
     setSelectedConversationId(selectedConversationId);
   };
-  
-  const fetchGeneralWritingReport = async (conversationId) => {
-    try {
-      const response = await axios.get(`/api/analysis/report/${conversationId}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      console.log("General Writing Report Data:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error('Failed to fetch general writing report:', error);
-    }
-  };
 
-  const fetchSavedReport = async (conversationId) => {
-    try {
-        const response = await axios.get(`/api/analysis/${conversationId}`, {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-        });
-        console.log("Saved Writing Report Data:", response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Failed to fetch saved writing report:', error);
-        return null;
-    }
-};
-
-  
-  const fetchDetailedWritingAnalysis = async (conversationId) => {
-    try {
-      const response = await axios.post('/api/analysis/analyze', { conversationId }, {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      console.log("Detailed Analysis Data:", response.data);
-      return response.data.detailedAnalysis;
-    } catch (error) {
-        console.error('Failed to fetch detailed analysis:', error);
-    }
-  };
-  
-
-  const fetchUserWritingMessages = async (conversationId) => {
-    try {
-      const response = await axios.get(`/api/writingConversations/userMessages/${conversationId}`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-      });
-      console.log("User Messages:", response.data);
-  
-      // Check if the response data is null or undefined
-      if (!response.data || !response.data.messages) {
-        throw new Error('No messages found in the response data');
-      }
-  
-      return response.data.messages;
-    } catch (error) {
-      console.error('Failed to fetch user messages:', error);
-      return [];
-    }
-  };
-  
-
-  const createAIPromptWriting = (generalReport, detailedAnalysis, userMessages) => {
-    let prompt = `Analyze the following conversation data and provide specific feedback and recommendations for improvement:\n\n`;
-  
-    prompt += `General Analysis:\n- Average Sentiment Score: ${generalReport.sentimentScoreAverage} (${generalReport.sentimentScoreAverage < 0 ? "negative" : "positive or neutral"} tone)\n`;
-    prompt += `- Number of Analyses Conducted: ${generalReport.analysisCount}\n\n`;
-  
-    prompt += `Detailed Analysis Findings:\n`;
-    detailedAnalysis.forEach((issue, index) => {
-      prompt += `${index + 1}. ${issue.aspect}: ${issue.feedback}\n`;
-    });
-  
-    prompt += `\nExamples from the conversation:\n`;
-    userMessages.forEach((msg, index) => {
-      prompt += `${index + 1}. "${msg.text}"\n`;
-    });
-  
-    prompt += `\nBased on the above analysis and examples, provide specific feedback and actionable recommendations for the user to improve their conversation skills. Focus on aspects such as grammar, style, vocabulary, and engagement.`;
-  
-    return prompt;
-  };
-  
-
-  const generateAIContent = async (generalWritingReportData, detailedWritingAnalysisData, userMessages) => {
-    if (!selectedConversationId) {
-      console.error("No conversation selected.");
-      return;
-    }
-    if (!generalWritingReportData || !detailedWritingAnalysisData || userMessages.length === 0) {
-      console.error("Data for generating AI content is incomplete.");
-      setLoading(false);
-      return;
-    }
-  
-    setLoading(true);
-    const prompt = createAIPromptWriting(generalWritingReportData, detailedWritingAnalysisData, userMessages);
-  
-    try {
-      const { GoogleGenerativeAI } = await import('@google/generative-ai');
-      const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-      const genAI = new GoogleGenerativeAI(API_KEY);
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = await response.text();
-      setGeneratedText(text);
-      await saveGeneratedText(selectedConversationId, text);
-    } catch (error) {
-      console.error('Error loading GoogleGenerativeAI or generating content:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  
-
-  const saveGeneratedText = async (conversationId, generatedText) => {
-    try {
-        await axios.post('/api/analysis/saveGeneratedText', {
-            conversationId,
-            generatedText
-        }, {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-        });
-        console.log('Generated text saved successfully');
-    } catch (error) {
-        console.error('Error saving generated text:', error);
-    }
-};
-
-
-const formatAIGeneratedTextWriting = (generatedText) => {
-  const sections = generatedText.split("**").filter(text => text.trim() !== "");
-  
   return (
-    <>
-      {sections.map((section, index) => {
-        if (section.startsWith("General Analysis:") || section.startsWith("Detailed Analysis Findings:")) {
-          return <h3 key={index}>{section}</h3>;
-        } else if (section.startsWith("Examples from the conversation:")) {
-          const messages = section.split("\n").filter(text => text.trim() !== "" && !text.startsWith("Examples from"));
-          return (
-            <div key={index}>
-              <h4>Examples from the conversation:</h4>
-              <ul>
-                {messages.map((msg, msgIndex) => (
-                  <li key={msgIndex}>{msg}</li>
-                ))}
-              </ul>
-            </div>
-          );
-        } else if (section.startsWith("Personalized Recommendations:") || section.startsWith("Overall Improvement Tips:")) {
-          const items = section.split("*").filter(text => text.trim() !== "");
-          return (
-            <div key={index}>
-              <h4>{items.shift()}</h4>
-              <ul>
-                {items.map((item, itemIndex) => (
-                  <li key={itemIndex}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          );
-        } else {
-          return <p key={index} style={{ color: 'white' }}>{section}</p>;
-        }
-      })}
-    </>
+    <Container className="mt-4 d-flex flex-column min-vh-100">
+      <Row className="justify-content-md-center pt-5">
+        <Col xs={12} className="text-center">
+          <h1>Conversation Analysis Report</h1>
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center py-3">
+        <Col xs={12} md={8} lg={6}>
+          <ConversationSelector
+            conversations={conversations}
+            selectedConversationId={selectedConversationId}
+            onSelect={handleConversationSelect}
+          />
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center">
+        <Col xs={12} md={8}>
+          <AIGeneratedContent loading={loading} generatedText={generatedText} />
+        </Col>
+      </Row>
+      <Row className="mt-auto">
+        <Col>
+          <HomeButton />
+        </Col>
+      </Row>
+    </Container>
   );
-};
-
-
-return (
-<Container className="mt-4 d-flex flex-column min-vh-100">
-    <Row className="justify-content-md-center pt-5">
-      <Col xs={12} className="text-center">
-        <h1>Conversation Analysis Report</h1>
-      </Col>
-    </Row>
-    <Row className="justify-content-md-center py-3">
-      <Col xs={12} md={8} lg={6}>
-        <Dropdown onSelect={handleConversationSelect}>
-          <Dropdown.Toggle variant="primary" id="conversation-dropdown">
-            {selectedConversationId ? conversations.find(conversation => conversation._id === selectedConversationId)?.name : 'Select a conversation'}
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            {conversations.map(conversation => (
-              <Dropdown.Item key={conversation._id} eventKey={conversation._id}>
-                {conversation.name} - {conversation.tag}
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
-      </Col>
-    </Row>
-    <Row className="justify-content-md-center">
-      <Col xs={12} md={8}>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <>
-            {generatedText ? (
-              <div>
-                <h2>Generated Recommendations</h2>
-                {formatAIGeneratedTextWriting(generatedText)}
-              </div>
-            ) : (
-              <p>No recommendations generated yet.</p>
-            )}
-          </>
-        )}
-      </Col>
-    </Row>
-    <Row className="mt-auto">
-      <Col>
-        <HomeButton />
-      </Col>
-    </Row>
-  </Container>
-);
-
 }
 
 export default AnalysisReport;
