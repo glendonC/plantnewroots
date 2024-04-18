@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import { DropdownButton, Dropdown } from 'react-bootstrap';
+import {  DropdownButton, Container, Row, Col, Dropdown } from 'react-bootstrap';
 import './analysisreport.css';
 import HomeButton from '../../components/homebutton/HomeButton';
 
@@ -11,49 +11,6 @@ function AnalysisReport() {
   const [conversations, setConversations] = useState([]);
   const [selectedConversationId, setSelectedConversationId] = useState('');
   const [generatedText, setGeneratedText] = useState('');
-
-  const StyledSelect = styled.select`
-  width: 100%;
-  padding: 10px 15px;
-  border-radius: 5px;
-  border: 2px solid #007bff;
-  background-color: white;
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s ease-in-out;
-
-  &:hover, &:focus {
-    border-color: #0056b3;
-    outline: none;
-  }
-`;
-
-const StyledDropdownButton = styled(DropdownButton)`
-  width: 100%;
-  padding: 10px 15px;
-  border-radius: 5px;
-  border: 2px solid #007bff;
-  background-color: white;
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s ease-in-out;
-
-  &:hover, &:focus {
-    border-color: #0056b3;
-    outline: none;
-  }
-`;
-
-const StyledDropdownItem = styled(Dropdown.Item)`
-  &:hover, &:focus {
-    background-color: #f0f0f0;
-  }
-`;
-
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -297,38 +254,52 @@ const formatAIGeneratedText = (generatedText) => {
 
 
 return (
-  <div className="page-container d-flex flex-column mh-100">
-    <div className="analysis-report-container flex-grow-1">
-      <h1>Conversation Analysis Report</h1>
-      <Dropdown onSelect={handleConversationSelect}>
-      <Dropdown.Toggle variant="primary" id="conversation-dropdown">
-        {selectedConversationId ? conversations.find(conversation => conversation._id === selectedConversationId)?.name : 'Select a conversation'}
-      </Dropdown.Toggle>
-      <Dropdown.Menu>
-        {conversations.map(conversation => (
-          <Dropdown.Item key={conversation._id} eventKey={conversation._id}>
-            {conversation.name} - {conversation.tag}
-          </Dropdown.Item>
-        ))}
-      </Dropdown.Menu>
-    </Dropdown>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {generatedText ? (
-            <div>
-              <h2>Generated Recommendations</h2>
-              {formatAIGeneratedText(generatedText)}
-            </div>
-          ) : (
-            <p>No recommendations generated yet.</p>
-          )}
-        </>
-      )}
-    </div>
-    <HomeButton className="mt-auto"/>
-  </div>
+<Container className="mt-4 d-flex flex-column min-vh-100">
+    <Row className="justify-content-md-center pt-5">
+      <Col xs={12} className="text-center">
+        <h1>Conversation Analysis Report</h1>
+      </Col>
+    </Row>
+    <Row className="justify-content-md-center py-3">
+      <Col xs={12} md={8} lg={6}>
+        <Dropdown onSelect={handleConversationSelect}>
+          <Dropdown.Toggle variant="primary" id="conversation-dropdown">
+            {selectedConversationId ? conversations.find(conversation => conversation._id === selectedConversationId)?.name : 'Select a conversation'}
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            {conversations.map(conversation => (
+              <Dropdown.Item key={conversation._id} eventKey={conversation._id}>
+                {conversation.name} - {conversation.tag}
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+      </Col>
+    </Row>
+    <Row className="justify-content-md-center">
+      <Col xs={12} md={8}>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            {generatedText ? (
+              <div>
+                <h2>Generated Recommendations</h2>
+                {formatAIGeneratedText(generatedText)}
+              </div>
+            ) : (
+              <p>No recommendations generated yet.</p>
+            )}
+          </>
+        )}
+      </Col>
+    </Row>
+    <Row className="mt-auto">
+      <Col>
+        <HomeButton />
+      </Col>
+    </Row>
+  </Container>
 );
 
 }
