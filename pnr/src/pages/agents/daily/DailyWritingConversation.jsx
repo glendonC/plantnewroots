@@ -31,11 +31,17 @@ function DailyWritingConversation() {
     const handleSaveClick = () => {
         if (!conversationName) {
             setShowModal(true);
-            return;
+        } else {
+            saveConversation();
         }
-        saveConversation();
     };
-
+    
+    // Add this in the Modal's close button onClick
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setConversationName(''); // Reset conversation name when modal is closed without saving
+    };
+    
     const saveConversation = async () => {
         if (!conversationName) {
             alert('Please enter a name for the conversation.');
@@ -44,34 +50,39 @@ function DailyWritingConversation() {
         const payload = {
             participants: [localStorage.getItem('userId'), '660a88e076ab4670bfd0bfc6'],
             messages: messages.map(message => ({
-                ...message,
+                text: message.text,
                 from: message.from === 'user' ? localStorage.getItem('userId') : '660a88e076ab4670bfd0bfc6',
             })),
             name: conversationName,
             tag: "Daily Writing",
         };
     
+        console.log("Sending payload to server:", payload); // Debug log to see what's being sent
+    
         try {
             const response = await axios.post('/api/writingConversations/save', payload, {
                 headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}
             });
-            await saveUserMessages(response.data.conversationId);
+            console.log("Server response:", response.data); // Debug log to see server response
+            await saveUserMessages(response.data.sessionId);
             alert('Conversation saved!');
+            setConversationName('');
         } catch (error) {
             console.error('Error saving conversation:', error);
             alert('Failed to save the conversation.');
         }
     };
     
+    
 
     
-    const saveUserMessages = async (conversationId) => {
+    const saveUserMessages = async (sessionId) => {
         const userMessages = messages.filter(message => message.from === 'user').map(message => message.text);
     
         try {
             await axios.post('/api/writingConversations/userMessages/save', {
                 userId: localStorage.getItem('userId'),
-                conversationId,
+                sessionId,
                 messages: userMessages,
                 name: conversationName,
                 tag: conversationTag,
@@ -159,13 +170,14 @@ function DailyWritingConversation() {
                     />
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="outline-secondary" onClick={() => setShowModal(false)}>
-                        Close
-                    </Button>
-                    <Button variant="outline-primary" onClick={() => { if (conversationName) saveConversation(); setShowModal(false); }}>
-                        Save Conversation
-                    </Button>
-                </Modal.Footer>
+    <Button variant="outline-secondary" onClick={handleCloseModal}>
+        Close
+    </Button>
+    <Button variant="outline-primary" onClick={() => { if (conversationName) saveConversation(); setShowModal(false); }}>
+        Save Conversation
+    </Button>
+</Modal.Footer>
+
             </Modal>
         </div>
     );

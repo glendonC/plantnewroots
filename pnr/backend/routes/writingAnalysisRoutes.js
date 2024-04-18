@@ -31,60 +31,66 @@ router.get('/report', authenticate, async (req, res) => {
   }
 });
 
-router.get('/report/:conversationId', authenticate, async (req, res) => {
+// Example: Adjusting findById to findOne for UUID sessionId
+router.get('/report/:sessionId', authenticate, async (req, res) => {
+  console.log("Requested session ID:", req.params.sessionId);  // Log the incoming session ID
   try {
-    const { conversationId } = req.params;
-    const conversation = await WritingConversationAnalysis.findById(conversationId).populate('participants messages.from');
+      const { sessionId } = req.params;
+      const conversation = await WritingConversationAnalysis.findOne({ sessionId }).populate('participants messages.from');
+      console.log("Fetched conversation:", conversation);  // Log the fetched conversation
 
-    if (!conversation) {
-      return res.status(404).json({ message: 'Conversation not found' });
-    }
+      if (!conversation) {
+          console.log("No conversation found for ID:", sessionId);  // Log if not found
+          return res.status(404).json({ message: 'Conversation not found' });
+      }
 
-    const sentimentScores = [];
-    for (let message of conversation.messages) {
-      const sentiment = await analyzeSentiment(message.text);
-      sentimentScores.push(sentiment.score);
-    }
-    
-    const averageSentimentScore = sentimentScores.reduce((a, b) => a + b, 0) / sentimentScores.length;
+      const sentimentScores = conversation.messages.map(message => analyzeSentiment(message.text));
+      const averageSentimentScore = sentimentScores.reduce((a, b) => a + b, 0) / sentimentScores.length;
 
-    res.json({
-      sentimentScoreAverage: averageSentimentScore.toFixed(2),
-      analysisCount: sentimentScores.length
-    });
+      res.json({
+          sentimentScoreAverage: averageSentimentScore.toFixed(2),
+          analysisCount: sentimentScores.length
+      });
   } catch (error) {
-    console.error('Error fetching specific analysis report:', error);
-    res.status(500).json({ error: 'Failed to fetch specific analysis report' });
+      console.error('Error fetching specific analysis report:', error);
+      res.status(500).json({ error: 'Failed to fetch specific analysis report' });
   }
 });
 
-router.post('/analyze', async (req, res) => {
+router.post('/analyze', authenticate, async (req, res) => {
+  console.log("Analyzing session with ID:", req.body.sessionId);
   try {
-    const { conversationId } = req.body;
-    const conversation = await WritingConversationAnalysis.findById(conversationId);
+      const { sessionId } = req.body;
+      const conversation = await WritingConversationAnalysis.findOne({ sessionId });
 
-    const analysisPromises = conversation.messages.map(message =>
-      analyzeText(message.text)
-    );
-    const analysisResults = await Promise.all(analysisPromises);
+      if (!conversation) {
+          console.log("No conversation found for analysis with ID:", sessionId);
+          return res.status(404).json({ message: 'Conversation not found' });
+      }
 
-    // process analysisResults to identify mistakes, strengths, etc
-    res.json({ detailedAnalysis: analysisResults });
+      if (!conversation.messages || conversation.messages.length === 0) {
+          console.log("No messages available for analysis in conversation with ID:", sessionId);
+          return res.status(400).json({ message: 'No messages available for analysis' });
+      }
+
+      const analysisPromises = conversation.messages.map(message => analyzeText(message.text));
+      const analysisResults = await Promise.all(analysisPromises);
+
+      res.json({ detailedAnalysis: analysisResults });
   } catch (error) {
-    console.error("Error analyzing conversation:", error);
-    res.status(500).json({ error: 'Failed to analyze conversation' });
+      console.error("Error analyzing conversation with ID:", req.body.sessionId, error);
+      res.status(500).json({ error: 'Failed to analyze conversation', details: error.message });
   }
 });
 
-router.get('/:conversationId', authenticate, async (req, res) => {
-  try {
-    const { conversationId } = req.params;
-    const analysis = await WritingConversationAnalysis.findOne({ conversationId });
 
+router.get('/:sessionId', authenticate, async (req, res) => {
+  const { sessionId } = req.params;
+  try {
+    const analysis = await WritingConversationAnalysis.findOne({ sessionId });
     if (!analysis) {
-      return res.status(404).json({ message: 'Analysis data not found for the specified conversation ID' });
+      return res.status(404).json({ message: 'Analysis data not found for the specified session ID' });
     }
-
     res.json(analysis);
   } catch (error) {
     console.error('Error fetching analysis data:', error);
@@ -93,18 +99,20 @@ router.get('/:conversationId', authenticate, async (req, res) => {
 });
 
 
+
+
 router.post('/saveGeneratedText', authenticate, async (req, res) => {
   try {
-    const { conversationId, generatedText } = req.body;
+    const { sessionId, generatedText } = req.body;
 
-    if (!conversationId || !generatedText) {
-      return res.status(400).json({ error: 'conversationId and generatedText are required' });
+    if (!sessionId || !generatedText) {
+      return res.status(400).json({ error: 'sessionId and generatedText are required' });
     }
 
-    let analysis = await WritingConversationAnalysis.findOne({ conversationId });
+    let analysis = await WritingConversationAnalysis.findOne({ sessionId });
     if (!analysis) {
       analysis = new WritingConversationAnalysis({
-        conversationId,
+        sessionId,
         generatedText,
       });
     } else {

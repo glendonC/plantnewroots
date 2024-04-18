@@ -4,38 +4,44 @@ import { Dropdown } from 'react-bootstrap';
 const SessionSelector = ({
     writingSessions = [], 
     readingSessions = [],
-    onWritingSessionSelect,
-    onReadingSessionSelect,
-    selectedWritingSessionId,
-    selectedReadingSessionId
+    onSessionSelect,
+    selectedSessionId
 }) => {
     return (
         <>
             <h3>Select Writing Conversation:</h3>
-            <Dropdown onSelect={onWritingSessionSelect}>
+            <Dropdown onSelect={(eventKey) => onSessionSelect(eventKey, 'writing')}>
                 <Dropdown.Toggle variant="primary" id="writing-dropdown">
-                    {selectedWritingSessionId ? writingSessions.find(session => session._id === selectedWritingSessionId)?.name : 'Select a writing conversation'}
+                    {selectedSessionId ? writingSessions.find(session => session.sessionId === selectedSessionId)?.name : 'Select a writing conversation'}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                    {writingSessions && writingSessions.map(session => (
-                        <Dropdown.Item key={session._id} eventKey={session._id}>
-                            {session.name} - {session.tag}
-                        </Dropdown.Item>
-                    ))}
+                    {writingSessions.map(session => ([
+                        <Dropdown.Item key={`${session.sessionId}-full`} eventKey={session.sessionId}>
+    {session.name} - Full Conversation
+</Dropdown.Item>,
+<Dropdown.Item key={`${session.sessionId}-user`} eventKey={session.sessionId}>
+    {session.name} - User Messages
+</Dropdown.Item>
+
+                    ]))}
                 </Dropdown.Menu>
             </Dropdown>
 
             <h3>Select Reading Session:</h3>
-            <Dropdown onSelect={onReadingSessionSelect}>
+            <Dropdown onSelect={(eventKey) => onSessionSelect(eventKey, 'reading')}>
                 <Dropdown.Toggle variant="secondary" id="reading-dropdown">
-                    {selectedReadingSessionId ? readingSessions.find(session => session._id === selectedReadingSessionId)?.name : 'Select a reading session'}
+                    {selectedSessionId ? readingSessions.find(session => session.sessionId === selectedSessionId)?.name : 'Select a reading session'}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                    {readingSessions && readingSessions.map(session => (
-                        <Dropdown.Item key={session._id} eventKey={session._id}>
-                            {session.name}
-                        </Dropdown.Item>
-                    ))}
+                    {readingSessions.map(session => ([
+                        <Dropdown.Item key={`${session.sessionId}-full`} eventKey={session.sessionId}>
+    {session.name} - Full Conversation
+</Dropdown.Item>,
+<Dropdown.Item key={`${session.sessionId}-user`} eventKey={session.sessionId}>
+    {session.name} - User Messages
+</Dropdown.Item>
+
+                    ]))}
                 </Dropdown.Menu>
             </Dropdown>
         </>

@@ -4,13 +4,15 @@ const writingConversationSchema = new mongoose.Schema({
   participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   messages: [{
     text: String,
-    from: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    timestamp: { type: Date, default: Date.now }
+    from: mongoose.Schema.Types.ObjectId,
+    timestamp: Date
   }],
-  conversationId: { type: String, required: true },
-  name: { type: String, required: true },
-  tag: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
-});
+  name: String,
+  tag: String,
+  sessionId: { type: String, required: true },
+  type: { type: String, enum: ['full', 'user'], default: 'full' } // Assuming 'full' is the default type for complete conversations
+}, { collection: 'writingconversations' });
 
-module.exports = mongoose.model('WritingConversation', writingConversationSchema);
+const WritingConversation = mongoose.model('WritingConversation', writingConversationSchema);
+
+module.exports = WritingConversation;

@@ -55,7 +55,7 @@ function CulturalWritingConversation() {
             const response = await axios.post('/api/writingConversations/save', payload, {
                 headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}
             });
-            await saveUserMessages(response.data.conversationId);
+            await saveUserMessages(response.data.sessionId);
             alert('Conversation saved!');
         } catch (error) {
             console.error('Error saving conversation:', error);
@@ -65,13 +65,13 @@ function CulturalWritingConversation() {
     
 
     
-    const saveUserMessages = async (conversationId) => {
+    const saveUserMessages = async (sessionId) => {
         const userMessages = messages.filter(message => message.from === 'user').map(message => message.text);
     
         try {
             await axios.post('/api/writingConversations/userMessages/save', {
                 userId: localStorage.getItem('userId'),
-                conversationId,
+                sessionId,
                 messages: userMessages,
                 name: conversationName,
                 tag: conversationTag,
