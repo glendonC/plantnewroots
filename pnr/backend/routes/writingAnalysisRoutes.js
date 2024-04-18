@@ -4,7 +4,7 @@ const WritingConversation = require('../models/WritingConversation');
 const { analyzeSentiment, analyzeText } = require('../services/sentimentAnalysisService');
 const authenticate = require('../middleware/authenticate');
 
-const ConversationAnalysis = require('../models/ConversationAnalysis');
+const WritingConversationAnalysis = require('../models/WritingConversationAnalysis');
 
 router.get('/report', authenticate, async (req, res) => {
   try {
@@ -81,7 +81,7 @@ router.post('/analyze', async (req, res) => {
 router.get('/:conversationId', authenticate, async (req, res) => {
   try {
     const { conversationId } = req.params;
-    const analysis = await ConversationAnalysis.findOne({ conversationId });
+    const analysis = await WritingConversationAnalysis.findOne({ conversationId });
 
     if (!analysis) {
       return res.status(404).json({ message: 'Analysis data not found for the specified conversation ID' });
@@ -103,9 +103,9 @@ router.post('/saveGeneratedText', authenticate, async (req, res) => {
       return res.status(400).json({ error: 'conversationId and generatedText are required' });
     }
 
-    let analysis = await ConversationAnalysis.findOne({ conversationId });
+    let analysis = await WritingConversationAnalysis.findOne({ conversationId });
     if (!analysis) {
-      analysis = new ConversationAnalysis({
+      analysis = new WritingConversationAnalysis({
         conversationId,
         generatedText,
       });
