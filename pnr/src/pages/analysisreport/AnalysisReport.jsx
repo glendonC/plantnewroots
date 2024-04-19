@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import ConversationSelector from './ConversationSelector';
-import AIGeneratedContent from './AIGeneratedContent';
+import AIGeneratedContentWriting from './AIGeneratedContentWriting';
 import { useLoading } from '../../hooks/useLoading';
 import {
   fetchGeneralWritingReport,
@@ -96,7 +96,7 @@ function AnalysisReport() {
       </Row>
       <Row className="justify-content-md-center">
         <Col xs={12} md={8}>
-          <AIGeneratedContent loading={loading} generatedText={generatedText} />
+          <AIGeneratedContentWriting loading={loading} generatedText={generatedText} />
         </Col>
       </Row>
       <Row className="mt-auto">
