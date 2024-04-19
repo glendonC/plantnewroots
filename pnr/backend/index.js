@@ -8,6 +8,7 @@ const writingAnalysisRoutes = require('./routes/writingAnalysisRoutes');
 const textToSpeechRoutes = require('./routes/textToSpeechRoutes');
 const speechToTextRoutes = require('./routes/speechToTextRoutes');
 const readingSessionRoutes = require('./routes/readingSessionRoutes');
+const readingAnalysisRoutes = require('./routes/readingAnalysisRoutes');
 
 const app = express();
 
@@ -35,6 +36,8 @@ app.use('/api/text-to-speech', textToSpeechRoutes);
 app.use('/api/speech-to-text', speechToTextRoutes);
 
 app.use('/api/reading-session', readingSessionRoutes);
+
+app.use('/api/reading-sessions', readingAnalysisRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
