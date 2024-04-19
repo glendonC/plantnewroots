@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
-import { Button, Form, Container, Row, Col, Dropdown } from 'react-bootstrap';
+import { Modal, Button, Form, Container, Row, Col, Dropdown } from 'react-bootstrap';
 import HomeButton from "../../components/homebutton/HomeButton";
 import Transition from "../../components/transition/Transition";
 
@@ -12,6 +12,8 @@ const Reading = () => {
   const [expectedAnswers, setExpectedAnswers] = useState([]);
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [sessionName, setSessionName] = useState("");
 
   const generateContent = async () => {
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
@@ -128,73 +130,127 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
   }, [content, submitted]);
 
 
+  const saveSession = async () => {
+    const sessionData = {
+      name: sessionName,
+      content,
+      answers,
+      feedback
+    };
   
-
+    try {
+      const response = await fetch('/api/reading-session/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(sessionData)
+      });
+  
+      if (response.ok) {
+        const jsonResponse = await response.json();
+        console.log("Session saved successfully:", jsonResponse);
+        setShowSaveModal(false);
+      } else {
+        throw new Error('Failed to save session: ' + response.status);
+      }
+    } catch (error) {
+      console.error('Error saving session:', error);
+    }
+  };
+  
   return (
     <Container className="mt-4 d-flex flex-column min-vh-100">
-      <div className="flex-grow-1">
       <Row className="justify-content-md-center pt-5">
-          <Col xs={12}>
-            <h1 className="text-center">Reading Exercise</h1>
-          </Col>
-        </Row>
-        <Row className="justify-content-md-center mt-3">
-          <Col md={6}>
-            <Dropdown>
-              <Dropdown.Toggle variant="success" id="dropdown-basic-text-length">
-                Select text length: {textLength || "Choose..."}
-              </Dropdown.Toggle>
-  
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => setTextLength('short')}>Short</Dropdown.Item>
-                <Dropdown.Item onClick={() => setTextLength('medium')}>Medium</Dropdown.Item>
-                <Dropdown.Item onClick={() => setTextLength('long')}>Long</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Col>
-        </Row>
-        <Row className="justify-content-md-center mt-3">
-          <Col md={6}>
-            <Button variant="primary" onClick={generateContent} disabled={!textLength}>
-              Generate Text
-            </Button>
-          </Col>
-        </Row>
-        <Row className="justify-content-md-center mt-3">
-          <Col md={6}>
-            <div className="content-section">
-              <p>{content.text}</p>
-              {content.questions.map((question, index) => (
-                <div key={index} className="mb-3">
-                  <p>{question.query}</p>
-                  <input
-                    type="text"
-                    placeholder="Your answer..."
-                    value={answers[index] || ''}
-                    onChange={(e) => handleAnswerChange(index, e.target.value)}
-                  />
-                </div>
-              ))}
-              {content.text && content.questions.length > 0 && (
-                <Button variant="success" onClick={submitAnswers}>
-                  Submit Answers
-                </Button>
-              )}
-            </div>
-          </Col>
-          <Col md={4} className="align-self-start" style={{ marginTop: '-12px' }}>
-            {feedback && (
-              <div className="mt-3" style={{ border: '1px solid #ccc', padding: '10px' }}>
-                <h3>Feedback</h3>
-                {feedback.split('\n').map((feedbackLine, index) => (
-                  <p key={index}>{feedbackLine}</p>
-                ))}
+        <Col xs={12}>
+          <h1 className="text-center">Reading Exercise</h1>
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center mt-3">
+        <Col md={6}>
+          <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic-text-length">
+              Select text length: {textLength || "Choose..."}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => setTextLength('short')}>Short</Dropdown.Item>
+              <Dropdown.Item onClick={() => setTextLength('medium')}>Medium</Dropdown.Item>
+              <Dropdown.Item onClick={() => setTextLength('long')}>Long</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center mt-3">
+        <Col md={6}>
+          <Button variant="primary" onClick={generateContent} disabled={!textLength}>
+            Generate Text
+          </Button>
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center mt-3">
+        <Col md={6}>
+          <div className="content-section">
+            <p>{content.text}</p>
+            {content.questions.map((question, index) => (
+              <div key={index} className="mb-3">
+                <p>{question.query}</p>
+                <input
+                  type="text"
+                  placeholder="Your answer..."
+                  value={answers[index] || ''}
+                  onChange={(e) => handleAnswerChange(index, e.target.value)}
+                />
               </div>
+            ))}
+            {content.text && content.questions.length > 0 && (
+              <Button variant="success" onClick={submitAnswers}>
+                Submit Answers
+              </Button>
             )}
-          </Col>
-        </Row>
-      </div>
-      <HomeButton className="mt-auto"/>
+          </div>
+        </Col>
+        <Col md={4} className="align-self-start" style={{ marginTop: '-12px' }}>
+          {feedback && (
+            <div className="mt-3" style={{ border: '1px solid #ccc', padding: '10px' }}>
+              <h3>Feedback</h3>
+              {feedback.split('\n').map((feedbackLine, index) => (
+                <p key={index}>{feedbackLine}</p>
+              ))}
+            </div>
+          )}
+        </Col>
+      </Row>
+      <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Save Reading Session</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="sessionName">
+              <Form.Label>Session Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter a name for this session"
+                value={sessionName}
+                onChange={(e) => setSessionName(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={saveSession}>
+            Save Session
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Button variant="primary" onClick={() => setShowSaveModal(true)} className="mt-auto">
+        Save Session
+      </Button>
+      <HomeButton />
     </Container>
   );
   
