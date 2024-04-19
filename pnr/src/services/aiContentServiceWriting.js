@@ -2,12 +2,11 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-export const generateAIContent = async (generalWritingReportData, detailedWritingAnalysisData, userMessages) => {
+export const generateAIContentWriting = async (generalWritingReportData, detailedWritingAnalysisData, userMessages) => {
   if (!generalWritingReportData || !detailedWritingAnalysisData || userMessages.length === 0) {
     console.error("Data for generating AI content is incomplete.");
     return '';
   }
-
   const prompt = createAIPromptWriting(generalWritingReportData, detailedWritingAnalysisData, userMessages);
 
   try {
