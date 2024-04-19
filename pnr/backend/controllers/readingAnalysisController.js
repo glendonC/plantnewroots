@@ -31,4 +31,29 @@ const getReadingSessionsByConversationId = async (req, res) => {
   }
 };
 
-module.exports = { getReadingSessions, getReadingSessionDetails, getReadingSessionsByConversationId };
+
+const getReadingAnalysisDetails = async (req, res) => {
+  try {
+    const session = await ReadingSession.findById(req.params.id);
+    if (!session) {
+      return res.status(404).json({ message: 'Reading session not found' });
+    }
+
+    console.log('Reading Session:', session);
+    const answersObject = {};
+    session.answers.forEach((value, key) => {
+      answersObject[key] = value;
+    });
+    
+    res.json({
+      text: session.content.text,
+      questions: session.content.questions,
+      answers: answersObject
+    });
+  
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch reading analysis details', error: error.message });
+  }
+};
+
+module.exports = { getReadingSessions, getReadingSessionDetails, getReadingSessionsByConversationId, getReadingAnalysisDetails };

@@ -6,7 +6,7 @@ const fetchReadingSessions = async () => {
 };
 
 const fetchReadingSessionDetails = async (sessionId) => {
-  const response = await axios.get(`/api/reading-analysis/${sessionId}`);
+  const response = await axios.get(`/api/reading-analysis/reading-analysis/${sessionId}`);
   return response.data;
 };
 

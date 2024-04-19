@@ -74,8 +74,14 @@ function AnalysisReport() {
           }
         } else if (sessionType === 'reading') {
           const readingDetails = await fetchReadingSessionDetails(selectedConversationId);
-          generatedText = await generateAIContentReading(readingDetails.text, readingDetails.questions, readingDetails.answers);
+          const { text, questions, answers } = readingDetails;
+          if (text && questions && answers) {
+            generatedText = await generateAIContentReading(text, questions, answers);
+          } else {
+            console.error("Data for generating AI content for reading is incomplete.");
+          }
         }
+        
   
         if (generatedText) {
           setGeneratedText(generatedText);
