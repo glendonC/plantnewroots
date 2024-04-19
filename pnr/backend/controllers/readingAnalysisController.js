@@ -31,4 +31,4 @@ const getReadingSessionsByConversationId = async (req, res) => {
   }
 };
 
-module.exports = { getReadingSessions, getReadingSessionDetails };
+module.exports = { getReadingSessions, getReadingSessionDetails, getReadingSessionsByConversationId };
