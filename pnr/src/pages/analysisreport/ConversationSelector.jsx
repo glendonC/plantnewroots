@@ -20,7 +20,7 @@ function ConversationSelector({ conversations, selectedConversationId, onSelect 
             <Dropdown.ItemText>{type.toUpperCase()}</Dropdown.ItemText>
             {conversations.map(conversation => (
               <Dropdown.Item key={conversation._id} eventKey={conversation._id}>
-                {conversation.name} - {conversation.tag}
+                {conversation.name} - {conversation.type === 'reading' ? 'Reading' : conversation.tag}
               </Dropdown.Item>
             ))}
           </React.Fragment>

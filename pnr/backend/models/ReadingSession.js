@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const readingSessionSchema = new mongoose.Schema({
   conversationId: { type: String, required: true },
   name: { type: String, required: true },
+  type: { type: String, required: true, default: 'reading' },
   content: {
     text: { type: String, required: true },
     questions: [
