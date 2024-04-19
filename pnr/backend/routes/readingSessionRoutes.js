@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const ReadingSession = require('../models/ReadingSession');
+const { getReadingSessions, getReadingSessionDetails } = require('../controllers/readingSessionController');
+
+router.get('/', getReadingSessions);
+
+router.get('/:id', getReadingSessionDetails);
 
 router.post('/save', async (req, res) => {
     try {
