@@ -1,5 +1,12 @@
 import axios from 'axios';
 
+export const fetchWritingSessions = async () => {
+  const response = await axios.get('/api/writingConversations', {
+    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+  });
+  return response.data;
+};
+
 export const fetchGeneralWritingReport = async (conversationId) => {
   try {
     const response = await axios.get(`/api/analysis/report/${conversationId}`, {
