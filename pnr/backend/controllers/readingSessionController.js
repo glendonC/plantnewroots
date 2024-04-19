@@ -23,11 +23,12 @@ exports.getReadingSessionDetails = async (req, res) => {
 
 exports.saveReadingSession = async (req, res) => {
   try {
-    const { name, content, answers, feedback } = req.body;
-    const newSession = new ReadingSession({ name, content, answers, feedback });
+    const { conversationId, name, content, answers, feedback } = req.body;
+    const newSession = new ReadingSession({ conversationId, name, content, answers, feedback });
     await newSession.save();
     res.status(201).json({ message: "Session saved successfully", session: newSession });
   } catch (error) {
     res.status(500).json({ message: 'Failed to save session', error: error.message });
   }
 };
+

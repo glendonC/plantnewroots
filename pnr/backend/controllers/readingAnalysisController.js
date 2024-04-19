@@ -21,4 +21,14 @@ const getReadingSessionDetails = async (req, res) => {
   }
 };
 
+const getReadingSessionsByConversationId = async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const sessions = await ReadingSession.find({ conversationId });
+    res.json(sessions);
+  } catch (error) {
+    res.status(500).json({ message: `Failed to fetch reading sessions for conversation ID: ${req.params.conversationId}`, error: error.message });
+  }
+};
+
 module.exports = { getReadingSessions, getReadingSessionDetails };

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const readingSessionSchema = new mongoose.Schema({
+  conversationId: { type: String, required: true },
   name: { type: String, required: true },
   content: {
     text: { type: String, required: true },
