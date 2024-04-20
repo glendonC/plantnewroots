@@ -3,6 +3,7 @@ import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
 import { Modal, Button, Form, Container, Row, Col, Dropdown } from 'react-bootstrap';
 import HomeButton from "../../components/homebutton/HomeButton";
 import Transition from "../../components/transition/Transition";
+import axios from 'axios';
 
 const Reading = () => {
   const { selectedLevel, selectedLanguage } = useLevelLanguage();
@@ -129,7 +130,6 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
     evaluateAnswers();
   }, [content, submitted]);
 
-
   const saveSession = async () => {
     const sessionData = {
       name: sessionName,
@@ -139,17 +139,14 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
     };
   
     try {
-      const response = await fetch('/api/reading-session/save', {
-        method: 'POST',
+      const response = await axios.post('/api/reading-sessions/save', sessionData, {
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(sessionData)
+        }
       });
   
-      if (response.ok) {
-        const jsonResponse = await response.json();
-        console.log("Session saved successfully:", jsonResponse);
+      if (response.status === 201) {
+        console.log("Session saved successfully:", response.data);
         setShowSaveModal(false);
       } else {
         throw new Error('Failed to save session: ' + response.status);
@@ -158,6 +155,7 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
       console.error('Error saving session:', error);
     }
   };
+
   
   return (
     <Container className="mt-4 d-flex flex-column min-vh-100">

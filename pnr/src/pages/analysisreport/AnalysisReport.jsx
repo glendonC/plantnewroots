@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Tab, Tabs } from 'react-bootstrap';
 import ConversationSelector from './ConversationSelector';
-import AIGeneratedContent from './AIGeneratedContent';
+import AIGeneratedContentWriting from './AIGeneratedContentWriting';
 import { useLoading } from '../../hooks/useLoading';
 import {
   fetchGeneralWritingReport,
@@ -10,7 +10,13 @@ import {
   fetchSavedReport,
   saveGeneratedText
 } from '../../services/writingAnalysisService';
-import { generateAIContent } from '../../services/aiContentService';
+import AIGeneratedContentReading from './AIGeneratedContentReading';
+import {
+  fetchReadingSessions,
+  fetchReadingSessionDetails
+} from '../../services/readingAnalysisService';
+import { generateAIContentReading } from '../../services/aiContentServiceReading';
+import { generateAIContentWriting } from '../../services/aiContentServiceWriting';
 import HomeButton from '../../components/homebutton/HomeButton';
 import './analysisreport.css';
 import axios from 'axios'
@@ -19,31 +25,35 @@ function AnalysisReport() {
   const [conversations, setConversations] = useState([]);
   const [selectedConversationId, setSelectedConversationId] = useState('');
   const [generatedText, setGeneratedText] = useState('');
+  const [sessionType, setSessionType] = useState('writing');
+
 
   useEffect(() => {
     const fetchConversations = async () => {
+      console.log("Selected Session Type: ", sessionType);
+      const url = sessionType === 'writing' ? '/api/writingConversations' : '/api/reading-sessions';
       try {
-        const response = await axios.get('/api/writingConversations', {
+        const response = await axios.get(url, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
         let filteredConversations = [];
         const seenIds = new Set();
-    
+  
         response.data.forEach(conversation => {
           if (!seenIds.has(conversation.conversationId)) {
             filteredConversations.push(conversation);
             seenIds.add(conversation.conversationId);
           }
         });
-    
+        console.log("Fetched Conversations: ", response.data);
         setConversations(filteredConversations);
       } catch (error) {
         console.error('Failed to fetch conversations:', error);
       }
     };
-    
+  
     fetchConversations();
-  }, []);
+  }, [sessionType]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,31 +61,58 @@ function AnalysisReport() {
   
       startLoading();
       try {
-        let generatedText;
-        const savedReport = await fetchSavedReport(selectedConversationId);
-        if (savedReport) {
-          generatedText = savedReport.generatedText;
+        let generatedText = '';
+        if (sessionType === 'writing') {
+          const savedReport = await fetchSavedReport(selectedConversationId);
+          if (savedReport) {
+            generatedText = savedReport.generatedText;
+          } else {
+            const generalReportData = await fetchGeneralWritingReport(selectedConversationId);
+            const detailedAnalysisData = await fetchDetailedWritingAnalysis(selectedConversationId);
+            const userMessages = await fetchUserWritingMessages(selectedConversationId);
+            generatedText = await generateAIContentWriting(generalReportData, detailedAnalysisData, userMessages);
+          }
+        } 
+        else if (sessionType === 'reading') {
+          const readingDetails = await fetchReadingSessionDetails(selectedConversationId);
+          const { text, feedback } = readingDetails;
+        
+          console.log("Reading Text:", text);
+          console.log("Feedback:", feedback);
+        
+          if (text && feedback) {
+            generatedText = await generateAIContentReading(text, feedback);
+          } else {
+            console.error("Data for generating AI content for reading is incomplete.");
+          }
+        }
+        
+        
+        
+        
+  
+        if (generatedText) {
           setGeneratedText(generatedText);
-        } else if (!generatedText) {
-          const generalWritingReportData = await fetchGeneralWritingReport(selectedConversationId);
-          const detailedWritingAnalysisData = await fetchDetailedWritingAnalysis(selectedConversationId);
-          const userMessages = await fetchUserWritingMessages(selectedConversationId);
-          generatedText = await generateAIContent(generalWritingReportData, detailedWritingAnalysisData, userMessages);
-          setGeneratedText(generatedText);
-          await saveGeneratedText(selectedConversationId, generatedText);
         }
       } catch (error) {
-        console.error('Error fetching data for AI content generation:', error);
+        console.error(`Error fetching data for ${sessionType} content generation:`, error);
       } finally {
         stopLoading();
       }
     };
   
     fetchData();
-  }, [selectedConversationId]);
+  }, [selectedConversationId, sessionType]);
 
   const handleConversationSelect = (selectedConversationId) => {
+    setGeneratedText('');
     setSelectedConversationId(selectedConversationId);
+  };
+  
+  const handleTabSelect = (key) => {
+    setSelectedConversationId('');
+    setGeneratedText('');
+    setSessionType(key);
   };
 
   return (
@@ -86,17 +123,32 @@ function AnalysisReport() {
         </Col>
       </Row>
       <Row className="justify-content-md-center py-3">
-        <Col xs={12} md={8} lg={6}>
-          <ConversationSelector
-            conversations={conversations}
-            selectedConversationId={selectedConversationId}
-            onSelect={handleConversationSelect}
-          />
+        <Col xs={12}>
+        <Tabs defaultActiveKey="writing" id="type-tabs" onSelect={handleTabSelect}>
+          <Tab eventKey="writing" title="Writing">
+              <ConversationSelector
+                  conversations={conversations}
+                  selectedConversationId={selectedConversationId}
+                  onSelect={handleConversationSelect}
+              />
+          </Tab>
+          <Tab eventKey="reading" title="Reading">
+              <ConversationSelector
+                  conversations={conversations.filter(c => c.type === 'reading')}
+                  selectedConversationId={selectedConversationId}
+                  onSelect={handleConversationSelect}
+              />
+          </Tab>
+        </Tabs>
         </Col>
       </Row>
       <Row className="justify-content-md-center">
         <Col xs={12} md={8}>
-          <AIGeneratedContent loading={loading} generatedText={generatedText} />
+            {selectedConversationId && (sessionType === 'writing' ? (
+                <AIGeneratedContentWriting loading={loading} generatedText={generatedText} />
+            ) : (
+                <AIGeneratedContentReading loading={loading} generatedText={generatedText} />
+            ))}
         </Col>
       </Row>
       <Row className="mt-auto">
@@ -106,6 +158,7 @@ function AnalysisReport() {
       </Row>
     </Container>
   );
+
 }
 
 export default AnalysisReport;
