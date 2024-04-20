@@ -8,18 +8,19 @@ import {
   fetchDetailedWritingAnalysis,
   fetchUserWritingMessages,
   fetchSavedReport,
-  saveGeneratedText
 } from '../../services/writingAnalysisService';
 import AIGeneratedContentReading from './AIGeneratedContentReading';
 import {
-  fetchReadingSessions,
-  fetchReadingSessionDetails
+  fetchReadingSessionDetails,
+  saveReadingAnalysis,
+  fetchSavedReadingAnalysis
 } from '../../services/readingAnalysisService';
 import { generateAIContentReading } from '../../services/aiContentServiceReading';
 import { generateAIContentWriting } from '../../services/aiContentServiceWriting';
 import HomeButton from '../../components/homebutton/HomeButton';
 import './analysisreport.css';
-import axios from 'axios'
+import axios from 'axios';
+
 function AnalysisReport() {
   const { loading, startLoading, stopLoading } = useLoading();
   const [conversations, setConversations] = useState([]);
@@ -74,23 +75,43 @@ function AnalysisReport() {
           }
         } 
         else if (sessionType === 'reading') {
-          const readingDetails = await fetchReadingSessionDetails(selectedConversationId);
-          const { text, feedback } = readingDetails;
-        
-          console.log("Reading Text:", text);
-          console.log("Feedback:", feedback);
-        
-          if (text && feedback) {
-            generatedText = await generateAIContentReading(text, feedback);
-          } else {
-            console.error("Data for generating AI content for reading is incomplete.");
+          try {
+            const savedReport = await fetchSavedReadingAnalysis(selectedConversationId);
+            if (savedReport) {
+              setGeneratedText(savedReport.analysis.generatedText);
+            } else {
+              throw new Error("No saved analysis found.");
+            }
+          } catch (error) {
+            if (error.response && error.response.status === 404) {
+              try {
+                const readingDetails = await fetchReadingSessionDetails(selectedConversationId);
+                const { text, feedback } = readingDetails;
+  
+                console.log("Fetched Text:", text);
+                console.log("Fetched Feedback:", feedback);
+  
+                if (text && feedback) {
+                  const generatedAnalysis = await generateAIContentReading(text, feedback);
+                  console.log("Generated Analysis:", generatedAnalysis);
+  
+                  const savedAnalysis = await saveReadingAnalysis(selectedConversationId, text, {
+                    generatedText: generatedAnalysis,
+                    analysisText: extractAnalysisText(generatedAnalysis),
+                    feedback: extractFeedback(generatedAnalysis)
+                  });
+                  setGeneratedText(savedAnalysis.analysis.generatedText);
+                } else {
+                  console.error("Data for generating AI content for reading is incomplete.");
+                }
+              } catch (error) {
+                console.error("Error generating or saving analysis:", error);
+              }
+            } else {
+              console.error("Error fetching saved reading analysis:", error);
+            }
           }
         }
-        
-        
-        
-        
-  
         if (generatedText) {
           setGeneratedText(generatedText);
         }
@@ -103,6 +124,18 @@ function AnalysisReport() {
   
     fetchData();
   }, [selectedConversationId, sessionType]);
+
+  function extractAnalysisText(generatedAnalysis) {
+    const analysisTextPattern = /\*\*Language Comprehension Analysis:\*\*\n([\s\S]*?)\n\*\*Accuracy Analysis:\*\*/;
+    const match = generatedAnalysis.match(analysisTextPattern);
+    return match ? match[1].trim() : '';
+  }
+  
+  function extractFeedback(generatedAnalysis) {
+    const feedbackPattern = /\*\*Exercises to Address Mistakes:\*\*\n([\s\S]*?)\n\*\*Tips for Enhancing Text Comprehension:\*\*/;
+    const match = generatedAnalysis.match(feedbackPattern);
+    return match ? match[1].trim() : '';
+  }
 
   const handleConversationSelect = (selectedConversationId) => {
     setGeneratedText('');
