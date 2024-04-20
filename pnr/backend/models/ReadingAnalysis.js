@@ -11,8 +11,18 @@ const ReadingAnalysisSchema = new mongoose.Schema({
     required: true
   },
   analysis: {
-    type: String,
-    required: true
+    generatedText: {
+      type: String,
+      required: true
+    },
+    analysisText: {
+      type: String,
+      required: false
+    },
+    feedback: {
+      type: String,
+      required: false
+    }
   },
   createdAt: {
     type: Date,
