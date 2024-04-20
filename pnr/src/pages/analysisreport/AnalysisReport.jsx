@@ -72,15 +72,23 @@ function AnalysisReport() {
             const userMessages = await fetchUserWritingMessages(selectedConversationId);
             generatedText = await generateAIContentWriting(generalReportData, detailedAnalysisData, userMessages);
           }
-        } else if (sessionType === 'reading') {
+        } 
+        else if (sessionType === 'reading') {
           const readingDetails = await fetchReadingSessionDetails(selectedConversationId);
-          const { text, questions, answers } = readingDetails;
-          if (text && questions && answers) {
-            generatedText = await generateAIContentReading(text, questions, answers);
+          const { text, feedback } = readingDetails;
+        
+          console.log("Reading Text:", text);
+          console.log("Feedback:", feedback);
+        
+          if (text && feedback) {
+            generatedText = await generateAIContentReading(text, feedback);
           } else {
             console.error("Data for generating AI content for reading is incomplete.");
           }
         }
+        
+        
+        
         
   
         if (generatedText) {
