@@ -39,21 +39,18 @@ const getReadingAnalysisDetails = async (req, res) => {
       return res.status(404).json({ message: 'Reading session not found' });
     }
 
-    console.log('Reading Session:', session);
-    const answersObject = {};
-    session.answers.forEach((value, key) => {
-      answersObject[key] = value;
-    });
-    
+    const feedback = session.feedback || "No feedback available";
+
     res.json({
       text: session.content.text,
-      questions: session.content.questions,
-      answers: answersObject
+      feedback
     });
-  
+
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch reading analysis details', error: error.message });
   }
 };
+
+
 
 module.exports = { getReadingSessions, getReadingSessionDetails, getReadingSessionsByConversationId, getReadingAnalysisDetails };
