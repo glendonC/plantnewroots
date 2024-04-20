@@ -1,4 +1,5 @@
 const ReadingSession = require('../models/ReadingSession');
+const ReadingAnalysis = require('../models/ReadingAnalysis');
 
 const getReadingSessions = async (req, res) => {
   try {
@@ -31,7 +32,6 @@ const getReadingSessionsByConversationId = async (req, res) => {
   }
 };
 
-
 const getReadingAnalysisDetails = async (req, res) => {
   try {
     const session = await ReadingSession.findById(req.params.id);
@@ -51,6 +51,66 @@ const getReadingAnalysisDetails = async (req, res) => {
   }
 };
 
+const saveReadingAnalysis = async (req, res) => {
+  console.log(req.body);
+  const { conversationId, text, analysis } = req.body;
+
+  if (!conversationId || !text || !analysis) {
+    console.error("Validation Error: Top-level fields missing", { conversationId, text, analysis });
+    return res.status(400).json({ message: "Required fields are missing or incomplete." });
+  }
+
+  if (!analysis.generatedText) {
+    console.error("Validation Error: Analysis field missing", analysis);
+    return res.status(400).json({ message: "Analysis field is missing or incomplete." });
+  }
+
+  try {
+    let savedAnalysis;
+    const existingAnalysis = await ReadingAnalysis.findOne({ conversationId });
+    if (existingAnalysis) {
+      existingAnalysis.text = text;
+      existingAnalysis.analysis = analysis;
+      savedAnalysis = await existingAnalysis.save();
+    } else {
+      const newAnalysis = new ReadingAnalysis({
+        conversationId,
+        text,
+        analysis
+      });
+      savedAnalysis = await newAnalysis.save();
+    }
+    res.status(201).json({ message: 'Reading analysis saved successfully', analysis: savedAnalysis });
+  } catch (error) {
+    console.error("Error saving reading analysis:", error);
+    res.status(500).json({ message: "Failed to save reading analysis", details: error.message });
+  }
+};
 
 
-module.exports = { getReadingSessions, getReadingSessionDetails, getReadingSessionsByConversationId, getReadingAnalysisDetails };
+
+
+
+
+
+const fetchReadingAnalysis = async (req, res) => {
+  const { conversationId } = req.params;
+  try {
+    const analysis = await ReadingAnalysis.findOne({ conversationId });
+    if (!analysis) {
+      return res.status(404).json({ message: "Analysis not found" });
+    }
+    res.json(analysis);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch analysis', error: error.message });
+  }
+};
+
+module.exports = {
+  getReadingSessions,
+  getReadingSessionDetails,
+  getReadingSessionsByConversationId,
+  getReadingAnalysisDetails,
+  saveReadingAnalysis,
+  fetchReadingAnalysis
+};
