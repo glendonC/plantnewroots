@@ -10,4 +10,20 @@ const fetchReadingSessionDetails = async (sessionId) => {
   return response.data;
 };
 
-export { fetchReadingSessions, fetchReadingSessionDetails };
+const saveReadingAnalysis = async (conversationId, text, analysis) => {
+  const response = await axios.post('/api/reading-analysis/reading-analysis/save', {
+    conversationId,
+    text,
+    analysis: {
+      generatedText: analysis.generatedText
+    }
+  });
+  return response.data;
+};
+
+const fetchSavedReadingAnalysis = async (sessionId) => {
+  const response = await axios.get(`/api/reading-analysis/reading-analysis/fetch/${sessionId}`);
+  return response.data;
+};
+
+export { fetchReadingSessions, fetchReadingSessionDetails, saveReadingAnalysis, fetchSavedReadingAnalysis };
