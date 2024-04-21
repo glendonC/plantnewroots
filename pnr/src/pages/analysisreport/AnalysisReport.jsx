@@ -4,6 +4,7 @@ import ConversationSelector from './ConversationSelector';
 import AIGeneratedContentReading from './AIGeneratedContentReading';
 import AIGeneratedContentWriting from './AIGeneratedContentWriting';
 import AIGeneratedContentListening from './AIGeneratedContentListening';
+import AIGeneratedContentSpeaking from './AIGeneratedContentSpeaking';
 import { useLoading } from '../../hooks/useLoading';
 
 import {
@@ -27,6 +28,14 @@ import {
   fetchSavedListeningAnalysis
 } from '../../services/listeningAnalysisService';
 import { generateAIContentListening } from '../../services/aiContentServiceListening';
+
+import {
+  fetchSpeakingSessionDetails,
+  saveSpeakingAnalysis,
+  fetchSavedSpeakingAnalysis
+} from '../../services/speakingAnalysisService';
+import { generateAIContentSpeaking } from '../../services/aiContentServiceSpeaking';
+
 
 import HomeButton from '../../components/homebutton/HomeButton';
 import './analysisreport.css';
@@ -53,6 +62,9 @@ function AnalysisReport() {
           break;
         case 'listening':
           url = '/api/listening-sessions';
+          break;
+        case 'speaking':
+          url = '/api/speaking-sessions';  // Assuming the endpoint for speaking sessions
           break;
         default:
           console.log('Unknown session type: ', sessionType);
@@ -153,6 +165,30 @@ function AnalysisReport() {
             }
             break;
   
+          case 'speaking':
+            try {
+              const savedSpeakingReport = await fetchSavedSpeakingAnalysis(selectedConversationId);
+              generatedText = savedSpeakingReport.analysis.generatedText;
+            } catch (error) {
+              if (error.response && error.response.status === 404) {
+                const speakingDetails = await fetchSpeakingSessionDetails(selectedConversationId);
+                const { transcript, response } = speakingDetails;
+                if (transcript && response) {
+                  generatedText = await generateAIContentSpeaking(transcript, response);
+                  await saveSpeakingAnalysis(selectedConversationId, transcript, response, {
+                    generatedText,
+                    analysisText: extractAnalysisText(generatedText),
+                    feedback: extractFeedback(generatedText)
+                  });
+                } else {
+                  console.error("Data for generating AI content for speaking is incomplete.");
+                }
+              } else {
+                throw error;
+              }
+            }
+            break;
+
           default:
             console.log('Unknown session type:', sessionType);
             break;
@@ -224,20 +260,29 @@ function AnalysisReport() {
                   onSelect={handleConversationSelect}
               />
           </Tab>
+          <Tab eventKey="speaking" title="Speaking">
+              <ConversationSelector
+                  conversations={conversations.filter(c => c.type === 'speaking')}
+                  selectedConversationId={selectedConversationId}
+                  onSelect={handleConversationSelect}
+              />
+          </Tab>
         </Tabs>
         </Col>
       </Row>
       <Row className="justify-content-md-center">
-        <Col xs={12} md={8}>
-            {selectedConversationId && (
-              sessionType === 'writing' ? (
+      <Col xs={12} md={8}>
+        {selectedConversationId && (
+            sessionType === 'writing' ? (
                 <AIGeneratedContentWriting loading={loading} generatedText={generatedText} />
-              ) : sessionType === 'reading' ? (
+            ) : sessionType === 'reading' ? (
                 <AIGeneratedContentReading loading={loading} generatedText={generatedText} />
-              ) : (
+            ) : sessionType === 'listening' ? (
                 <AIGeneratedContentListening loading={loading} generatedText={generatedText} />
-              )
-            )}
+            ) : sessionType === 'speaking' && (
+                <AIGeneratedContentSpeaking loading={loading} generatedText={generatedText} />
+            )
+        )}
         </Col>
       </Row>
       <Row className="mt-auto">
