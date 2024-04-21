@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Button, Container, Row, Col, Card } from 'react-bootstrap';
+import { Button, Container, Row, Col, Card, Modal, Form } from 'react-bootstrap';
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
 import HomeButton from "../../components/homebutton/HomeButton";
 
@@ -8,6 +8,9 @@ const Speaking = () => {
     const [isRecording, setIsRecording] = useState(false);
     const [transcript, setTranscript] = useState('');
     const [response, setResponse] = useState('');
+    const [showSaveModal, setShowSaveModal] = useState(false);
+    const [sessionName, setSessionName] = useState('');
+
 
     const mediaRecorderRef = useRef(null);
     
@@ -104,7 +107,7 @@ const Speaking = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ text: responseText, language: selectedLanguage }) // Ensure language is appropriately set or managed
+                body: JSON.stringify({ text: responseText, language: selectedLanguage })
             });
     
             if (response.ok) {
@@ -121,7 +124,38 @@ const Speaking = () => {
             alert("Failed to process Text-to-Speech request.");
         }
     };
+    const saveSession = async () => {
+        const sessionData = {
+          name: sessionName,
+          language: selectedLanguage,
+          level: selectedLevel,
+          messages: [
+            { text: transcript },
+            { text: response }
+          ]
+        };
+      
+        try {
+          const response = await fetch('/api/speaking-sessions/save', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(sessionData)
+          });
+          const result = await response.json();
+          if (response.ok) {
+            console.log("Session saved successfully:", result);
+            setShowSaveModal(false);  // Close the modal on successful save
+          } else {
+            throw new Error('Failed to save session');
+          }
+        } catch (error) {
+          console.error('Error saving session:', error);
+        }
+      };
     
+      
     return (
         <Container className="mt-4 d-flex flex-column min-vh-100">
             <div className="flex-grow-1">
@@ -166,6 +200,36 @@ const Speaking = () => {
                         </Card>
                     </Col>
                 </Row>
+                <Button variant="primary" onClick={() => setShowSaveModal(true)} className="mt-3">
+                Save Session
+            </Button>
+
+            <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Save Speaking Session</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3" controlId="sessionName">
+                            <Form.Label>Session Name</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter a name for this session"
+                                value={sessionName}
+                                onChange={(e) => setSessionName(e.target.value)}
+                            />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={saveSession}>
+                        Save Session
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             </div>
             <HomeButton className="mt-auto"/>
         </Container>
