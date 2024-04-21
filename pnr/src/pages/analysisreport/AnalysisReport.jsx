@@ -1,22 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Tab, Tabs } from 'react-bootstrap';
 import ConversationSelector from './ConversationSelector';
-import AIGeneratedContentWriting from './AIGeneratedContentWriting';
-import { useLoading } from '../../hooks/useLoading';
-import {
-  fetchGeneralWritingReport,
-  fetchDetailedWritingAnalysis,
-  fetchUserWritingMessages,
-  fetchSavedReport,
-} from '../../services/writingAnalysisService';
 import AIGeneratedContentReading from './AIGeneratedContentReading';
+import AIGeneratedContentWriting from './AIGeneratedContentWriting';
+import AIGeneratedContentListening from './AIGeneratedContentListening';
+import { useLoading } from '../../hooks/useLoading';
+
 import {
   fetchReadingSessionDetails,
   saveReadingAnalysis,
   fetchSavedReadingAnalysis
 } from '../../services/readingAnalysisService';
 import { generateAIContentReading } from '../../services/aiContentServiceReading';
+
+import {
+  fetchGeneralWritingReport,
+  fetchDetailedWritingAnalysis,
+  fetchUserWritingMessages,
+  fetchSavedReport,
+} from '../../services/writingAnalysisService';
 import { generateAIContentWriting } from '../../services/aiContentServiceWriting';
+
+import {
+  fetchListeningSessionDetails,
+  saveListeningAnalysis,
+  fetchSavedListeningAnalysis
+} from '../../services/listeningAnalysisService';
+import { generateAIContentListening } from '../../services/aiContentServiceListening';
+
 import HomeButton from '../../components/homebutton/HomeButton';
 import './analysisreport.css';
 import axios from 'axios';
@@ -32,7 +43,21 @@ function AnalysisReport() {
   useEffect(() => {
     const fetchConversations = async () => {
       console.log("Selected Session Type: ", sessionType);
-      const url = sessionType === 'writing' ? '/api/writingConversations' : '/api/reading-sessions';
+      let url = '';
+      switch (sessionType) {
+        case 'writing':
+          url = '/api/writingConversations';
+          break;
+        case 'reading':
+          url = '/api/reading-sessions';
+          break;
+        case 'listening':
+          url = '/api/listening-sessions';
+          break;
+        default:
+          console.log('Unknown session type: ', sessionType);
+          return;
+      }
       try {
         const response = await axios.get(url, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
@@ -63,54 +88,74 @@ function AnalysisReport() {
       startLoading();
       try {
         let generatedText = '';
-        if (sessionType === 'writing') {
-          const savedReport = await fetchSavedReport(selectedConversationId);
-          if (savedReport) {
-            generatedText = savedReport.generatedText;
-          } else {
-            const generalReportData = await fetchGeneralWritingReport(selectedConversationId);
-            const detailedAnalysisData = await fetchDetailedWritingAnalysis(selectedConversationId);
-            const userMessages = await fetchUserWritingMessages(selectedConversationId);
-            generatedText = await generateAIContentWriting(generalReportData, detailedAnalysisData, userMessages);
-          }
-        } 
-        else if (sessionType === 'reading') {
-          try {
-            const savedReport = await fetchSavedReadingAnalysis(selectedConversationId);
-            if (savedReport) {
-              setGeneratedText(savedReport.analysis.generatedText);
-            } else {
-              throw new Error("No saved analysis found.");
+        switch (sessionType) {
+          case 'writing':
+            try {
+              const savedWritingReport = await fetchSavedReport(selectedConversationId);
+              generatedText = savedWritingReport.generatedText;
+            } catch (error) {
+              if (error.response && error.response.status === 404) {
+                const generalReportData = await fetchGeneralWritingReport(selectedConversationId);
+                const detailedAnalysisData = await fetchDetailedWritingAnalysis(selectedConversationId);
+                const userMessages = await fetchUserWritingMessages(selectedConversationId);
+                generatedText = await generateAIContentWriting(generalReportData, detailedAnalysisData, userMessages);
+              } else {
+                throw error;
+              }
             }
-          } catch (error) {
-            if (error.response && error.response.status === 404) {
-              try {
+            break;
+  
+          case 'reading':
+            try {
+              const savedReadingReport = await fetchSavedReadingAnalysis(selectedConversationId);
+              generatedText = savedReadingReport.analysis.generatedText;
+            } catch (error) {
+              if (error.response && error.response.status === 404) {
                 const readingDetails = await fetchReadingSessionDetails(selectedConversationId);
                 const { text, feedback } = readingDetails;
-  
-                console.log("Fetched Text:", text);
-                console.log("Fetched Feedback:", feedback);
-  
                 if (text && feedback) {
-                  const generatedAnalysis = await generateAIContentReading(text, feedback);
-                  console.log("Generated Analysis:", generatedAnalysis);
-  
-                  const savedAnalysis = await saveReadingAnalysis(selectedConversationId, text, {
-                    generatedText: generatedAnalysis,
-                    analysisText: extractAnalysisText(generatedAnalysis),
-                    feedback: extractFeedback(generatedAnalysis)
+                  generatedText = await generateAIContentReading(text, feedback);
+                  await saveReadingAnalysis(selectedConversationId, text, {
+                    generatedText,
+                    analysisText: extractAnalysisText(generatedText),
+                    feedback: extractFeedback(generatedText)
                   });
-                  setGeneratedText(savedAnalysis.analysis.generatedText);
                 } else {
                   console.error("Data for generating AI content for reading is incomplete.");
                 }
-              } catch (error) {
-                console.error("Error generating or saving analysis:", error);
+              } else {
+                throw error;
               }
-            } else {
-              console.error("Error fetching saved reading analysis:", error);
             }
-          }
+            break;
+  
+          case 'listening':
+            try {
+              const savedListeningReport = await fetchSavedListeningAnalysis(selectedConversationId);
+              generatedText = savedListeningReport.analysis.generatedText;
+            } catch (error) {
+              if (error.response && error.response.status === 404) {
+                const listeningDetails = await fetchListeningSessionDetails(selectedConversationId);
+                const { text, feedback } = listeningDetails;
+                if (text && feedback) {
+                  generatedText = await generateAIContentListening(text, feedback);
+                  await saveListeningAnalysis(selectedConversationId, text, {
+                    generatedText,
+                    analysisText: extractAnalysisText(generatedText),
+                    feedback: extractFeedback(generatedText)
+                  });
+                } else {
+                  console.error("Data for generating AI content for listening is incomplete.");
+                }
+              } else {
+                throw error;
+              }
+            }
+            break;
+  
+          default:
+            console.log('Unknown session type:', sessionType);
+            break;
         }
         if (generatedText) {
           setGeneratedText(generatedText);
@@ -124,7 +169,7 @@ function AnalysisReport() {
   
     fetchData();
   }, [selectedConversationId, sessionType]);
-
+  
   function extractAnalysisText(generatedAnalysis) {
     const analysisTextPattern = /\*\*Language Comprehension Analysis:\*\*\n([\s\S]*?)\n\*\*Accuracy Analysis:\*\*/;
     const match = generatedAnalysis.match(analysisTextPattern);
@@ -160,7 +205,7 @@ function AnalysisReport() {
         <Tabs defaultActiveKey="writing" id="type-tabs" onSelect={handleTabSelect}>
           <Tab eventKey="writing" title="Writing">
               <ConversationSelector
-                  conversations={conversations}
+                  conversations={conversations.filter(c => c.type === 'writing')}
                   selectedConversationId={selectedConversationId}
                   onSelect={handleConversationSelect}
               />
@@ -172,16 +217,27 @@ function AnalysisReport() {
                   onSelect={handleConversationSelect}
               />
           </Tab>
+          <Tab eventKey="listening" title="Listening">
+              <ConversationSelector
+                  conversations={conversations.filter(c => c.type === 'listening')}
+                  selectedConversationId={selectedConversationId}
+                  onSelect={handleConversationSelect}
+              />
+          </Tab>
         </Tabs>
         </Col>
       </Row>
       <Row className="justify-content-md-center">
         <Col xs={12} md={8}>
-            {selectedConversationId && (sessionType === 'writing' ? (
+            {selectedConversationId && (
+              sessionType === 'writing' ? (
                 <AIGeneratedContentWriting loading={loading} generatedText={generatedText} />
-            ) : (
+              ) : sessionType === 'reading' ? (
                 <AIGeneratedContentReading loading={loading} generatedText={generatedText} />
-            ))}
+              ) : (
+                <AIGeneratedContentListening loading={loading} generatedText={generatedText} />
+              )
+            )}
         </Col>
       </Row>
       <Row className="mt-auto">
@@ -191,7 +247,6 @@ function AnalysisReport() {
       </Row>
     </Container>
   );
-
 }
 
 export default AnalysisReport;
