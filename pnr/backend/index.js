@@ -11,6 +11,9 @@ const readingSessionRoutes = require('./routes/readingSessionRoutes');
 const readingAnalysisRoutes = require('./routes/readingAnalysisRoutes');
 const listeningSessionRoutes = require('./routes/listeningSessionRoutes');
 const listeningAnalysisRoutes = require('./routes/listeningAnalysisRoutes');
+const speakingSessionRoutes = require('./routes/speakingSessionRoutes');
+const speakingAnalysisRoutes = require('./routes/speakingAnalysisRoutes');
+
 
 
 const app = express();
@@ -35,6 +38,8 @@ app.use('/api/reading-sessions', readingSessionRoutes);
 app.use('/api/reading-analysis', readingAnalysisRoutes);
 app.use('/api/listening-sessions', listeningSessionRoutes);
 app.use('/api/listening-analysis', listeningAnalysisRoutes);
+app.use('/api/speaking-sessions', speakingSessionRoutes);
+app.use('/api/speaking-analysis', speakingAnalysisRoutes);
 
 
 const PORT = process.env.PORT || 3000;
