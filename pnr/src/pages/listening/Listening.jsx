@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
-import { Button, Form, Container, Row, Col, Dropdown } from 'react-bootstrap';
+import { Modal, Button, Form, Container, Row, Col, Dropdown } from 'react-bootstrap';
 import HomeButton from "../../components/homebutton/HomeButton";
 import Transition from "../../components/transition/Transition";
 
@@ -12,8 +12,10 @@ const Listening = () => {
   const [expectedAnswers, setExpectedAnswers] = useState([]);
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
-
   const [speechReady, setSpeechReady] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [sessionName, setSessionName] = useState("");
+
 
   const generateContent = async () => {
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
@@ -152,6 +154,33 @@ const Listening = () => {
     evaluateAnswers();
   }, [content, submitted]);
 
+  const saveSession = async () => {
+    const sessionData = {
+      name: sessionName,
+      content,
+      answers,
+      feedback
+    };
+  
+    try {
+      const response = await axios.post('/api/listening-sessions/save', sessionData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (response.status === 201) {
+        console.log("Session saved successfully:", response.data);
+        setShowSaveModal(false);
+      } else {
+        throw new Error('Failed to save session: ' + response.status);
+      }
+    } catch (error) {
+      console.error('Error saving session:', error);
+    }
+  };
+  
+
 
   return (
     <Container className="mt-4 d-flex flex-column min-vh-100">
@@ -228,6 +257,35 @@ const Listening = () => {
             )}
           </Col>
         </Row>
+        <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Save Listening Session</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group className="mb-3" controlId="sessionName">
+                <Form.Label>Session Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter a name for this session"
+                  value={sessionName}
+                  onChange={(e) => setSessionName(e.target.value)}
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={saveSession}>
+              Save Session
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Button variant="primary" onClick={() => setShowSaveModal(true)} className="mt-3">
+          Save Session
+        </Button>
       </div>
       <HomeButton className="mt-auto"/>
     </Container>
