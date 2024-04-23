@@ -235,37 +235,37 @@ function AnalysisReport() {
         </Col>
       </Row>
       <Row className="justify-content-md-center py-3">
-        <Col xs={12}>
-        <Tabs defaultActiveKey="writing" id="analysis-tabs" onSelect={handleTabSelect}>
-        <Tab eventKey="writing" title={<span className="nav-link tab-writing"><FaPen /> Writing</span>}>
+        <Col xs={12} className="d-flex justify-content-start">
+          <Tabs defaultActiveKey="writing" id="analysis-tabs" onSelect={handleTabSelect}>
+            <Tab eventKey="writing" title={<span className="nav-link tab-writing"><FaPen /> Writing</span>}>
               <ConversationSelector
                   conversations={conversations.filter(c => c.type === 'writing')}
                   selectedConversationId={selectedConversationId}
                   onSelect={handleConversationSelect}
               />
-          </Tab>
-          <Tab eventKey="reading" title={<span className="nav-link tab-reading"><FaBook /> Reading</span>} className="tab-reading">
+              </Tab>
+            <Tab eventKey="reading" title={<span className="nav-link tab-reading"><FaBook /> Reading</span>} className="tab-reading">
               <ConversationSelector
                   conversations={conversations.filter(c => c.type === 'reading')}
                   selectedConversationId={selectedConversationId}
                   onSelect={handleConversationSelect}
               />
-          </Tab>
-          <Tab eventKey="listening" title={<span className="nav-link tab-listening"><FaHeadphones /> Listening</span>} className="tab-listening">
+            </Tab>
+            <Tab eventKey="listening" title={<span className="nav-link tab-listening"><FaHeadphones /> Listening</span>} className="tab-listening">
               <ConversationSelector
                   conversations={conversations.filter(c => c.type === 'listening')}
                   selectedConversationId={selectedConversationId}
                   onSelect={handleConversationSelect}
               />
-          </Tab>
-          <Tab eventKey="speaking" title={<span className="nav-link tab-speaking"><FaComment /> Speaking</span>} className="tab-speaking">
+            </Tab>
+            <Tab eventKey="speaking" title={<span className="nav-link tab-speaking"><FaComment /> Speaking</span>} className="tab-speaking">
               <ConversationSelector
                   conversations={conversations.filter(c => c.type === 'speaking')}
                   selectedConversationId={selectedConversationId}
                   onSelect={handleConversationSelect}
               />
-          </Tab>
-        </Tabs>
+            </Tab>
+          </Tabs>
         </Col>
       </Row>
       <Row className="justify-content-md-center">

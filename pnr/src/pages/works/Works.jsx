@@ -12,7 +12,6 @@ import WorkImg1 from "../../assets/images/work/reading.jpg";
 import WorkImg2 from "../../assets/images/work/writing.jpg";
 import WorkImg3 from "../../assets/images/work/listening.jpg";
 import WorkImg4 from "../../assets/images/work/speaking.jpg";
-import WorkImg5 from "../../assets/images/work/community.jpg";
 
 const Works = () => {
   const workCopyReveal = useRef();
@@ -45,7 +44,6 @@ const Works = () => {
     WorkImg2,
     WorkImg3,
     WorkImg4,
-    WorkImg5,
   ];
 
   const handleMouseOver = (index) => {
@@ -176,20 +174,6 @@ const Works = () => {
             </div>
           </div>
 
-          <div className="project-list-row">
-            <div className="project-list-col">
-              <div className="project-item" onMouseOver={() => handleMouseOver(5)}>
-                <div className="project-img works-blob">
-                  <Link to="/analysispage">
-                    <img src={WorkImg5} alt="Reading Conversation" />
-                  </Link>
-                </div>
-                <div className="project-copy copy-pos-right">
-                  <h2>Analysis</h2>
-                </div>
-              </div>
-            </div>
-          </div>
         </section>
 
         <div
