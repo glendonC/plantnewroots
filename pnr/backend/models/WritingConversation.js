@@ -10,6 +10,7 @@ const writingConversationSchema = new mongoose.Schema({
   conversationId: { type: String, required: true },
   name: { type: String, required: true },
   tag: { type: String, required: true },
+  type: { type: String, required: true, default: 'writing' },
   createdAt: { type: Date, default: Date.now }
 });
 

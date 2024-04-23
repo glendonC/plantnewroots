@@ -4,6 +4,7 @@ import ConversationSelector from './ConversationSelector';
 import AIGeneratedContentReading from './AIGeneratedContentReading';
 import AIGeneratedContentWriting from './AIGeneratedContentWriting';
 import AIGeneratedContentListening from './AIGeneratedContentListening';
+import AIGeneratedContentSpeaking from './AIGeneratedContentSpeaking';
 import { useLoading } from '../../hooks/useLoading';
 
 import {
@@ -27,6 +28,15 @@ import {
   fetchSavedListeningAnalysis
 } from '../../services/listeningAnalysisService';
 import { generateAIContentListening } from '../../services/aiContentServiceListening';
+
+import {
+  fetchSpeakingSessionDetails,
+  saveSpeakingAnalysis,
+  fetchSavedSpeakingAnalysis,
+  fetchSpeakingSession // Add this line
+} from '../../services/speakingAnalysisService';
+import { generateAIContentSpeaking } from '../../services/aiContentServiceSpeaking';
+
 
 import HomeButton from '../../components/homebutton/HomeButton';
 import './analysisreport.css';
@@ -53,6 +63,9 @@ function AnalysisReport() {
           break;
         case 'listening':
           url = '/api/listening-sessions';
+          break;
+        case 'speaking':
+          url = '/api/speaking-sessions';
           break;
         default:
           console.log('Unknown session type: ', sessionType);
@@ -104,7 +117,27 @@ function AnalysisReport() {
               }
             }
             break;
-  
+
+          case 'speaking':
+            try {
+              const savedSpeakingReport = await fetchSavedSpeakingAnalysis(selectedConversationId);
+              if (savedSpeakingReport && savedSpeakingReport.generatedText) {
+                generatedText = savedSpeakingReport.generatedText;
+              } else {
+                const speakingSession = await fetchSpeakingSession(selectedConversationId);
+                if (!speakingSession || !speakingSession.messages || speakingSession.messages.length < 2) {
+                } else {
+                  const transcript = speakingSession.messages[0].text || "No transcript available";
+                  const responseText = speakingSession.messages[1].text || "No response available"; // Ensure this line is correctly assigning responseText
+                  generatedText = await generateAIContentSpeaking(transcript, responseText);
+                  await saveSpeakingAnalysis(selectedConversationId, transcript, responseText, generatedText);
+                }
+              }
+            } catch (error) {
+              console.error("Error fetching or processing speaking analysis:", error);
+            }
+            break;
+            
           case 'reading':
             try {
               const savedReadingReport = await fetchSavedReadingAnalysis(selectedConversationId);
@@ -151,8 +184,8 @@ function AnalysisReport() {
                 throw error;
               }
             }
-            break;
-  
+            break;            
+
           default:
             console.log('Unknown session type:', sessionType);
             break;
@@ -224,20 +257,29 @@ function AnalysisReport() {
                   onSelect={handleConversationSelect}
               />
           </Tab>
+          <Tab eventKey="speaking" title="Speaking">
+              <ConversationSelector
+                  conversations={conversations.filter(c => c.type === 'speaking')}
+                  selectedConversationId={selectedConversationId}
+                  onSelect={handleConversationSelect}
+              />
+          </Tab>
         </Tabs>
         </Col>
       </Row>
       <Row className="justify-content-md-center">
-        <Col xs={12} md={8}>
-            {selectedConversationId && (
-              sessionType === 'writing' ? (
+      <Col xs={12} md={8}>
+        {selectedConversationId && (
+            sessionType === 'writing' ? (
                 <AIGeneratedContentWriting loading={loading} generatedText={generatedText} />
-              ) : sessionType === 'reading' ? (
+            ) : sessionType === 'reading' ? (
                 <AIGeneratedContentReading loading={loading} generatedText={generatedText} />
-              ) : (
+            ) : sessionType === 'listening' ? (
                 <AIGeneratedContentListening loading={loading} generatedText={generatedText} />
-              )
-            )}
+            ) : sessionType === 'speaking' && (
+                <AIGeneratedContentSpeaking loading={loading} generatedText={generatedText} />
+            )
+        )}
         </Col>
       </Row>
       <Row className="mt-auto">
