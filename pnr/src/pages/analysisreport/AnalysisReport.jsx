@@ -6,6 +6,7 @@ import AIGeneratedContentWriting from './AIGeneratedContentWriting';
 import AIGeneratedContentListening from './AIGeneratedContentListening';
 import AIGeneratedContentSpeaking from './AIGeneratedContentSpeaking';
 import { useLoading } from '../../hooks/useLoading';
+import { FaPen, FaBook, FaHeadphones, FaComment } from 'react-icons/fa';
 
 import {
   fetchReadingSessionDetails,
@@ -235,29 +236,29 @@ function AnalysisReport() {
       </Row>
       <Row className="justify-content-md-center py-3">
         <Col xs={12}>
-        <Tabs defaultActiveKey="writing" id="type-tabs" onSelect={handleTabSelect}>
-          <Tab eventKey="writing" title="Writing">
+        <Tabs defaultActiveKey="writing" id="analysis-tabs" onSelect={handleTabSelect}>
+        <Tab eventKey="writing" title={<span className="nav-link tab-writing"><FaPen /> Writing</span>}>
               <ConversationSelector
                   conversations={conversations.filter(c => c.type === 'writing')}
                   selectedConversationId={selectedConversationId}
                   onSelect={handleConversationSelect}
               />
           </Tab>
-          <Tab eventKey="reading" title="Reading">
+          <Tab eventKey="reading" title={<span className="nav-link tab-reading"><FaBook /> Reading</span>} className="tab-reading">
               <ConversationSelector
                   conversations={conversations.filter(c => c.type === 'reading')}
                   selectedConversationId={selectedConversationId}
                   onSelect={handleConversationSelect}
               />
           </Tab>
-          <Tab eventKey="listening" title="Listening">
+          <Tab eventKey="listening" title={<span className="nav-link tab-listening"><FaHeadphones /> Listening</span>} className="tab-listening">
               <ConversationSelector
                   conversations={conversations.filter(c => c.type === 'listening')}
                   selectedConversationId={selectedConversationId}
                   onSelect={handleConversationSelect}
               />
           </Tab>
-          <Tab eventKey="speaking" title="Speaking">
+          <Tab eventKey="speaking" title={<span className="nav-link tab-speaking"><FaComment /> Speaking</span>} className="tab-speaking">
               <ConversationSelector
                   conversations={conversations.filter(c => c.type === 'speaking')}
                   selectedConversationId={selectedConversationId}

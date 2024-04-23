@@ -27,5 +27,36 @@
     text-align: left;
     border: 1px solid #ddd;
     padding: 10px;
-  }
+}
   
+#analysis-tabs .nav-link {
+  color: white;
+  border: none;
+  font-size: 16px;
+  padding: 12px 20px; 
+  transition: background-color 0.3s;
+}
+
+#analysis-tabs .tab-writing {
+  background-color: #4285F4;
+}
+
+#analysis-tabs .tab-reading {
+  background-color: #DB4437;
+}
+
+#analysis-tabs .tab-listening {
+  background-color: #F4B400;
+}
+
+#analysis-tabs .tab-speaking {
+  background-color: #0F9D58;
+}
+
+#analysis-tabs .nav-link:hover,
+#analysis-tabs .nav-link.active,
+#analysis-tabs .nav-link.active:hover {
+  background-color: inherit;
+  opacity: 0.8;
+}
+
