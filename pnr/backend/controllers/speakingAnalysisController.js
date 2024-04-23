@@ -46,21 +46,23 @@ exports.fetchSpeakingAnalysis = async (req, res) => {
 
 exports.saveSpeakingAnalysis = async (req, res) => {
     try {
-        const { conversationId, transcript, responseText, analysis } = req.body;
+        const { conversationId, transcript, responseText, generatedText } = req.body;
         let existingAnalysis = await SpeakingAnalysis.findOne({ conversationId });
         if (!existingAnalysis) {
-            existingAnalysis = new SpeakingAnalysis({ conversationId, transcript, response: responseText, analysis });
+            existingAnalysis = new SpeakingAnalysis({ conversationId, transcript, response: responseText, generatedText });
         } else {
             existingAnalysis.transcript = transcript;
             existingAnalysis.response = responseText;
-            existingAnalysis.analysis = analysis;
+            existingAnalysis.generatedText = generatedText;
         }
         await existingAnalysis.save();
         res.json({ message: 'Speaking analysis saved successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to save speaking analysis', message: error.message });
+        console.error('Failed to save speaking analysis:', error);
+        res.status(500).send('Internal Server Error');
     }
 };
+
 
 exports.saveGeneratedText = async (req, res) => {
     try {

@@ -36,16 +36,13 @@ export const fetchSpeakingSessionDetails = async (conversationId) => {
   }
 };
 
-export const saveSpeakingAnalysis = async (conversationId, transcript, responseText, analysis) => {
+export const saveSpeakingAnalysis = async (conversationId, transcript, responseText, generatedText) => {
   try {
     const apiResponse = await axios.post('/api/speaking-analysis/save', {
       conversationId,
       transcript,
       response: responseText,
-      analysis: {
-        generatedText: analysis.generatedText,
-        additionalMetrics: analysis.additionalMetrics
-      }
+      generatedText: generatedText
     }, {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
     });
@@ -56,6 +53,7 @@ export const saveSpeakingAnalysis = async (conversationId, transcript, responseT
     throw error;
   }
 };
+
 
 export const fetchSavedSpeakingAnalysis = async (conversationId) => {
   try {

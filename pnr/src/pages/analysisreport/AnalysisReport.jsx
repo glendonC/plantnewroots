@@ -118,37 +118,26 @@ function AnalysisReport() {
             }
             break;
 
-            case 'speaking':
-              try {
-                const savedSpeakingReport = await fetchSavedSpeakingAnalysis(selectedConversationId);
-                if (savedSpeakingReport && savedSpeakingReport.generatedText) {
-                  generatedText = savedSpeakingReport.generatedText;
+          case 'speaking':
+            try {
+              const savedSpeakingReport = await fetchSavedSpeakingAnalysis(selectedConversationId);
+              if (savedSpeakingReport && savedSpeakingReport.generatedText) {
+                generatedText = savedSpeakingReport.generatedText;
+              } else {
+                const speakingSession = await fetchSpeakingSession(selectedConversationId);
+                if (!speakingSession || !speakingSession.messages || speakingSession.messages.length < 2) {
                 } else {
-                  console.log("No saved speaking analysis data found, attempting to generate new analysis.");
-                  try {
-                    const speakingSession = await fetchSpeakingSession(selectedConversationId);
-                    if (!speakingSession || !speakingSession.messages) {
-                      console.error("Speaking session data is incomplete.");
-                    } else {
-                      const transcript = speakingSession.messages[0].text;
-                      const response = speakingSession.messages[1].text;
-                      generatedText = await generateAIContentSpeaking(transcript, response);
-                      await saveSpeakingAnalysis(selectedConversationId, transcript, response, {
-                        generatedText,
-                        analysisText: extractAnalysisText(generatedText),
-                        feedback: extractFeedback(generatedText)
-                      });
-                    }
-                  } catch (innerError) {
-                    console.error("Error during speaking content generation or save:", innerError);
-                  }
+                  const transcript = speakingSession.messages[0].text || "No transcript available";
+                  const responseText = speakingSession.messages[1].text || "No response available"; // Ensure this line is correctly assigning responseText
+                  generatedText = await generateAIContentSpeaking(transcript, responseText);
+                  await saveSpeakingAnalysis(selectedConversationId, transcript, responseText, generatedText);
                 }
-              } catch (error) {
-                console.error("Error fetching or processing speaking analysis:", error);
               }
-              break;
-
-  
+            } catch (error) {
+              console.error("Error fetching or processing speaking analysis:", error);
+            }
+            break;
+            
           case 'reading':
             try {
               const savedReadingReport = await fetchSavedReadingAnalysis(selectedConversationId);
