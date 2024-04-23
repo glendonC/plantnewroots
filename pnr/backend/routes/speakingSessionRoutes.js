@@ -1,13 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const SpeakingSession = require('../models/SpeakingSession');
-const { getSpeakingSessions, getSpeakingSessionDetails, saveSpeakingSession, getUserMessages } = require('../controllers/speakingSessionController');
+const { getSpeakingSession, getSpeakingSessions, getSpeakingSessionDetails, saveSpeakingSession, getUserMessages } = require('../controllers/speakingSessionController');
 const { v4: uuidv4 } = require('uuid');
+const authenticate = require('../middleware/authenticate');
 const mongoose = require('mongoose');
 
 router.get('/', getSpeakingSessions);
 
 router.get('/:id', getSpeakingSessionDetails);
+
+router.get('/:conversationId', authenticate, getSpeakingSession);
 
 router.post('/save', async (req, res) => {
   try {
