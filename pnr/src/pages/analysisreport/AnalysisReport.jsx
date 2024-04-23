@@ -32,7 +32,8 @@ import { generateAIContentListening } from '../../services/aiContentServiceListe
 import {
   fetchSpeakingSessionDetails,
   saveSpeakingAnalysis,
-  fetchSavedSpeakingAnalysis
+  fetchSavedSpeakingAnalysis,
+  fetchSpeakingSession // Add this line
 } from '../../services/speakingAnalysisService';
 import { generateAIContentSpeaking } from '../../services/aiContentServiceSpeaking';
 
@@ -64,7 +65,7 @@ function AnalysisReport() {
           url = '/api/listening-sessions';
           break;
         case 'speaking':
-          url = '/api/speaking-sessions';  // Assuming the endpoint for speaking sessions
+          url = '/api/speaking-sessions';
           break;
         default:
           console.log('Unknown session type: ', sessionType);
@@ -116,6 +117,37 @@ function AnalysisReport() {
               }
             }
             break;
+
+            case 'speaking':
+              try {
+                const savedSpeakingReport = await fetchSavedSpeakingAnalysis(selectedConversationId);
+                if (savedSpeakingReport && savedSpeakingReport.generatedText) {
+                  generatedText = savedSpeakingReport.generatedText;
+                } else {
+                  console.log("No saved speaking analysis data found, attempting to generate new analysis.");
+                  try {
+                    const speakingSession = await fetchSpeakingSession(selectedConversationId);
+                    if (!speakingSession || !speakingSession.messages) {
+                      console.error("Speaking session data is incomplete.");
+                    } else {
+                      const transcript = speakingSession.messages[0].text;
+                      const response = speakingSession.messages[1].text;
+                      generatedText = await generateAIContentSpeaking(transcript, response);
+                      await saveSpeakingAnalysis(selectedConversationId, transcript, response, {
+                        generatedText,
+                        analysisText: extractAnalysisText(generatedText),
+                        feedback: extractFeedback(generatedText)
+                      });
+                    }
+                  } catch (innerError) {
+                    console.error("Error during speaking content generation or save:", innerError);
+                  }
+                }
+              } catch (error) {
+                console.error("Error fetching or processing speaking analysis:", error);
+              }
+              break;
+
   
           case 'reading':
             try {
@@ -163,31 +195,7 @@ function AnalysisReport() {
                 throw error;
               }
             }
-            break;
-  
-          case 'speaking':
-            try {
-              const savedSpeakingReport = await fetchSavedSpeakingAnalysis(selectedConversationId);
-              generatedText = savedSpeakingReport.analysis.generatedText;
-            } catch (error) {
-              if (error.response && error.response.status === 404) {
-                const speakingDetails = await fetchSpeakingSessionDetails(selectedConversationId);
-                const { transcript, response } = speakingDetails;
-                if (transcript && response) {
-                  generatedText = await generateAIContentSpeaking(transcript, response);
-                  await saveSpeakingAnalysis(selectedConversationId, transcript, response, {
-                    generatedText,
-                    analysisText: extractAnalysisText(generatedText),
-                    feedback: extractFeedback(generatedText)
-                  });
-                } else {
-                  console.error("Data for generating AI content for speaking is incomplete.");
-                }
-              } else {
-                throw error;
-              }
-            }
-            break;
+            break;            
 
           default:
             console.log('Unknown session type:', sessionType);
