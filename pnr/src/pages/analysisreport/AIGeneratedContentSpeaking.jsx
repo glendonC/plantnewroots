@@ -7,13 +7,13 @@ function AIGeneratedContentSpeaking({ loading, generatedText }) {
     return (
       <>
         {sections.map((section, index) => {
-          if (section.startsWith("Fluency Analysis:") || section.startsWith("Pronunciation Analysis:")) {
+          if (section.startsWith("General Analysis:") || section.startsWith("Detailed Analysis Findings:")) {
             return <h3 key={index}>{section}</h3>;
-          } else if (section.startsWith("Specific Errors:")) {
-            const messages = section.split("\n").filter(text => text.trim() !== "" && !text.startsWith("Specific Errors"));
+          } else if (section.startsWith("Examples from the conversation:")) {
+            const messages = section.split("\n").filter(text => text.trim() !== "" && !text.startsWith("Examples from"));
             return (
               <div key={index}>
-                <h4>Specific Errors:</h4>
+                <h4>Examples from the conversation:</h4>
                 <ul>
                   {messages.map((msg, msgIndex) => (
                     <li key={msgIndex}>{msg}</li>
@@ -21,7 +21,7 @@ function AIGeneratedContentSpeaking({ loading, generatedText }) {
                 </ul>
               </div>
             );
-          } else if (section.startsWith("Improvement Tips:") || section.startsWith("Custom Feedback:")) {
+          } else if (section.startsWith("Personalized Recommendations:") || section.startsWith("Overall Improvement Tips:")) {
             const items = section.split("*").filter(text => text.trim() !== "");
             return (
               <div key={index}>
@@ -49,11 +49,11 @@ function AIGeneratedContentSpeaking({ loading, generatedText }) {
         <>
           {generatedText ? (
             <div>
-              <h2>Speaking Analysis Results</h2>
+              <h2>Generated Recommendations</h2>
               {formatAIGeneratedTextSpeaking(generatedText)}
             </div>
           ) : (
-            <p>No analysis results generated yet.</p>
+            <p>No recommendations generated yet.</p>
           )}
         </>
       )}
