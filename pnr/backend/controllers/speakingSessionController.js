@@ -9,6 +9,19 @@ exports.getSpeakingSessions = async (req, res) => {
   }
 };
 
+exports.getSpeakingSession = async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const speakingSession = await SpeakingSession.findOne({ conversationId });
+    if (!speakingSession) {
+      return res.status(404).json({ message: 'Speaking session not found' });
+    }
+    res.json(speakingSession);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch speaking session', error: error.message });
+  }
+};
+
 exports.getSpeakingSessionDetails = async (req, res) => {
   try {
     const session = await SpeakingSession.findById(req.params.id);
