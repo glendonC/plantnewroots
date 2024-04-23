@@ -5,26 +5,30 @@ const {
   getSpeakingAnalysisDetails,
   saveSpeakingAnalysis,
   fetchSpeakingAnalysis,
-  analyzeSpeechQuality
+  saveGeneratedText,
+  analyzeSpeakingSession,
+  getSpecificSpeakingAnalysis,
+  getGeneralSpeakingReport
 } = require('../controllers/speakingAnalysisController');
+const authenticate = require('../middleware/authenticate');
 
-router.get('/', getSpeakingAnalyses);
+router.get('/', authenticate, getSpeakingAnalyses);
 
-router.get('/:id', getSpeakingAnalysisDetails);
+router.get('/details/:conversationId', authenticate, getSpeakingAnalysisDetails);
 
-router.post('/save', saveSpeakingAnalysis);
 
-router.get('/fetch/:conversationId', fetchSpeakingAnalysis);
+router.get('/fetch/:conversationId', authenticate, fetchSpeakingAnalysis);
 
-router.post('/analyze', async (req, res) => {
-    const { conversationId } = req.body;
-    const session = await SpeakingSession.findById(conversationId);
-  
-    if (!session) {
-      return res.status(404).json({ message: 'Speaking session not found' });
-    }
-    const analysisResults = session.messages.map(message => analyzeSpeech(message.text));
-    res.json({ detailedAnalysis: analysisResults });
-  });
-  
+router.get('/report', authenticate, getGeneralSpeakingReport);
+
+
+router.get('/report/:conversationId', authenticate, getSpecificSpeakingAnalysis);
+
+router.post('/analyze', authenticate, analyzeSpeakingSession);
+
+
+router.post('/save', authenticate, saveSpeakingAnalysis);
+
+router.post('/saveGeneratedText', authenticate, saveGeneratedText);
+
 module.exports = router;
