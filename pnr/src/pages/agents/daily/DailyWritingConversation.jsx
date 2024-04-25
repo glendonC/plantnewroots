@@ -16,18 +16,35 @@ function DailyWritingConversation() {
         if (!userInput.trim()) return;
         const newMessage = { text: userInput, from: 'user' };
         setMessages(messages => [...messages, newMessage]);
-
+    
         try {
             const response = await axios.post('/api/dialog/daily', { message: userInput });
-            const replyMessage = { text: response.data.reply, from: 'bot' };
-            setMessages(messages => [...messages, replyMessage]);
+            if (response.data.reply === "AI_TAKEOVER") {
+                const { GoogleGenerativeAI } = await import('@google/generative-ai');
+                const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+                const genAI = new GoogleGenerativeAI(API_KEY);
+                const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+                const prompt = `Provide a concise, playful response to the user's input: "${userInput}"`;
+                try {
+                    const textResult = await model.generateContent(prompt);
+                    const textResponse = await textResult.response;
+                    const generatedText = await textResponse.text();
+                    const replyMessage = { text: generatedText, from: 'bot' };
+                    setMessages(messages => [...messages, replyMessage]);
+                } catch (genError) {
+                    console.error('Error generating content with Google AI:', genError);
+                    setMessages(messages => [...messages, { text: "Sorry, I am unable to respond right now.", from: 'bot' }]);
+                }
+            } else {
+                const replyMessage = { text: response.data.reply, from: 'bot' };
+                setMessages(messages => [...messages, replyMessage]);
+            }
         } catch (error) {
-            console.error('Failed to send message: ', error);
+            console.error('Failed to send message:', error);
         }
-
         setUserInput('');
     };
-
+    
     const handleSaveClick = () => {
         if (!conversationName) {
             setShowModal(true);
@@ -35,7 +52,7 @@ function DailyWritingConversation() {
         }
         saveConversation();
     };
-
+    
     const saveConversation = async () => {
         if (!conversationName) {
             alert('Please enter a name for the conversation.');
