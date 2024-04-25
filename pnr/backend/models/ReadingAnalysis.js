@@ -11,23 +11,26 @@ const ReadingAnalysisSchema = new mongoose.Schema({
     required: true
   },
   analysis: {
-    generatedText: {
-      type: String,
-      required: true
+    grammar: {
+      errors: { type: Number, default: 0 },
+      suggestions: { type: String, default: '' }
     },
-    analysisText: {
-      type: String,
-      required: false
+    vocabulary: {
+      appropriateness: { type: String, default: '' },
+      recommendations: { type: String, default: '' }
     },
-    feedback: {
-      type: String,
-      required: false
-    }
+    comprehension: {
+      level: { type: String, default: '' },
+      tips: { type: String, default: '' }
+    },
+    exercises: { type: String, default: '' },
+    feedback: { type: String, default: '' }
   },
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
+
 
 module.exports = mongoose.model('ReadingAnalysis', ReadingAnalysisSchema);
