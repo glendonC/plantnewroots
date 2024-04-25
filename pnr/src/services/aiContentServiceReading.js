@@ -10,15 +10,20 @@ export const generateAIContentReading = async (text, feedback) => {
 
   const prompt = `
     Given the provided text and user feedback, perform a comprehensive analysis focusing on language comprehension, accuracy, and areas for improvement:
-    
+
     Text: "${text}"
-    
+
     Feedback: ${feedback}
-    
-    Analyze the user's responses for grammar accuracy, vocabulary appropriateness, and comprehension of the text's context. Provide specific exercises to address any mistakes, offer tips to enhance their understanding of similar texts in the future, and encourage continuous learning with positive reinforcement.
-    
-    Summarize the overall language ability demonstrated by the user and suggest focused activities to improve their reading and comprehension skills in the target language.
+
+    Please categorize your analysis as follows:
+    - Grammar Accuracy: [Detail the errors and suggestions]
+    - Vocabulary Appropriateness: [Detail the use and recommendations]
+    - Comprehension of Context: [Evaluate comprehension and provide examples]
+    - Exercises and Tips: [Suggest specific exercises and tips for improvement]
+
+    Summarize the overall language ability demonstrated and suggest focused activities to improve their skills.
   `;
+
 
   try {
     const genAI = new GoogleGenerativeAI(API_KEY);
