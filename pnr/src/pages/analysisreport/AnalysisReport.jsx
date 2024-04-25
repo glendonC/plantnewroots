@@ -20,6 +20,7 @@ import {
   fetchDetailedWritingAnalysis,
   fetchUserWritingMessages,
   fetchSavedReport,
+  saveGeneratedText,
 } from '../../services/writingAnalysisService';
 import { generateAIContentWriting } from '../../services/aiContentServiceWriting';
 
@@ -106,16 +107,18 @@ function AnalysisReport() {
           case 'writing':
             try {
               const savedWritingReport = await fetchSavedReport(selectedConversationId);
-              generatedText = savedWritingReport.generatedText;
-            } catch (error) {
-              if (error.response && error.response.status === 404) {
+              if (savedWritingReport && savedWritingReport.generatedText) {
+                generatedText = savedWritingReport.generatedText;
+              } else {
                 const generalReportData = await fetchGeneralWritingReport(selectedConversationId);
                 const detailedAnalysisData = await fetchDetailedWritingAnalysis(selectedConversationId);
                 const userMessages = await fetchUserWritingMessages(selectedConversationId);
                 generatedText = await generateAIContentWriting(generalReportData, detailedAnalysisData, userMessages);
-              } else {
-                throw error;
+                await saveGeneratedText(selectedConversationId, generatedText);
               }
+            } catch (error) {
+              console.error('Error fetching/saving writing report:', error);
+              throw error;
             }
             break;
 
