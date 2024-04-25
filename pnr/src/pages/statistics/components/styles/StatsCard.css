@@ -1,0 +1,27 @@
+.statistics-page {
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.stats-cards-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.stats-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 250px;
+    margin: 10px;
+    text-align: center;
+}
+
+h2 {
+    color: #333;
+    text-align: center;
+}
