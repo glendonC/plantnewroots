@@ -1,0 +1,25 @@
+.statistics-container {
+    color: #fff;
+    background-color: rgba(62, 59, 54, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.stats-card {
+    background-color: #282726;
+    color: #fff;
+    margin-bottom: 20px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.chart-container {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #282726;
+    border-radius: 8px;
+}
