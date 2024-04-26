@@ -37,22 +37,16 @@ export const fetchSpeakingSessionDetails = async (conversationId) => {
 };
 
 export const saveSpeakingAnalysis = async (conversationId, transcript, responseText, generatedText) => {
-  try {
-    const apiResponse = await axios.post('/api/speaking-analysis/save', {
-      conversationId,
-      transcript,
-      response: responseText,
-      generatedText: generatedText
-    }, {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-    });
-    console.log('Speaking analysis saved successfully');
-    return apiResponse.data;
-  } catch (error) {
-    console.error('Error saving speaking analysis:', error);
-    throw error;
-  }
+  const response = await axios.post(`/api/speaking-analysis/save/${conversationId}`, {
+    transcript,
+    responseText,
+    generatedText
+  }, {
+    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+  });
+  return response.data;
 };
+
 
 
 export const fetchSavedSpeakingAnalysis = async (conversationId) => {
