@@ -31,25 +31,18 @@ exports.getSpeakingAnalysisDetails = async (req, res) => {
     }
   };
 
-exports.fetchSpeakingAnalysis = async (req, res) => {
+  exports.saveSpeakingAnalysis = async (req, res) => {
     try {
-        const analysis = await SpeakingAnalysis.findOne({ conversationId: req.params.conversationId });
-        if (!analysis) {
-            return res.status(404).json({ message: 'Analysis not found' });
-        }
-        res.json(analysis);
-    } catch (error) {
-        console.error('Failed to fetch analysis:', error);
-        res.status(500).json({ error: 'Internal Server Error', message: error.message });
-    }
-};
-
-exports.saveSpeakingAnalysis = async (req, res) => {
-    try {
-        const { conversationId, transcript, responseText, generatedText } = req.body;
-        let existingAnalysis = await SpeakingAnalysis.findOne({ conversationId });
+        const { transcript, responseText, generatedText } = req.body;
+        let existingAnalysis = await SpeakingAnalysis.findOne({ conversationId: req.params.conversationId, userId: req.user.id });
         if (!existingAnalysis) {
-            existingAnalysis = new SpeakingAnalysis({ conversationId, transcript, response: responseText, generatedText });
+            existingAnalysis = new SpeakingAnalysis({
+                userId: req.user.id,
+                conversationId: req.params.conversationId,
+                transcript,
+                response: responseText,
+                generatedText
+            });
         } else {
             existingAnalysis.transcript = transcript;
             existingAnalysis.response = responseText;
@@ -60,6 +53,19 @@ exports.saveSpeakingAnalysis = async (req, res) => {
     } catch (error) {
         console.error('Failed to save speaking analysis:', error);
         res.status(500).send('Internal Server Error');
+    }
+};
+
+exports.fetchSpeakingAnalysis = async (req, res) => {
+    try {
+        const analysis = await SpeakingAnalysis.findOne({ conversationId: req.params.conversationId, userId: req.user.id });
+        if (!analysis) {
+            return res.status(404).json({ message: 'Analysis not found' });
+        }
+        res.json(analysis);
+    } catch (error) {
+        console.error('Failed to fetch analysis:', error);
+        res.status(500).json({ error: 'Internal Server Error', message: error.message });
     }
 };
 
