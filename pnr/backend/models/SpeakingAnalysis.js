@@ -1,19 +1,25 @@
 const mongoose = require('mongoose');
 
 const SpeakingAnalysisSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   conversationId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'SpeakingSession',
     required: true,
-    unique: true,
+    unique: true
   },
   generatedText: {
     type: String,
-    required: true,
+    required: true
   },
   createdAt: {
     type: Date,
-    default: Date.now,
-  },
+    default: Date.now
+  }
 });
 
 const SpeakingAnalysis = mongoose.model('SpeakingAnalysis', SpeakingAnalysisSchema);
