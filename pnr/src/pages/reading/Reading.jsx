@@ -139,9 +139,11 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
     };
   
     try {
+      const token = localStorage.getItem('token');
       const response = await axios.post('/api/reading-sessions/save', sessionData, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         }
       });
   
@@ -155,6 +157,7 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
       console.error('Error saving session:', error);
     }
   };
+  
 
   
   return (
@@ -251,9 +254,6 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
       <HomeButton />
     </Container>
   );
-  
-
-  
 };
 
 export default Transition(Reading);
