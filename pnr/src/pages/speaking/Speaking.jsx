@@ -124,6 +124,7 @@ const Speaking = () => {
             alert("Failed to process Text-to-Speech request.");
         }
     };
+    
     const saveSession = async () => {
         const sessionData = {
           name: sessionName,
@@ -136,17 +137,19 @@ const Speaking = () => {
         };
       
         try {
+          const token = localStorage.getItem('token');
           const response = await fetch('/api/speaking-sessions/save', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(sessionData)
           });
           const result = await response.json();
           if (response.ok) {
             console.log("Session saved successfully:", result);
-            setShowSaveModal(false);  // Close the modal on successful save
+            setShowSaveModal(false);
           } else {
             throw new Error('Failed to save session');
           }
@@ -154,6 +157,7 @@ const Speaking = () => {
           console.error('Error saving session:', error);
         }
       };
+      
     
       
     return (
