@@ -114,7 +114,7 @@ function AnalysisReport() {
                 const detailedAnalysisData = await fetchDetailedWritingAnalysis(selectedConversationId);
                 const userMessages = await fetchUserWritingMessages(selectedConversationId);
                 generatedText = await generateAIContentWriting(generalReportData, detailedAnalysisData, userMessages);
-                await saveGeneratedText(selectedConversationId, generatedText);
+                await saveGeneratedText(selectedConversationId, generatedText, "full");
               }
             } catch (error) {
               console.error('Error fetching/saving writing report:', error);

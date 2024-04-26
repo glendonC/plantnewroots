@@ -3,7 +3,7 @@ const ReadingAnalysis = require('../models/ReadingAnalysis');
 
 const getReadingSessions = async (req, res) => {
   try {
-    const sessions = await ReadingSession.find({});
+    const sessions = await ReadingSession.find({ userId: req.user.id });
     res.json(sessions);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch reading sessions', error: error.message });
@@ -12,7 +12,7 @@ const getReadingSessions = async (req, res) => {
 
 const getReadingSessionDetails = async (req, res) => {
   try {
-    const session = await ReadingSession.findById(req.params.id);
+    const session = await ReadingSession.findOne({ _id: req.params.id, userId: req.user.id });
     if (!session) {
       return res.status(404).json({ message: 'Reading session not found' });
     }
@@ -25,7 +25,7 @@ const getReadingSessionDetails = async (req, res) => {
 const getReadingSessionsByConversationId = async (req, res) => {
   try {
     const { conversationId } = req.params;
-    const sessions = await ReadingSession.find({ conversationId });
+    const sessions = await ReadingSession.find({ conversationId, userId: req.user.id });
     res.json(sessions);
   } catch (error) {
     res.status(500).json({ message: `Failed to fetch reading sessions for conversation ID: ${req.params.conversationId}`, error: error.message });
@@ -52,7 +52,6 @@ const getReadingAnalysisDetails = async (req, res) => {
 };
 
 const saveReadingAnalysis = async (req, res) => {
-  console.log(req.body);
   const { conversationId, text, analysis } = req.body;
 
   if (!conversationId || !text || !analysis) {
@@ -60,26 +59,24 @@ const saveReadingAnalysis = async (req, res) => {
     return res.status(400).json({ message: "Required fields are missing or incomplete." });
   }
 
-  if (!analysis.generatedText) {
-    console.error("Validation Error: Analysis field missing", analysis);
-    return res.status(400).json({ message: "Analysis field is missing or incomplete." });
-  }
-
   try {
     let savedAnalysis;
-    const existingAnalysis = await ReadingAnalysis.findOne({ conversationId });
+    const existingAnalysis = await ReadingAnalysis.findOne({ conversationId, userId: req.user.id });
+
     if (existingAnalysis) {
       existingAnalysis.text = text;
       existingAnalysis.analysis = analysis;
       savedAnalysis = await existingAnalysis.save();
     } else {
       const newAnalysis = new ReadingAnalysis({
+        userId: req.user.id,
         conversationId,
         text,
         analysis
       });
       savedAnalysis = await newAnalysis.save();
     }
+
     res.status(201).json({ message: 'Reading analysis saved successfully', analysis: savedAnalysis });
   } catch (error) {
     console.error("Error saving reading analysis:", error);
@@ -88,15 +85,10 @@ const saveReadingAnalysis = async (req, res) => {
 };
 
 
-
-
-
-
-
 const fetchReadingAnalysis = async (req, res) => {
   const { conversationId } = req.params;
   try {
-    const analysis = await ReadingAnalysis.findOne({ conversationId });
+    const analysis = await ReadingAnalysis.findOne({ conversationId, userId: req.user.id });
     if (!analysis) {
       return res.status(404).json({ message: "Analysis not found" });
     }
@@ -105,6 +97,7 @@ const fetchReadingAnalysis = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch analysis', error: error.message });
   }
 };
+
 
 module.exports = {
   getReadingSessions,

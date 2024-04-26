@@ -69,8 +69,6 @@ router.post('/analyze', async (req, res) => {
       analyzeText(message.text)
     );
     const analysisResults = await Promise.all(analysisPromises);
-
-    // process analysisResults to identify mistakes, strengths, etc
     res.json({ detailedAnalysis: analysisResults });
   } catch (error) {
     console.error("Error analyzing conversation:", error);
@@ -94,19 +92,27 @@ router.get('/:conversationId', authenticate, async (req, res) => {
   }
 });
 
-
 router.post('/saveGeneratedText', authenticate, async (req, res) => {
   try {
-    const { conversationId, generatedText } = req.body;
+    // First, destructure the required variables from the request body
+    const { conversationId, generatedText, type } = req.body;
 
-    if (!conversationId || !generatedText) {
-      return res.status(400).json({ error: 'conversationId and generatedText are required' });
+    // Then log them
+    console.log('Received data for saving:', { conversationId, generatedText, type });
+
+    const userId = req.user.id;
+
+    if (!conversationId || !generatedText || !type) {
+      return res.status(400).json({ error: 'conversationId, generatedText, and type are required' });
     }
 
-    let analysis = await WritingConversationAnalysis.findOne({ conversationId });
+    let analysis = await WritingConversationAnalysis.findOne({ conversationId, userId, type });
+
     if (!analysis) {
       analysis = new WritingConversationAnalysis({
+        userId,
         conversationId,
+        type,
         generatedText,
       });
     } else {
@@ -114,13 +120,15 @@ router.post('/saveGeneratedText', authenticate, async (req, res) => {
     }
 
     await analysis.save();
-
+    console.log('Generated text saved successfully');
     res.json({ message: 'Generated text saved successfully' });
   } catch (error) {
     console.error('Error saving generated text:', error);
-    res.status(500).json({ error: 'Failed to save generated text' });
+    res.status(500).json({ error: 'Failed to save generated text', details: error.toString() });
   }
 });
+
+
 
 
 

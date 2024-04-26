@@ -68,15 +68,18 @@ export const fetchSavedReport = async (conversationId) => {
   }
 };
 
-export const saveGeneratedText = async (conversationId, generatedText) => {
+export const saveGeneratedText = async (conversationId, generatedText, type) => {
   try {
-    await axios.post('/api/analysis/saveGeneratedText', {
+    //console.log('Sending to saveGeneratedText:', { conversationId, generatedText, type });
+    const response = await axios.post('/api/analysis/saveGeneratedText', {
       conversationId,
-      generatedText
+      generatedText,
+      type
     }, {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
     });
-    console.log('Generated text saved successfully');
+    //console.log('Generated text saved successfully:', response.data);
+    return response.data;
   } catch (error) {
     console.error('Error saving generated text:', error);
     throw error;

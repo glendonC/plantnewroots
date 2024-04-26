@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const listeningAnalysisSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   conversationId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ListeningSession',
