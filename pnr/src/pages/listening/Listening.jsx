@@ -164,9 +164,11 @@ const Listening = () => {
     };
   
     try {
+      const token = localStorage.getItem('token');
       const response = await axios.post('/api/listening-sessions/save', sessionData, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         }
       });
   
@@ -181,8 +183,6 @@ const Listening = () => {
     }
   };
   
-
-
   return (
     <Container className="mt-4 d-flex flex-column min-vh-100">
       <div className="flex-grow-1">
