@@ -31,13 +31,14 @@ exports.saveListeningAnalysis = async (req, res) => {
 
   try {
     let savedAnalysis;
-    const existingAnalysis = await ListeningAnalysis.findOne({ conversationId });
+    const existingAnalysis = await ListeningAnalysis.findOne({ conversationId, userId: req.user.id });
     if (existingAnalysis) {
       existingAnalysis.text = text;
       existingAnalysis.analysis = analysis;
       savedAnalysis = await existingAnalysis.save();
     } else {
       const newAnalysis = new ListeningAnalysis({
+        userId: req.user.id,
         conversationId,
         text,
         analysis
@@ -54,7 +55,7 @@ exports.saveListeningAnalysis = async (req, res) => {
 exports.fetchListeningAnalysis = async (req, res) => {
   const { conversationId } = req.params;
   try {
-    const analysis = await ListeningAnalysis.findOne({ conversationId });
+    const analysis = await ListeningAnalysis.findOne({ conversationId, userId: req.user.id });
     if (!analysis) {
       return res.status(404).json({ message: "Analysis not found" });
     }
