@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const ReadingAnalysisSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   conversationId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ReadingSession',
@@ -17,11 +22,11 @@ const ReadingAnalysisSchema = new mongoose.Schema({
     },
     analysisText: {
       type: String,
-      required: false
+      optional: true
     },
     feedback: {
       type: String,
-      required: false
+      optional: true
     }
   },
   createdAt: {
