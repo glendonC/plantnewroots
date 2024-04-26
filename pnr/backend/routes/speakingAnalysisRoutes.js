@@ -15,9 +15,9 @@ const authenticate = require('../middleware/authenticate');
 router.get('/', authenticate, getSpeakingAnalyses);
 
 router.get('/details/:conversationId', authenticate, getSpeakingAnalysisDetails);
-
-
 router.get('/fetch/:conversationId', authenticate, fetchSpeakingAnalysis);
+router.post('/save/:conversationId', authenticate, saveSpeakingAnalysis);
+
 
 router.get('/report', authenticate, getGeneralSpeakingReport);
 
@@ -25,9 +25,6 @@ router.get('/report', authenticate, getGeneralSpeakingReport);
 router.get('/report/:conversationId', authenticate, getSpecificSpeakingAnalysis);
 
 router.post('/analyze', authenticate, analyzeSpeakingSession);
-
-
-router.post('/save', authenticate, saveSpeakingAnalysis);
 
 router.post('/saveGeneratedText', authenticate, saveGeneratedText);
 
