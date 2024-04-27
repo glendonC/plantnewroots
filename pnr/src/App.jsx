@@ -28,6 +28,8 @@ import Speaking from './pages/speaking/Speaking'
 
 import AnalysisReport from './pages/analysisreport/AnalysisReport'
 
+import StatisticsPage from "./pages/statistics/StatisticsPage";
+
 import { AnimatePresence } from "framer-motion";
 
 import { useAuth } from './contexts/AuthContext';
@@ -63,6 +65,8 @@ function App() {
           <Route path="/listening" element={<Listening />} />
           <Route path="/speaking" element={<Speaking />} />
           <Route path="/sample-blog/:id" element={<SampleBlog />} />
+
+          <Route path="/statistics" element={<StatisticsPage />} />
         </Routes>
       </AnimatePresence>
       {!isLoginPage && <Footer />}
