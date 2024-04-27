@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import Transition from "../../components/transition/Transition";
 import './login.css'; // Import your CSS file
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -28,7 +30,7 @@ function Login() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('username', data.username);
         localStorage.setItem('userId', data.userId);
-
+        login();
         // Redirect to the home page
         navigate('/home');
       } else {
@@ -76,6 +78,7 @@ function Login() {
             </form>
             <p>"Plant new roots with courage, for in the soil of change, opportunities bloom."</p>
             <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
+            <p>Forgot your password? <Link to="/password-reset">Reset it</Link></p>
           </div>
         </header>
         <footer>
