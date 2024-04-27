@@ -226,7 +226,7 @@ const Speaking = () => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
+                    <Button variant="secondary" onClick={() => setShowSaveModal(false)} style={{ color: 'black' }}>
                         Close
                     </Button>
                     <Button variant="primary" onClick={saveSession}>
