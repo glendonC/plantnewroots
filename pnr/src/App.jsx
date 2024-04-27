@@ -1,4 +1,3 @@
-import "./App.css";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Menu from "./components/menu/Menu";
 import Footer from "./components/footer/Footer";
@@ -15,6 +14,7 @@ import SampleBlog from "./pages/sampleblog/SampleBlog";
 
 import Login from "./pages/login/Login";
 import SignUp from "./pages/signup/SignUp";
+import PasswordReset from "./pages/password-reset/PasswordReset";
 
 import Reading from './pages/reading/Reading';
 
@@ -39,6 +39,7 @@ function App() {
   const { isLoggedIn } = useAuth();
 
   const isLoginPage = location.pathname === "/login" || location.pathname === "/signup";
+  const isPasswordResetPage = location.pathname === "/password-reset";
   
   return (
     <>
@@ -48,6 +49,7 @@ function App() {
           <Route path="/" element={<Navigate replace to="/login" />} />
           <Route path="/login" element={isLoggedIn ? <Navigate replace to="/home" /> : <Login />} />
           <Route path="/signup" element={isLoggedIn ? <Navigate replace to="/home" /> : <SignUp />} />
+          {isPasswordResetPage ? (isLoggedIn ? <Navigate replace to="/home" /> : <Route path="/password-reset" element={<PasswordReset />} />) : null} {/* Conditionally render PasswordReset component only if not logged in */}
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
 
