@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Menu from "./components/menu/Menu";
 import Footer from "./components/footer/Footer";
-import PasswordResetForm from "./pages/password-reset/PasswordReset"; // Import the PasswordResetForm component
+import PasswordResetForm from "./pages/password-reset/PasswordReset";
 
 import Home from "./pages/home/Home";
 import About from "./pages/about/About";
@@ -43,13 +43,13 @@ function App() {
   
   return (
     <>
-      {!isLoginPage && !isPasswordResetPage && <Menu />} {/* Render Menu conditionally */}
+      {!isLoginPage && !isPasswordResetPage && <Menu />}
       <AnimatePresence mode="wait">
         <Routes>
           <Route path="/" element={<Navigate replace to="/login" />} />
           <Route path="/login" element={isLoggedIn ? <Navigate replace to="/home" /> : <Login />} />
           <Route path="/signup" element={isLoggedIn ? <Navigate replace to="/home" /> : <SignUp />} />
-          <Route path="/password-reset" element={<PasswordResetForm />} /> {/* Render PasswordResetForm directly */}
+          <Route path="/password-reset" element={<PasswordResetForm />} />
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
 
@@ -71,7 +71,7 @@ function App() {
           <Route path="/statistics" element={<StatisticsPage />} />
         </Routes>
       </AnimatePresence>
-      {!isLoginPage && !isPasswordResetPage && <Footer />} {/* Render Footer conditionally */}
+      {!isLoginPage && !isPasswordResetPage && <Footer />}
     </>
   );
 }

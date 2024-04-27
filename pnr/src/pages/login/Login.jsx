@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import Transition from "../../components/transition/Transition";
-import './login.css'; // Import your CSS file
+import './login.css';
 
 function Login() {
   const navigate = useNavigate();
@@ -13,7 +13,6 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      // Replace the fetch URL with your authentication endpoint
       const response = await fetch('/api/users/login', {
         method: 'POST',
         headers: {
@@ -31,10 +30,8 @@ function Login() {
         localStorage.setItem('username', data.username);
         localStorage.setItem('userId', data.userId);
         login();
-        // Redirect to the home page
         navigate('/home');
       } else {
-        // Handle login failure
         console.error('Login error:', data.message);
       }
     } catch (error) {

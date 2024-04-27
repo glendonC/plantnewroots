@@ -168,7 +168,7 @@ const Menu = () => {
               <Link to="/profile">{username}</Link>
             </div>
           </div>
-          {isLoggedIn && ( // Conditionally render the logout button only if the user is logged in
+          {isLoggedIn && (
               <div className="logout-btn">
                 <button onClick={handleLogout} className="btn">
                   Logout
