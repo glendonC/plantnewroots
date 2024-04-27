@@ -125,7 +125,7 @@ const Profile = () => {
                 <input type="text" placeholder="New Username" value={newUsername} onChange={handleUsernameChange} />
                 <input type="text" placeholder="New Email" value={newEmail} onChange={handleEmailChange} />
                 <input type="text" placeholder="New Password" value={newPassword} onChange={handlePasswordChange} />
-                <Button variant="light" style={{ backgroundColor: 'transparent' }} onClick={handleSubmit}>
+                <Button variant="light" style={{ backgroundColor: 'transparent', marginTop: '10px', marginLeft: '-10px' }} onClick={handleSubmit}>
                   Update Profile
                 </Button>
               </form>
