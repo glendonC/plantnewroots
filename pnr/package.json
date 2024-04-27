@@ -27,6 +27,7 @@
     "country-flag-icons": "^1.5.11",
     "d3": "^7.9.0",
     "d3-cloud": "^1.2.7",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "flag-icon-css": "^4.1.7",

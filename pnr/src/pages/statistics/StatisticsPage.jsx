@@ -3,8 +3,7 @@ import StackedBarChart from '../../components/charts/StackedBarChart';
 import PieChart from '../../components/charts/PieChart';
 import WordCloudChart from '../../components/charts/WordCloudChart';
 import { fetchData } from '../../services/statsService';
-import { Container, Row, Col } from 'react-bootstrap';
-
+import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 
 const StatisticsPage = () => {
   const [data, setData] = useState({
@@ -14,21 +13,15 @@ const StatisticsPage = () => {
   });
   
   const [error, setError] = useState(null);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date()); 
-  
+  const [selectedRange, setSelectedRange] = useState('all');
+
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await fetchData(startDate, endDate);
-        console.log("API Response:", response);
+        const response = await fetchData(selectedRange);
         const transformedStackedData = transformToStackedData(response);
         const transformedPieData = transformToPieData(response);
         const transformedWordCloudData = transformToWordCloudData(response);
-        
-        console.log("Stacked Data:", transformedStackedData);
-        console.log("Pie Data:", transformedPieData);
-        console.log("Word Cloud Data:", transformedWordCloudData);
 
         setData({
           stackedData: transformedStackedData,
@@ -42,46 +35,40 @@ const StatisticsPage = () => {
     };
   
     getData();
-  }, [startDate, endDate]);
+  }, [selectedRange]);
+
+  const handleRangeSelect = (range) => {
+    setSelectedRange(range);
+  };
 
   const transformToStackedData = (response) => {
-    const labels = ['Listening', 'Reading', 'Speaking', 'Writing'];
-    const datasets = [{
-      label: 'Counts',
-      data: [
-        response.listening,
-        response.reading,
-        response.speaking,
-        response.writing
-      ],
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.5)',
-        'rgba(54, 162, 235, 0.5)',
-        'rgba(75, 192, 192, 0.5)',
-        'rgba(153, 102, 255, 0.5)'
-      ],
-    }];
-  
-    return { labels, datasets };
+    return {
+      labels: ['Listening', 'Reading', 'Speaking', 'Writing'],
+      datasets: [{
+        label: 'Counts',
+        data: [response.listening, response.reading, response.speaking, response.writing],
+        backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(75, 192, 192, 0.5)', 'rgba(153, 102, 255, 0.5)']
+      }]
+    };
   };
   
-const transformToPieData = (response) => {
-  return [
-    { type: 'Listening', value: response.listening },
-    { type: 'Reading', value: response.reading },
-    { type: 'Speaking', value: response.speaking },
-    { type: 'Writing', value: response.writing }
-  ];
-};
+  const transformToPieData = (response) => {
+    return [
+      { type: 'Listening', value: response.listening },
+      { type: 'Reading', value: response.reading },
+      { type: 'Speaking', value: response.speaking },
+      { type: 'Writing', value: response.writing }
+    ];
+  };
 
-const transformToWordCloudData = (response) => {
-  return [
-    { text: 'Listening', size: response.listening * 10 },
-    { text: 'Reading', size: response.reading * 10 },
-    { text: 'Speaking', size: response.speaking * 10 },
-    { text: 'Writing', size: response.writing * 10 }
-  ];
-};
+  const transformToWordCloudData = (response) => {
+    return [
+      { text: 'Listening', size: response.listening * 10 },
+      { text: 'Reading', size: response.reading * 10 },
+      { text: 'Speaking', size: response.speaking * 10 },
+      { text: 'Writing', size: response.writing * 10 }
+    ];
+  };
 
   if (error) {
     return <div>Error loading statistics: {error}</div>;
@@ -96,14 +83,22 @@ const transformToWordCloudData = (response) => {
       </Row>
       <Row className="justify-content-md-center pt-3">
         <Col xs={12}>
-          {data.stackedData && data.stackedData.datasets && data.stackedData.datasets.length > 0 && (
-            <StackedBarChart data={data.stackedData} />
-          )}
+          <ButtonGroup>
+            <Button variant="secondary" onClick={() => handleRangeSelect('today')}>Today</Button>
+            <Button variant="secondary" onClick={() => handleRangeSelect('week')}>This Week</Button>
+            <Button variant="secondary" onClick={() => handleRangeSelect('month')}>This Month</Button>
+            <Button variant="secondary" onClick={() => handleRangeSelect('all')}>All Time</Button>
+          </ButtonGroup>
         </Col>
       </Row>
       <Row className="justify-content-md-center pt-3">
         <Col xs={12}>
-          {data.pieData && data.pieData.length > 0 && <PieChart data={data.pieData} />}
+          {data.stackedData.datasets.length > 0 && <StackedBarChart data={data.stackedData} />}
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center pt-3">
+        <Col xs={12}>
+          {data.pieData.length > 0 && <PieChart data={data.pieData} />}
         </Col>
       </Row>
       <Row className="justify-content-md-center pt-3">
