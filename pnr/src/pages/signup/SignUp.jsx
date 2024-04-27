@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Transition from "../../components/transition/Transition";
 import './signup.css';
+import Swal from 'sweetalert2';
 
 function SignUp() {
   const navigate = useNavigate();
@@ -22,13 +23,25 @@ function SignUp() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Sign up successful', data);
+        //console.log('Sign up successful', data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Sign up successful',
+          showConfirmButton: false,
+          timer: 2000
+        });
         navigate('/login');
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Sign up failed');
       }
     } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Sign up failed. Please try again.',
+      });
       console.error('Error during sign up:', error.message);
     }
   };

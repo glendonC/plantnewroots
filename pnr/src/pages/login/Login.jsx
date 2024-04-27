@@ -31,8 +31,6 @@ function Login() {
         localStorage.setItem('username', data.username);
         localStorage.setItem('userId', data.userId);
         login();
-        navigate('/home');
-
         Swal.fire({
           icon: 'success',
           title: 'Success',
@@ -40,6 +38,7 @@ function Login() {
           showConfirmButton: false,
           timer: 2000
         });
+        navigate('/home');
       } else {
         Swal.fire({
           icon: 'error',
