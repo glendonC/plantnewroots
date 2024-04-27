@@ -4,7 +4,7 @@ import { US, KR, CN } from 'country-flag-icons/react/3x2';
 import { Dropdown } from 'react-bootstrap';
 import { LevelList, LevelItem } from './LevelSelectionStyles';
 import "./profile.css";
-
+import axios from 'axios';
 
 import HomeButton from "../../components/homebutton/HomeButton";
 
@@ -13,16 +13,63 @@ const Profile = () => {
 
   const [selectedLevel, setSelectedLevel] = useState(localStorage.getItem('selectedLevel') || "");
 
+  const [newUsername, setNewUsername] = useState('');
+  const [newEmail, setNewEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+
   const [selectedLanguage, setSelectedLanguage] = useState(() => {
     const storedLanguage = localStorage.getItem('selectedLanguage');
     return storedLanguage || 'English';
   });
 
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleUsernameChange = (event) => {
+    setNewUsername(event.target.value);
+  };
+  
+  const handleEmailChange = (event) => {
+    setNewEmail(event.target.value);
+  };
+  
+  const handlePasswordChange = (event) => {
+    setNewPassword(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    
+    try {
+        const token = localStorage.getItem('token');
+
+        const response = await axios.post('/api/users/update-profile', {
+            username: newUsername,
+            email: newEmail,
+            password: newPassword
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        setSuccessMessage('Profile updated successfully');
+
+        setErrorMessage('');
+    
+        console.log('Profile updated successfully:', response.data);
+    } catch (error) {
+        setErrorMessage('Error updating profile');
+        setSuccessMessage('');
+        console.error('Error updating profile:', error);
+    }
+  };
+
+  
   const handleLanguageSelect = (language) => {
     setSelectedLanguage(language);
     localStorage.setItem('selectedLanguage', language);
   };
-  
   
   const handleLevelChange = (level) => {
     setSelectedLevel(level);
@@ -48,7 +95,8 @@ const Profile = () => {
     Korean: <KR className="flag-icon" />,
     Chinese: <CN className="flag-icon" />,
   };
-   const SelectedFlag = languageFlags[selectedLanguage];
+  
+  const SelectedFlag = languageFlags[selectedLanguage];
 
   return (
     <div className="contact page">
@@ -72,17 +120,16 @@ const Profile = () => {
               </p>
             </div>
             <div className="contact-col">
-              <form action="">
-                <div className="input">
-                  <input type="text" placeholder="New Username" />
-                </div>
-                <div className="input">
-                  <input type="text" placeholder="New Email" />
-                </div>
-                <div className="input">
-                  <input type="text" placeholder="New Password" />
-                </div>
+              <form onSubmit={handleSubmit}>
+                <input type="text" placeholder="New Username" value={newUsername} onChange={handleUsernameChange} />
+                <input type="text" placeholder="New Email" value={newEmail} onChange={handleEmailChange} />
+                <input type="text" placeholder="New Password" value={newPassword} onChange={handlePasswordChange} />
+                
+                {/* Submit button */}
+                <button type="submit">Update Profile</button>
               </form>
+              {successMessage && <div className="success-message">{successMessage}</div>}
+              {errorMessage && <div className="error-message">{errorMessage}</div>}
             </div>
           </div>
         </section>
