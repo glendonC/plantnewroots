@@ -3,6 +3,8 @@ import StackedBarChart from '../../components/charts/StackedBarChart';
 import PieChart from '../../components/charts/PieChart';
 import WordCloudChart from '../../components/charts/WordCloudChart';
 import { fetchData } from '../../services/statsService';
+import { Container, Row, Col } from 'react-bootstrap';
+
 
 const StatisticsPage = () => {
   const [data, setData] = useState({
@@ -86,22 +88,32 @@ const transformToWordCloudData = (response) => {
   }
 
   return (
-    <div>
-      <h1>Statistics</h1>
-      <div>
-        <h2>Stacked Bar Chart</h2>
-        {data.stackedData && data.stackedData.datasets && data.stackedData.datasets.length > 0 && <StackedBarChart data={data.stackedData} />}
-      </div>
-      <div>
-        <h2>Pie Chart</h2>
-        {data.pieData && data.pieData.length > 0 && <PieChart data={data.pieData} />}
-      </div>
-      <div>
-        <h2>Word Cloud</h2>
-        {data.wordCloudData && data.wordCloudData.length > 0 && <WordCloudChart words={data.wordCloudData} />}
-      </div>
-    </div>
+    <Container className="mt-4 d-flex flex-column min-vh-100">
+      <Row className="justify-content-md-center pt-5">
+        <Col xs={12}>
+          <h1 className="text-center">Statistics</h1>
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center pt-3">
+        <Col xs={12}>
+          {data.stackedData && data.stackedData.datasets && data.stackedData.datasets.length > 0 && (
+            <StackedBarChart data={data.stackedData} />
+          )}
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center pt-3">
+        <Col xs={12}>
+          {data.pieData && data.pieData.length > 0 && <PieChart data={data.pieData} />}
+        </Col>
+      </Row>
+      <Row className="justify-content-md-center pt-3">
+        <Col xs={12}>
+          {data.wordCloudData && data.wordCloudData.length > 0 && <WordCloudChart words={data.wordCloudData} />}
+        </Col>
+      </Row>
+    </Container>
   );
+  
 
   
 };
