@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import Transition from "../../components/transition/Transition";
 import './login.css';
+import Swal from 'sweetalert2'; 
 
 function Login() {
   const navigate = useNavigate();
@@ -31,10 +32,28 @@ function Login() {
         localStorage.setItem('userId', data.userId);
         login();
         navigate('/home');
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Login successful',
+          showConfirmButton: false,
+          timer: 2000
+        });
       } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Login error. Please check your credentials and try again.',
+        });
         console.error('Login error:', data.message);
       }
     } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error during login. Please try again later.',
+      });
       console.error('Error during login:', error);
     }
   };
