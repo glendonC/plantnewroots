@@ -7,9 +7,10 @@ import { gsap } from "gsap";
 import DefaultPreviewImg from "../../assets/images/menu/default.jpg";
 import LinkPreviewImg1 from "../../assets/images/home/portrait.jpeg";
 import LinkPreviewImg2 from "../../assets/images/menu/analysis.jpg";
-import LinkPreviewImg3 from "../../assets/images/menu/blog.jpg";
-import LinkPreviewImg4 from "../../assets/images/menu/profile.jpg";
-import LinkPreviewImg5 from "../../assets/images/menu/learn.jpg";
+import LinkPreviewImg3 from "../../assets/images/menu/statistics.jpg"
+import LinkPreviewImg4 from "../../assets/images/menu/blog.jpg";
+import LinkPreviewImg5 from "../../assets/images/menu/profile.jpg";
+import LinkPreviewImg6 from "../../assets/images/menu/learn.jpg";
 
 import MouseTrail from '../../components/mousetrail/MouseTrail';
 
@@ -17,6 +18,7 @@ const Menu = () => {
   const menuLinks = [
     { path: "/works", label: "Learn" },
     { path: "/analysispage", label: "Analysis"},
+    { path: "/statistics", label: "Statistics"},
     { path: "/blog", label: "Blog" },
     { path: "/profile", label: "Profile" },
     { path: "/about", label: "About" },
@@ -96,6 +98,7 @@ const Menu = () => {
       LinkPreviewImg3,
       LinkPreviewImg4,
       LinkPreviewImg5,
+      LinkPreviewImg6,
     ];
 
     let lastHoveredIndex = null;
