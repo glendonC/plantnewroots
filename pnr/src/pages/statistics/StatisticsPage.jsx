@@ -84,20 +84,62 @@ const StatisticsPage = () => {
       </Row>
       <Row className="justify-content-md-center pt-3">
         <Col xs={12}>
-          <ButtonGroup>
-            <Button variant="secondary" onClick={() => handleRangeSelect('today')}>Today</Button>
-            <Button variant="secondary" onClick={() => handleRangeSelect('week')}>This Week</Button>
-            <Button variant="secondary" onClick={() => handleRangeSelect('month')}>This Month</Button>
-            <Button variant="secondary" onClick={() => handleRangeSelect('all')}>All Time</Button>
-          </ButtonGroup>
+        <ButtonGroup>
+          <Button
+            variant={selectedRange === 'today' ? 'primary' : 'secondary'}
+            onClick={() => handleRangeSelect('today')}
+            active={selectedRange === 'today'}
+          >
+            Today
+          </Button>
+          <Button
+            variant={selectedRange === 'week' ? 'primary' : 'secondary'}
+            onClick={() => handleRangeSelect('week')}
+            active={selectedRange === 'week'}
+          >
+            This Week
+          </Button>
+          <Button
+            variant={selectedRange === 'month' ? 'primary' : 'secondary'}
+            onClick={() => handleRangeSelect('month')}
+            active={selectedRange === 'month'}
+          >
+            This Month
+          </Button>
+          <Button
+            variant={selectedRange === 'all' ? 'primary' : 'secondary'}
+            onClick={() => handleRangeSelect('all')}
+            active={selectedRange === 'all'}
+          >
+            All Time
+          </Button>
+        </ButtonGroup>
         </Col>
       </Row>
       <Row className="justify-content-md-center pt-3">
         <Col xs={12}>
           <ButtonGroup>
-            <Button variant="info" onClick={() => setSelectedChart('stackedBar')}>Stacked Bar Chart</Button>
-            <Button variant="info" onClick={() => setSelectedChart('pie')}>Pie Chart</Button>
-            <Button variant="info" onClick={() => setSelectedChart('wordCloud')}>Word Cloud</Button>
+            <Button
+              variant={selectedChart === 'stackedBar' ? 'primary' : 'secondary'}
+              onClick={() => setSelectedChart('stackedBar')}
+              active={selectedChart === 'stackedBar'}
+            >
+              Stacked Bar Chart
+            </Button>
+            <Button
+              variant={selectedChart === 'pie' ? 'primary' : 'secondary'}
+              onClick={() => setSelectedChart('pie')}
+              active={selectedChart === 'pie'}
+            >
+              Pie Chart
+            </Button>
+            <Button
+              variant={selectedChart === 'wordCloud' ? 'primary' : 'secondary'}
+              onClick={() => setSelectedChart('wordCloud')}
+              active={selectedChart === 'wordCloud'}
+            >
+              Word Cloud
+            </Button>
           </ButtonGroup>
         </Col>
       </Row>
@@ -110,6 +152,7 @@ const StatisticsPage = () => {
       </Row>
     </Container>
   );
+  
 
   
 };
