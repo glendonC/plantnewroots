@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Transition from "../../components/transition/Transition";
 import { US, KR, CN } from 'country-flag-icons/react/3x2';
-import { Dropdown } from 'react-bootstrap';
+import { Dropdown, Modal, Button } from 'react-bootstrap';
 import { LevelList, LevelItem } from './LevelSelectionStyles';
 import "./profile.css";
 import axios from 'axios';
@@ -16,14 +16,14 @@ const Profile = () => {
   const [newUsername, setNewUsername] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalType, setModalType] = useState('success');
 
   const [selectedLanguage, setSelectedLanguage] = useState(() => {
     const storedLanguage = localStorage.getItem('selectedLanguage');
     return storedLanguage || 'English';
   });
-
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
   const handleUsernameChange = (event) => {
     setNewUsername(event.target.value);
@@ -36,6 +36,8 @@ const Profile = () => {
   const handlePasswordChange = (event) => {
     setNewPassword(event.target.value);
   };
+
+  const handleCloseModal = () => setShowModal(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -53,15 +55,14 @@ const Profile = () => {
             }
         });
 
-        setSuccessMessage('Profile updated successfully');
-
-        setErrorMessage('');
+        setModalType('success');
+            setModalMessage('Profile updated successfully');
+            setShowModal(true);
     
-        console.log('Profile updated successfully:', response.data);
     } catch (error) {
-        setErrorMessage('Error updating profile');
-        setSuccessMessage('');
-        console.error('Error updating profile:', error);
+      setModalType('error');
+      setModalMessage('Error updating profile');
+      setShowModal(true);
     }
   };
 
@@ -124,12 +125,21 @@ const Profile = () => {
                 <input type="text" placeholder="New Username" value={newUsername} onChange={handleUsernameChange} />
                 <input type="text" placeholder="New Email" value={newEmail} onChange={handleEmailChange} />
                 <input type="text" placeholder="New Password" value={newPassword} onChange={handlePasswordChange} />
-                
-                {/* Submit button */}
-                <button type="submit">Update Profile</button>
+                <Button variant="light" style={{ backgroundColor: 'transparent' }} onClick={handleSubmit}>
+                  Update Profile
+                </Button>
               </form>
-              {successMessage && <div className="success-message">{successMessage}</div>}
-              {errorMessage && <div className="error-message">{errorMessage}</div>}
+              <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{modalType === 'success' ? 'Success' : 'Error'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{modalMessage}</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal} style={{ color: 'black' }}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+              </Modal>
             </div>
           </div>
         </section>
@@ -188,7 +198,7 @@ const Profile = () => {
                 {["Beginner", "Elementary", "Intermediate", "Advanced", "Fluent"].map((level) => (
                   <LevelItem
                     key={level}
-                    $isActive={selectedLevel === level} // Using transient prop here
+                    $isActive={selectedLevel === level}
                     onClick={() => handleLevelChange(level)}
                   >
                     {level}
