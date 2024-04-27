@@ -14,6 +14,7 @@ const StatisticsPage = () => {
   
   const [error, setError] = useState(null);
   const [selectedRange, setSelectedRange] = useState('all');
+  const [selectedChart, setSelectedChart] = useState('stackedBar');
 
   useEffect(() => {
     const getData = async () => {
@@ -93,22 +94,22 @@ const StatisticsPage = () => {
       </Row>
       <Row className="justify-content-md-center pt-3">
         <Col xs={12}>
-          {data.stackedData.datasets.length > 0 && <StackedBarChart data={data.stackedData} />}
+          <ButtonGroup>
+            <Button variant="info" onClick={() => setSelectedChart('stackedBar')}>Stacked Bar Chart</Button>
+            <Button variant="info" onClick={() => setSelectedChart('pie')}>Pie Chart</Button>
+            <Button variant="info" onClick={() => setSelectedChart('wordCloud')}>Word Cloud</Button>
+          </ButtonGroup>
         </Col>
       </Row>
       <Row className="justify-content-md-center pt-3">
         <Col xs={12}>
-          {data.pieData.length > 0 && <PieChart data={data.pieData} />}
-        </Col>
-      </Row>
-      <Row className="justify-content-md-center pt-3">
-        <Col xs={12}>
-          {data.wordCloudData && data.wordCloudData.length > 0 && <WordCloudChart words={data.wordCloudData} />}
+          {selectedChart === 'stackedBar' && data.stackedData.datasets.length > 0 && <StackedBarChart data={data.stackedData} />}
+          {selectedChart === 'pie' && data.pieData.length > 0 && <PieChart data={data.pieData} />}
+          {selectedChart === 'wordCloud' && data.wordCloudData.length > 0 && <WordCloudChart words={data.wordCloudData} />}
         </Col>
       </Row>
     </Container>
   );
-  
 
   
 };
