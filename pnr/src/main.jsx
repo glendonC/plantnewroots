@@ -7,6 +7,10 @@ import "./index.css";
 import { AuthProvider } from './contexts/AuthContext';
 import { LevelLanguageProvider } from './contexts/LevelLanguageContext';
 import { StoryProvider } from './contexts/StoryContext.jsx';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
