@@ -6,9 +6,9 @@ import PasswordResetForm from "./pages/password-reset/PasswordReset";
 import Home from "./pages/home/Home";
 import About from "./pages/about/About";
 import MinimapPage from "./pages/about/MinimapPage";
-import Works from "./pages/works/Works";
+import Practice from "./pages/practice/Practice";
 import Profile from "./pages/profile/Profile";
-import Blog from "./pages/blog/Blog";
+import Learn from "./pages/learn/Learn";
 
 import ConversationChoices from "./pages/conversationchoices/ConversationChoices";
 import SampleBlog from "./pages/sampleblog/SampleBlog";
@@ -55,8 +55,8 @@ function App() {
 
           <Route path="/minimap" element={<MinimapPage />} />
 
-          <Route path="/works" element={<Works />} />
-          <Route path="/blog" element={<Blog />} />
+          <Route path="/practice" element={<Practice />} />
+          <Route path="/learn" element={<Learn />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/conversationchoices" element={<ConversationChoices />} />
           <Route path="/analysispage" element={<AnalysisReport />} />

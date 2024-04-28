@@ -4,6 +4,8 @@ import { useStory } from "../../contexts/StoryContext";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
 import Transition from "../../components/transition/Transition";
 import HomeButton from "../../components/homebutton/HomeButton";
+import Loader from 'react-loaders';
+import 'loaders.css/loaders.min.css';
 import "./sample-blog.css";
 import { Button } from 'react-bootstrap';
 
@@ -15,9 +17,11 @@ function SampleBlog() {
   const [content, setContent] = useState('');
   const [userQuestion, setUserQuestion] = useState('');
   const [aiResponse, setAiResponse] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const generateContent = async () => {
+      setLoading(true);
       const { GoogleGenerativeAI } = await import('@google/generative-ai');
       const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
       const genAI = new GoogleGenerativeAI(API_KEY);
@@ -49,6 +53,8 @@ function SampleBlog() {
       } catch (error) {
         console.error('Error generating content:', error);
         setContent('Failed to load story content.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -84,38 +90,44 @@ function SampleBlog() {
         <div className="s-blog-hero">
           <h2>{title || "Default Title"}</h2>
         </div>
-        <div className="blog-content">
-          <div className="s-blog-col scroll">
-            <p><span>{subtitle || "Default Subtitle"}</span></p>
-            <br />
-            {content.split('\n\n').map((paragraph, index) => (
-              <React.Fragment key={index}>
-                {paragraph.split('\n').map((line, lineIndex) => {
-                  if (line.startsWith('**')) {
-                    return <h3 key={lineIndex}>{line.replace(/\*\*/g, '').trim()}</h3>;
-                  } else if (line.startsWith('*')) {
-                    return <li key={lineIndex}>{line.replace(/\*/g, '').trim()}</li>;
-                  }
-                  return <p key={lineIndex}>{line}</p>;
-                })}
-                <br /><br />
-              </React.Fragment>
-            ))}
+        {loading ? (
+          <div className="loader-container">
+            <Loader type="ball-scale-ripple-multiple" />
           </div>
-          <div className="s-blog-col sticky">
-            <form onSubmit={handleUserQuestion}>
-              <textarea
-                value={userQuestion}
-                onChange={(e) => setUserQuestion(e.target.value)}
-                placeholder="Ask me anything about the content..."
-                rows="5"
-                style={{ width: '100%' }}
-              />
-              <Button type="submit" variant="primary" style={{ marginTop: '10px' }}>Ask Gemini!</Button>
-              {aiResponse && <p style={{ marginTop: '10px' }}>{aiResponse}</p>}
-            </form>
+        ) : (
+          <div className="blog-content">
+            <div className="s-blog-col scroll">
+              <p><span>{subtitle || "Default Subtitle"}</span></p>
+              <br />
+              {content.split('\n\n').map((paragraph, index) => (
+                <React.Fragment key={index}>
+                  {paragraph.split('\n').map((line, lineIndex) => {
+                    if (line.startsWith('**')) {
+                      return <h3 key={lineIndex}>{line.replace(/\*\*/g, '').trim()}</h3>;
+                    } else if (line.startsWith('*')) {
+                      return <li key={lineIndex}>{line.replace(/\*/g, '').trim()}</li>;
+                    }
+                    return <p key={lineIndex}>{line}</p>;
+                  })}
+                  <br /><br />
+                </React.Fragment>
+              ))}
+            </div>
+            <div className="s-blog-col sticky">
+              <form onSubmit={handleUserQuestion}>
+                <textarea
+                  value={userQuestion}
+                  onChange={(e) => setUserQuestion(e.target.value)}
+                  placeholder="Ask me anything about the content..."
+                  rows="5"
+                  style={{ width: '100%' }}
+                />
+                <Button type="submit" variant="primary" style={{ marginTop: '10px' }}>Ask Gemini!</Button>
+                {aiResponse && <p style={{ marginTop: '10px' }}>{aiResponse}</p>}
+              </form>
+            </div>
           </div>
-        </div>
+        )}
         <HomeButton />
       </div>
     </div>

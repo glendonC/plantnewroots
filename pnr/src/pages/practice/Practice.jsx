@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import "./works.css";
+import "./practice.css";
 
 import Transition from "../../components/transition/Transition";
 import { Link } from "react-router-dom";
@@ -13,7 +13,7 @@ import WorkImg2 from "../../assets/images/work/writing.jpg";
 import WorkImg3 from "../../assets/images/work/listening.jpg";
 import WorkImg4 from "../../assets/images/work/speaking.jpg";
 
-const Works = () => {
+const Practice = () => {
   const workCopyReveal = useRef();
 
   let lastHoveredIndex = null;
@@ -202,4 +202,4 @@ const Works = () => {
   );
 };
 
-export default Transition(Works);
+export default Transition(Practice);
