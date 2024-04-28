@@ -1,4 +1,6 @@
 import React from 'react';
+import Loader from 'react-loaders'
+import 'loaders.css/loaders.min.css';
 import './ReportCard.css';
 
 function AIGeneratedContent({ loading, generatedText }) {
@@ -32,18 +34,18 @@ function AIGeneratedContent({ loading, generatedText }) {
   return (
     <>
       {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {generatedText ? (
-            <div>
-              <h2>Writing Analysis</h2>
-              {formatAIGeneratedTextWriting(generatedText)}
-            </div>
-          ) : (
-            <p>No recommendations generated yet.</p>
-          )}
-        </>
+                <div className="loader-active">
+                    <Loader type="ball-scale-ripple-multiple" active />
+                </div>
+            ) : (
+        generatedText ? (
+          <div>
+            <h2>Writing Analysis</h2>
+            {formatAIGeneratedTextWriting(generatedText)}
+          </div>
+        ) : (
+          <p>No recommendations generated yet.</p>
+        )
       )}
     </>
   );

@@ -1,8 +1,16 @@
 import React from 'react';
+import Loader from 'react-loaders'
+import 'loaders.css/loaders.min.css';
 import './ReportCard.css';
 
 const AIGeneratedContentListening = ({ loading, generatedText }) => {
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div className="loader-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Loader type="ball-scale-ripple-multiple" />
+      </div>
+    );
+  }
   if (!generatedText) return <p>No recommendations generated yet.</p>;
 
   const sections = generatedText.split('\n').filter(text => text.trim() !== "").map(section => {
