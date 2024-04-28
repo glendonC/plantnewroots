@@ -19,7 +19,7 @@ const Menu = () => {
     { path: "/practice", label: "Practice" },
     { path: "/analysispage", label: "Analysis"},
     { path: "/statistics", label: "Statistics"},
-    { path: "/blog", label: "Learn" },
+    { path: "/learn", label: "Learn" },
     { path: "/profile", label: "Profile" },
     { path: "/about", label: "About" },
   ];

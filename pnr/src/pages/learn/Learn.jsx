@@ -6,9 +6,9 @@ import HomeButton from "../../components/homebutton/HomeButton";
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
 import { useStory } from "../../contexts/StoryContext";
 
-import "./blog.css";
+import "./learn.css";
 
-const Blog = () => {
+const Learn = () => {
   const { selectedLevel, selectedLanguage } = useLevelLanguage();
   const { setStory } = useStory();
   const navigate = useNavigate();
@@ -82,4 +82,4 @@ const Blog = () => {
   );
 };
 
-export default Transition(Blog);
+export default Transition(Learn);
