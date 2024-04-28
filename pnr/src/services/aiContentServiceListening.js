@@ -9,17 +9,23 @@ export const generateAIContentListening = async (text, feedback) => {
   }
 
   const prompt = `
-    Given the provided audio text and user feedback, perform a comprehensive analysis focusing on listening comprehension, pronunciation understanding, and areas for improvement:
+    Based on the provided audio text and user feedback, create a personalized and conversational report card focusing on listening comprehension, pronunciation, and vocabulary usage:
     
     Audio Text: "${text}"
     
     Feedback: ${feedback}
     
-    Analyze the user's responses for pronunciation accuracy, vocabulary comprehension, and understanding of the audio's context. Provide specific exercises to address any pronunciation errors, offer tips to enhance their listening skills for similar audio in the future, and encourage continuous learning with positive reinforcement.
+    Please generate feedback as if you are a coach directly addressing the student. Use a friendly and encouraging tone and cover the following:
+    - Comment on the user's listening comprehension and pronunciation accuracy.
+    - Highlight specific areas of vocabulary strength and areas for improvement.
+    - Recommend targeted exercises to enhance pronunciation and listening skills.
+    - Offer practical tips for improving listening habits and strategies.
+    - Provide positive reinforcement focusing on what the user did well.
+    - Summarize the user's overall listening ability and suggest focused activities to improve their skills further.
     
-    Summarize the overall language ability demonstrated by the user and suggest focused activities to improve their listening and comprehension skills in the target language.
+    Ensure the feedback feels like a one-on-one session, aiming to motivate and guide the user in their language learning journey.
   `;
-
+  
   try {
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });

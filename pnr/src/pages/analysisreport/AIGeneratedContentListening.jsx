@@ -1,31 +1,31 @@
 import React from 'react';
+import './ReportCard.css';
 
 const AIGeneratedContentListening = ({ loading, generatedText }) => {
   if (loading) return <p>Loading...</p>;
-
   if (!generatedText) return <p>No recommendations generated yet.</p>;
 
-  const sections = generatedText.split("**").filter(text => text.trim() !== "");
-
-  let lastTitle = null;
+  const sections = generatedText.split('\n').filter(text => text.trim() !== "").map(section => {
+    if (section.trim().startsWith('**')) {
+      return { type: 'heading', content: section.replace(/\*\*/g, '').trim() };
+    } else if (section.trim().startsWith('*')) {
+      return { type: 'list', content: section.replace(/\*/g, '').trim() };
+    }
+    return { type: 'paragraph', content: section.trim() };
+  });
 
   return (
-    <div>
+    <div className="report-card">
       {sections.map((section, index) => {
-        let title;
-        if (section.endsWith(":")) {
-          if (lastTitle !== section) {
-            title = <h3>{section}</h3>;
-            lastTitle = section;
-          }
+        switch (section.type) {
+          case 'heading':
+            return <h3 key={index}>{section.content}</h3>;
+          case 'list':
+            return <ul key={index}><li>{section.content}</li></ul>;
+          case 'paragraph':
+          default:
+            return <p key={index}>{section.content}</p>;
         }
-
-        return (
-          <div key={index}>
-            {title}
-            <p>{title ? "" : section}</p>
-          </div>
-        );
       })}
     </div>
   );
