@@ -23,3 +23,21 @@
   margin-top: 0;
   margin-bottom: 16px;
 }
+
+.loader-active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin-top: -300px;
+}
+
+.react-loaders .loader, .ball-scale-ripple-multiple {
+  transform: scale(8) !important;
+}
+
+.ball-scale-ripple-multiple {
+  transform: scale(3);
+  margin: 0 auto;
+}
+

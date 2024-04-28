@@ -1,4 +1,6 @@
 import React from 'react';
+import Loader from 'react-loaders'
+import 'loaders.css/loaders.min.css';
 import './ReportCard.css';
 
 function AIGeneratedContentSpeaking({ loading, generatedText }) {
@@ -32,8 +34,10 @@ function AIGeneratedContentSpeaking({ loading, generatedText }) {
   return (
     <>
       {loading ? (
-        <p>Loading...</p>
-      ) : (
+                <div className="loader-active">
+                    <Loader type="ball-scale-ripple-multiple" active />
+                </div>
+            ) : (
         generatedText ? (
           <div>
             <h2>Speaking Analysis</h2>
