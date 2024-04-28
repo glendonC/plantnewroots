@@ -1,5 +1,6 @@
 .sample-blog.page {
   width: 100%;
+  background-color: #3e3b36;
 }
 
 .s-blog-hero {
@@ -10,23 +11,29 @@
 
 .s-blog-hero h2 {
   font-size: 60px;
+  color: #ffffff;
 }
 
 .blog-content {
-  width: 80%;
-  margin: 0 auto;
-  display: flex;
-  gap: 2em;
-  position: relative;
+  background-color: #2c2a29;
+  border: 1px solid #5c5a5a;
+  padding: 20px;
+  margin-bottom: 2em;
+  color: #ffffff;
 }
 
-.blog-content p {
-  font-size: 1.125em;
+.blog-content p,
+.blog-content li {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  color: #ffffff;
 }
 
 .blog-content h3 {
   line-height: 110%;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
+  color: #ffcc00;
 }
 
 .s-blog-col {
