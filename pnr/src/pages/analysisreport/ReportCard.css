@@ -24,7 +24,7 @@
   margin-bottom: 16px;
 }
 
-.loader-active {
+.loader-container {
   display: flex;
   justify-content: center;
   align-items: center;

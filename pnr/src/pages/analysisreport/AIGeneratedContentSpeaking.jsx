@@ -34,7 +34,7 @@ function AIGeneratedContentSpeaking({ loading, generatedText }) {
   return (
     <>
       {loading ? (
-                <div className="loader-active">
+                <div className="loader-container">
                     <Loader type="ball-scale-ripple-multiple" active />
                 </div>
             ) : (

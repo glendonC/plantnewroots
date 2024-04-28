@@ -6,7 +6,7 @@ import './ReportCard.css';
 const AIGeneratedContentListening = ({ loading, generatedText }) => {
   if (loading) {
     return (
-      <div className="loader-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div className="loader-container">
         <Loader type="ball-scale-ripple-multiple" />
       </div>
     );
