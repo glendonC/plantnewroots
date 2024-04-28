@@ -16,10 +16,10 @@ import MouseTrail from '../../components/mousetrail/MouseTrail';
 
 const Menu = () => {
   const menuLinks = [
-    { path: "/works", label: "Learn" },
+    { path: "/practice", label: "Practice" },
     { path: "/analysispage", label: "Analysis"},
     { path: "/statistics", label: "Statistics"},
-    { path: "/blog", label: "Blog" },
+    { path: "/blog", label: "Learn" },
     { path: "/profile", label: "Profile" },
     { path: "/about", label: "About" },
   ];
