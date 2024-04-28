@@ -24,12 +24,13 @@ export const generateAIContentSpeaking = async (transcript, response) => {
 };
 
 const createAIPromptSpeaking = (transcript, response) => {
-  let prompt = `Provide a detailed analysis of the spoken language used in the following transcript, focusing on aspects such as pronunciation accuracy, fluency, grammatical correctness, and appropriateness of vocabulary. Also, use the feedback provided to offer specific exercises or tips to improve speaking skills.\n\n`;
+  let prompt = `As a language coach, provide a detailed and personalized feedback report on the following transcript, focusing on pronunciation accuracy, fluency, grammatical correctness, and vocabulary appropriateness. Use the feedback given to offer specific exercises or tips that will help improve the speaker's skills. Make sure your feedback is engaging, motivational, and easy to understand for someone looking to enhance their speaking abilities.\n\n`;
 
   prompt += `Transcript: "${transcript}"\n`;
   prompt += `Feedback: ${response}\n\n`;
 
-  prompt += `Based on the transcript and feedback, generate a comprehensive report detailing strengths, weaknesses, and specific recommendations for enhancing the speaker's language proficiency.`;
+  prompt += `Please address the user directly, offering constructive criticism and clear guidance. Highlight specific strengths and areas for improvement, and recommend practical exercises that can be easily integrated into daily practice. Conclude with positive reinforcement that encourages persistence and confidence in their language learning journey.`;
 
   return prompt;
 };
+

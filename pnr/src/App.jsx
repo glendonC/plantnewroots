@@ -1,7 +1,7 @@
-import "./App.css";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Menu from "./components/menu/Menu";
 import Footer from "./components/footer/Footer";
+import PasswordResetForm from "./pages/password-reset/PasswordReset";
 
 import Home from "./pages/home/Home";
 import About from "./pages/about/About";
@@ -39,15 +39,17 @@ function App() {
   const { isLoggedIn } = useAuth();
 
   const isLoginPage = location.pathname === "/login" || location.pathname === "/signup";
+  const isPasswordResetPage = location.pathname === "/password-reset";
   
   return (
     <>
-      {!isLoginPage && <Menu />}
+      {!isLoginPage && !isPasswordResetPage && <Menu />}
       <AnimatePresence mode="wait">
         <Routes>
           <Route path="/" element={<Navigate replace to="/login" />} />
           <Route path="/login" element={isLoggedIn ? <Navigate replace to="/home" /> : <Login />} />
           <Route path="/signup" element={isLoggedIn ? <Navigate replace to="/home" /> : <SignUp />} />
+          <Route path="/password-reset" element={<PasswordResetForm />} />
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
 
@@ -69,7 +71,7 @@ function App() {
           <Route path="/statistics" element={<StatisticsPage />} />
         </Routes>
       </AnimatePresence>
-      {!isLoginPage && <Footer />}
+      {!isLoginPage && !isPasswordResetPage && <Footer />}
     </>
   );
 }

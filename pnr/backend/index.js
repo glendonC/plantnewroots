@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
+const updateProfileRoutes = require('./routes/updateProfileRoute');
 const dialogRoutes = require('./routes/dialogRoutes');
 const conversationRoutes = require('./routes/writingConversationRoutes');
 const writingAnalysisRoutes = require('./routes/writingAnalysisRoutes');
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/users', userRoutes);
+app.use('/api/users', updateProfileRoutes);
 app.use('/api/dialog', dialogRoutes);
 app.use('/api/writingConversations', conversationRoutes);
 app.use('/api/analysis', writingAnalysisRoutes);

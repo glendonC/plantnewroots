@@ -177,7 +177,7 @@ function CulturalWritingConversation() {
                     />
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="outline-secondary" onClick={() => setShowModal(false)}>
+                    <Button variant="outline-secondary" onClick={() => setShowModal(false)} style={{ color: 'black' }}>
                         Close
                     </Button>
                     <Button variant="outline-primary" onClick={() => { if (conversationName) saveConversation(); setShowModal(false); }}>

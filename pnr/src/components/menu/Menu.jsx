@@ -168,9 +168,13 @@ const Menu = () => {
               <Link to="/profile">{username}</Link>
             </div>
           </div>
-          <div className="logout-btn">
-              <button onClick={handleLogout} className="btn">Logout</button>
-            </div>
+          {isLoggedIn && (
+              <div className="logout-btn">
+                <button onClick={handleLogout} className="btn">
+                  Logout
+                </button>
+              </div>
+            )}
           <div className="menu-toggle">
             <button className="hamburger-icon" onClick={toggleMenu}></button>
           </div>

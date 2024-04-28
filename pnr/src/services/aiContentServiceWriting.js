@@ -24,7 +24,7 @@ export const generateAIContentWriting = async (generalWritingReportData, detaile
 };
 
 const createAIPromptWriting = (generalReport, detailedAnalysis, userMessages) => {
-  let prompt = `Analyze the following conversation data and provide specific feedback and recommendations for improvement:\n\n`;
+  let prompt = `As a writing coach, provide a detailed and personalized feedback report based on the user's writing data. Analyze the given information and discuss specific areas such as grammar, style, vocabulary, and engagement. Use a friendly and encouraging tone to deliver constructive criticism and practical advice.\n\n`;
 
   prompt += `General Analysis:\n- Average Sentiment Score: ${generalReport.sentimentScoreAverage} (${generalReport.sentimentScoreAverage < 0 ? "negative" : "positive or neutral"} tone)\n`;
   prompt += `- Number of Analyses Conducted: ${generalReport.analysisCount}\n\n`;
@@ -39,7 +39,7 @@ const createAIPromptWriting = (generalReport, detailedAnalysis, userMessages) =>
     prompt += `${index + 1}. "${msg.text}"\n`;
   });
 
-  prompt += `\nBased on the above analysis and examples, provide specific feedback and actionable recommendations for the user to improve their conversation skills. Focus on aspects such as grammar, style, vocabulary, and engagement.`;
+  prompt += `\nBased on the above analysis and examples, please provide specific, actionable recommendations. Aim to help the user improve their conversation skills in a clear and motivational manner, focusing on their strengths and areas for improvement. Conclude with positive reinforcement that encourages persistence and confidence in their writing journey.`;
 
   return prompt;
 };

@@ -1,61 +1,51 @@
 import React from 'react';
+import Loader from 'react-loaders'
+import 'loaders.css/loaders.min.css';
+import './ReportCard.css';
 
 function AIGeneratedContentSpeaking({ loading, generatedText }) {
   const formatAIGeneratedTextSpeaking = (generatedText) => {
-    const sections = generatedText.split("**").filter(text => text.trim() !== "");
-    
+    const sections = generatedText.split('\n').filter(text => text.trim() !== "").map(section => {
+      if (section.trim().startsWith('**')) {
+        return { type: 'heading', content: section.replace(/\*\*/g, '').trim() };
+      } else if (section.trim().startsWith('*')) {
+        return { type: 'list', content: section.replace(/\*/g, '').trim() };
+      }
+      return { type: 'paragraph', content: section.trim() };
+    });
+
     return (
-      <>
+      <div className="report-card">
         {sections.map((section, index) => {
-          if (section.startsWith("General Analysis:") || section.startsWith("Detailed Analysis Findings:")) {
-            return <h3 key={index}>{section}</h3>;
-          } else if (section.startsWith("Examples from the conversation:")) {
-            const messages = section.split("\n").filter(text => text.trim() !== "" && !text.startsWith("Examples from"));
-            return (
-              <div key={index}>
-                <h4>Examples from the conversation:</h4>
-                <ul>
-                  {messages.map((msg, msgIndex) => (
-                    <li key={msgIndex}>{msg}</li>
-                  ))}
-                </ul>
-              </div>
-            );
-          } else if (section.startsWith("Personalized Recommendations:") || section.startsWith("Overall Improvement Tips:")) {
-            const items = section.split("*").filter(text => text.trim() !== "");
-            return (
-              <div key={index}>
-                <h4>{items.shift()}</h4>
-                <ul>
-                  {items.map((item, itemIndex) => (
-                    <li key={itemIndex}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            );
-          } else {
-            return <p key={index} style={{ color: 'white' }}>{section}</p>;
+          switch (section.type) {
+            case 'heading':
+              return <h3 key={index}>{section.content}</h3>;
+            case 'list':
+              return <ul key={index}><li>{section.content}</li></ul>;
+            case 'paragraph':
+            default:
+              return <p key={index}>{section.content}</p>;
           }
         })}
-      </>
+      </div>
     );
   };
 
   return (
     <>
       {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {generatedText ? (
-            <div>
-              <h2>Generated Recommendations</h2>
-              {formatAIGeneratedTextSpeaking(generatedText)}
-            </div>
-          ) : (
-            <p>No recommendations generated yet.</p>
-          )}
-        </>
+                <div className="loader-container">
+                    <Loader type="ball-scale-ripple-multiple" active />
+                </div>
+            ) : (
+        generatedText ? (
+          <div>
+            <h2>Speaking Analysis</h2>
+            {formatAIGeneratedTextSpeaking(generatedText)}
+          </div>
+        ) : (
+          <p>No recommendations generated yet.</p>
+        )
       )}
     </>
   );
