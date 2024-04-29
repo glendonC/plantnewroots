@@ -21,7 +21,6 @@
   height: 100vh;
 }
 
-/* wrappers */
 .hero-image-wrapper {
   position: relative;
   flex: 2;
@@ -95,7 +94,6 @@
   background: #000;
 }
 
-/* header */
 header h1,
 header h2 {
   font-family: "Gangsar";
@@ -114,7 +112,6 @@ header h1 {
   font-size: 8rem;
 }
 
-/* form-wrapper  */
 .form-wrapper {
   position: relative;
   margin: 3em 0;
@@ -135,6 +132,7 @@ header h1 {
   padding: 1em;
   font-size: 16px;
   border-bottom: 2px solid #000;
+  color: #000;
 }
 
 .form-wrapper form input::placeholder {
@@ -168,33 +166,7 @@ header h1 {
   color: #989898;
 }
 
-/* footer */
-footer p,
-footer span {
-  position: relative;
-  font-family: "Gangsar";
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 2rem;
-  font-weight: lighter;
-}
 
-footer span {
-  position: relative;
-}
-
-footer span:after {
-  position: absolute;
-  content: "";
-  display: block;
-  width: 3.5rem;
-  height: 1.5px;
-  top: 40px;
-  right: 0.3rem;
-  background: var(--primary);
-}
-
-/* header animation wrappers */
 header .h1,
 header .h2 {
   position: relative;
@@ -218,7 +190,6 @@ header h2 {
   z-index: 0;
 }
 
-/* overlay animation */
 .hero-image-wrapper,
 .content-wrapper,
 .front-img {
@@ -226,13 +197,11 @@ header h2 {
   clip-path: inset(0 0 0 0);
 }
 
-/* animate other elements */
 .nav > * {
   position: relative;
 }
 
 /* responsiveness */
-
 @media (max-width: 900px) {
   .signup-container {
     flex-direction: column;
@@ -274,3 +243,52 @@ header h2 {
     display: none;
   }
 }
+
+.footer-typing {
+  width: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid;
+  font-family: "monospace";
+  font-size: 2em;
+}
+
+.footer-typing p {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  font-family: "Gangsar";
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 2rem;
+  font-weight: lighter;
+  animation: custom-typing 4s steps(50) infinite, custom-blink 0.5s step-end infinite alternate;
+}
+
+@keyframes custom-typing {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes custom-blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+.footer-typing p::after {
+  position: absolute;
+  content: "";
+  display: block;
+  width: 3.5rem;
+  height: 1.5px;
+  top: 40px;
+  right: 0.3rem;
+  background: var(--primary);
+  
+}
+

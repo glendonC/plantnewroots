@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Transition from "../../components/transition/Transition";
 import './signup.css';
+import signupImage from './signup.jpg';
 import Swal from 'sweetalert2';
 
 function SignUp() {
@@ -49,12 +50,7 @@ function SignUp() {
   return (
     <div className="signup-container">
       <div className="hero-image-wrapper wrapper">
-        <div className="bg-img">
-          <img src="./login.jpg" alt="" />
-        </div>
-        <div className="front-img">
-          <img src="./login.jpg" alt="" />
-        </div>
+        <img className="front-img" src={signupImage} alt="" />
       </div>
       <div className="content-wrapper wrapper">
         <nav>
@@ -91,8 +87,10 @@ function SignUp() {
             <p>Already have an account? <Link to="/login">Login</Link></p>
           </div>
         </header>
-        <footer>
-          <p>Plant your roots <span>today</span></p>
+        <footer className="footer-typing">
+          <p>
+            Plant your roots <span className="footer-span">today</span>.
+          </p>
         </footer>
       </div>
     </div>
