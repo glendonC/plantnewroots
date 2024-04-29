@@ -32,7 +32,7 @@ const StackedBarChart = ({ data }) => {
   };
 
   return (
-    <div style={{ height: '400px', width: '600px' }}>
+    <div style={{ height: '800px', width: '700px' }}>
       <Bar data={data} options={options} />
     </div>
   );
