@@ -7,6 +7,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 const speechClient = new SpeechClient();
 
 router.post('/transcribe', upload.single('audio'), async (req, res) => {
+    //console.log('Received language code:', req.body.language);
     const audioBytes = req.file.buffer.toString('base64');
     const languageCode = req.body.language || 'en-US';
 
@@ -32,5 +33,6 @@ router.post('/transcribe', upload.single('audio'), async (req, res) => {
         res.status(500).json({ error: 'Failed to transcribe audio', details: error.message });
     }
 });
+
 
 module.exports = router;

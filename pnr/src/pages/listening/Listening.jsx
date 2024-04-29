@@ -107,6 +107,7 @@ const Listening = () => {
   };
 
   const submitAnswers = async () => {
+    setLoading(true);
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(API_KEY);
@@ -128,7 +129,9 @@ const Listening = () => {
       console.error('Error evaluating answers:', error);
       setFeedback("Failed to evaluate answers.");
       setSubmitted(false);
-    }    
+    } finally {
+      setLoading(false);
+    }
   };
   
   const evaluateAnswers = async () => {
@@ -323,7 +326,7 @@ const Listening = () => {
             <Button variant="secondary" onClick={() => setShowSaveModal(false)} style={{ color: 'black' }}>
               Close
             </Button>
-            <Button variant="primary" onClick={saveSession}>
+            <Button variant="primary" onClick={saveSession} style={{ color: 'black' }}>
               Save Session
             </Button>
           </Modal.Footer>

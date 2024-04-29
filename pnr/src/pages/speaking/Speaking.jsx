@@ -2,8 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Button, Container, Row, Col, Card, Modal, Form } from 'react-bootstrap';
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
 import HomeButton from "../../components/homebutton/HomeButton";
-import Loader from 'react-loaders';
-import 'loaders.css/loaders.min.css';
+
 
 const Speaking = () => {
     const { selectedLevel, selectedLanguage } = useLevelLanguage();
@@ -12,7 +11,6 @@ const Speaking = () => {
     const [response, setResponse] = useState('');
     const [showSaveModal, setShowSaveModal] = useState(false);
     const [sessionName, setSessionName] = useState('');
-    const [loading, setLoading] = useState(false);
 
 
 
@@ -22,7 +20,6 @@ const Speaking = () => {
 
     const startRecording = async () => {
         try {
-            setLoading(true);
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const recorder = new MediaRecorder(stream);
             audioChunksRef.current = [];
@@ -51,7 +48,6 @@ const Speaking = () => {
         if (mediaRecorderRef.current) {
             mediaRecorderRef.current.stop();
             setIsRecording(false);
-            setLoading(false);
             console.log("Stopping recording...");
         } else {
             console.error('No mediaRecorder instance found');
@@ -59,10 +55,17 @@ const Speaking = () => {
     };
 
     const sendAudioToSpeechToText = async (audioBlob) => {
-        setLoading(true);
-        console.log("Sending audio to server for transcription");
+        const languageCodes = {
+            English: 'en-US',
+            Korean: 'ko-KR',
+            //later add m0re here i.e. chinese
+        };
+        
+        const selectedLanguageCode = languageCodes[selectedLanguage];
+        console.log("Sending audio to server for transcription in", selectedLanguage);
         const formData = new FormData();
         formData.append('audio', audioBlob);
+        formData.append('language', selectedLanguageCode);
     
         try {
             const response = await fetch('/api/speech-to-text/transcribe', {
@@ -83,8 +86,8 @@ const Speaking = () => {
         }
     };
     
+    
     const fetchDialogflowResponse = async (text) => {
-        setLoading(true);
         console.log("Sending text to Dialogflow:", text);
         try {
             const response = await fetch('/api/dialog/daily', {
@@ -96,7 +99,10 @@ const Speaking = () => {
             });
             const data = await response.json();
             console.log("Dialogflow response received:", data);
-            if (data.reply) {
+            if (data.reply === "AI_TAKEOVER") {
+                // Trigger Google AI when Dialogflow returns AI_TAKEOVER
+                generateAIResponse(text);
+            } else if (data.reply) {
                 setResponse(data.reply);
                 playResponse(data.reply);
             } else {
@@ -108,9 +114,27 @@ const Speaking = () => {
         }
     };
     
+    const generateAIResponse = async (userInput) => {
+        try {
+            const { GoogleGenerativeAI } = await import('@google/generative-ai');
+            const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+            const genAI = new GoogleGenerativeAI(API_KEY);
+            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+            const prompt = `Provide a concise, playful response to the user's input: "${userInput}"`;
+            const textResult = await model.generateContent(prompt);
+            const textResponse = await textResult.response;
+            const generatedText = await textResponse.text();
+            setResponse(generatedText);
+            playResponse(generatedText);
+        } catch (genError) {
+            console.error('Error generating content with Google AI:', genError);
+            setResponse("Sorry, I am unable to respond right now.");
+        }
+    };
+    
+    
     const playResponse = async (responseText) => {
         try {
-            setLoading(true);
             const response = await fetch('/api/text-to-speech/synthesize', {
                 method: 'POST',
                 headers: {
@@ -128,7 +152,6 @@ const Speaking = () => {
             } else {
                 alert("Failed to play audio. Please try again.");
             }
-            setLoading(false);
         } catch (error) {
             console.error('Error sending text to Text-to-Speech API:', error);
             alert("Failed to process Text-to-Speech request.");
@@ -172,11 +195,6 @@ const Speaking = () => {
       
     return (
         <Container className="mt-4 d-flex flex-column min-vh-100">
-            {loading && (
-            <div className="loader-container">
-                <Loader type="ball-scale-ripple-multiple" />
-            </div>
-            )}
             <div className="flex-grow-1">
                 <Row className="justify-content-md-center pt-5">
                     <Col xs={12}>
@@ -251,7 +269,7 @@ const Speaking = () => {
                     <Button variant="secondary" onClick={() => setShowSaveModal(false)} style={{ color: 'black' }}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={saveSession}>
+                    <Button variant="primary" onClick={saveSession} style={{ color: 'black' }}>
                         Save Session
                     </Button>
                 </Modal.Footer>

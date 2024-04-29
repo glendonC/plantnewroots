@@ -180,7 +180,7 @@ function ProfessionalWritingConversation() {
                     <Button variant="outline-secondary" onClick={() => setShowModal(false)} style={{ color: 'black' }}>
                         Close
                     </Button>
-                    <Button variant="outline-primary" onClick={() => { if (conversationName) saveConversation(); setShowModal(false); }}>
+                    <Button variant="outline-primary" onClick={() => { if (conversationName) saveConversation(); setShowModal(false); }}  style={{ color: 'black' }}>
                         Save Conversation
                     </Button>
                 </Modal.Footer>

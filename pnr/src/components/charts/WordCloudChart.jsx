@@ -12,7 +12,7 @@ const WordCloudChart = ({ words }) => {
 
       const layout = cloud()
         .size([1200, 800])
-        .words(words.map(word => ({ text: word.text, size: word.size * 4 })))
+        .words(words.map(word => ({ text: word.text, size: word.size * 2 })))
         .padding(5)
         .rotate(() => Math.random() > 0.5 ? 0 : 90)
         .fontSize(d => d.size)
