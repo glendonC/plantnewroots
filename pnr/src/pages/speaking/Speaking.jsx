@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import { Button, Container, Row, Col, Card, Modal, Form } from 'react-bootstrap';
 import { useLevelLanguage } from "../../contexts/LevelLanguageContext";
 import HomeButton from "../../components/homebutton/HomeButton";
+import Loader from 'react-loaders';
+import 'loaders.css/loaders.min.css';
 
 const Speaking = () => {
     const { selectedLevel, selectedLanguage } = useLevelLanguage();
@@ -10,6 +12,8 @@ const Speaking = () => {
     const [response, setResponse] = useState('');
     const [showSaveModal, setShowSaveModal] = useState(false);
     const [sessionName, setSessionName] = useState('');
+    const [loading, setLoading] = useState(false);
+
 
 
     const mediaRecorderRef = useRef(null);
@@ -18,6 +22,7 @@ const Speaking = () => {
 
     const startRecording = async () => {
         try {
+            setLoading(true);
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const recorder = new MediaRecorder(stream);
             audioChunksRef.current = [];
@@ -46,6 +51,7 @@ const Speaking = () => {
         if (mediaRecorderRef.current) {
             mediaRecorderRef.current.stop();
             setIsRecording(false);
+            setLoading(false);
             console.log("Stopping recording...");
         } else {
             console.error('No mediaRecorder instance found');
@@ -53,6 +59,7 @@ const Speaking = () => {
     };
 
     const sendAudioToSpeechToText = async (audioBlob) => {
+        setLoading(true);
         console.log("Sending audio to server for transcription");
         const formData = new FormData();
         formData.append('audio', audioBlob);
@@ -77,6 +84,7 @@ const Speaking = () => {
     };
     
     const fetchDialogflowResponse = async (text) => {
+        setLoading(true);
         console.log("Sending text to Dialogflow:", text);
         try {
             const response = await fetch('/api/dialog/daily', {
@@ -102,6 +110,7 @@ const Speaking = () => {
     
     const playResponse = async (responseText) => {
         try {
+            setLoading(true);
             const response = await fetch('/api/text-to-speech/synthesize', {
                 method: 'POST',
                 headers: {
@@ -119,6 +128,7 @@ const Speaking = () => {
             } else {
                 alert("Failed to play audio. Please try again.");
             }
+            setLoading(false);
         } catch (error) {
             console.error('Error sending text to Text-to-Speech API:', error);
             alert("Failed to process Text-to-Speech request.");
@@ -162,6 +172,11 @@ const Speaking = () => {
       
     return (
         <Container className="mt-4 d-flex flex-column min-vh-100">
+            {loading && (
+            <div className="loader-container">
+                <Loader type="ball-scale-ripple-multiple" />
+            </div>
+            )}
             <div className="flex-grow-1">
                 <Row className="justify-content-md-center pt-5">
                     <Col xs={12}>

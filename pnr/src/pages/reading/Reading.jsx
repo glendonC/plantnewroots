@@ -4,6 +4,8 @@ import { Modal, Button, Form, Container, Row, Col, Dropdown } from 'react-bootst
 import HomeButton from "../../components/homebutton/HomeButton";
 import Transition from "../../components/transition/Transition";
 import axios from 'axios';
+import Loader from 'react-loaders';
+import 'loaders.css/loaders.min.css'
 
 const Reading = () => {
   const { selectedLevel, selectedLanguage } = useLevelLanguage();
@@ -15,8 +17,10 @@ const Reading = () => {
   const [submitted, setSubmitted] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [sessionName, setSessionName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const generateContent = async () => {
+    setLoading(true);
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(API_KEY);
@@ -48,6 +52,8 @@ const Reading = () => {
     } catch (error) {
       console.error('Error generating content:', error);
       setContent({ text: "Failed to generate content.", questions: [] });
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -77,6 +83,7 @@ const Reading = () => {
   };
 
   const submitAnswers = async () => {
+    setLoading(true);
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(API_KEY);
@@ -97,6 +104,8 @@ const Reading = () => {
     } catch (error) {
       console.error('Error evaluating answers:', error);
       setFeedback("Failed to evaluate answers.");
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -167,6 +176,11 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
           <h1 className="text-center">Reading Exercise</h1>
         </Col>
       </Row>
+      {loading && (
+          <div className="loader-container">
+            <Loader type="ball-scale-ripple-multiple" active />
+          </div>
+        )}
       <Row className="justify-content-md-center mt-3">
         <Col md={6}>
           <Dropdown>
