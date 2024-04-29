@@ -290,7 +290,7 @@ const prompt = `The text provided is: "${content.text}". Evaluate the following 
           <Button variant="secondary" onClick={() => setShowSaveModal(false)} style={{ color: 'black' }}>
             Close
           </Button>
-          <Button variant="primary" onClick={saveSession}>
+          <Button variant="primary" onClick={saveSession} style={{ color: 'black' }}>
             Save Session
           </Button>
         </Modal.Footer>
