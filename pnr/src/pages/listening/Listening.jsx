@@ -328,9 +328,17 @@ const Listening = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-      <Button variant="primary" onClick={() => setShowSaveModal(true)} className="mt-auto">
-        Save Session
-      </Button>
+        <Row className="justify-content-center mt-3">
+          <Col xs={12} md={8} className="text-center">
+            <Button
+              variant="primary"
+              onClick={() => setShowSaveModal(true)}
+              style={{ width: '800px' }}
+            >
+              Save Session
+            </Button>
+          </Col>
+        </Row>
       </div>
       <HomeButton className="mt-auto"/>
     </Container>

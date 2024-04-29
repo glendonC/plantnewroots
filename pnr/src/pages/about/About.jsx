@@ -141,7 +141,7 @@ const About = () => {
             </Marquee>
           </section>
 
-          <section ref={el => sections.current[4] = el} className="about-contact about-section">
+          {/* <section ref={el => sections.current[4] = el} className="about-contact about-section">
             <div className="about-contact-copy">
               <h2>Is there something else that you want to see added?</h2>
               <p>
@@ -151,7 +151,7 @@ const About = () => {
               </p>
               <br />
             </div>
-          </section>
+          </section> */}
 
           <HomeButton />
 

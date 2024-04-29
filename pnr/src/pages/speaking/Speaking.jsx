@@ -219,10 +219,17 @@ const Speaking = () => {
                         </Card>
                     </Col>
                 </Row>
-                <Button variant="primary" onClick={() => setShowSaveModal(true)} className="mt-3">
-                Save Session
-            </Button>
-
+                <Row className="justify-content-center mt-3">
+                    <Col xs={12} md={8} className="text-center">
+                        <Button
+                        variant="primary"
+                        onClick={() => setShowSaveModal(true)}
+                        style={{ width: '800px' }}
+                        >
+                        Save Session
+                        </Button>
+                    </Col>
+                </Row>
             <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Save Speaking Session</Modal.Title>
