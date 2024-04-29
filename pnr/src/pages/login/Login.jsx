@@ -93,7 +93,9 @@ function Login() {
           </div>
         </header>
         <footer className="footer-typing">
-          Plant your roots today.
+          <p>
+            Plant your roots <span className="footer-span">today</span>.
+          </p>
         </footer>
       </div>
     </div>

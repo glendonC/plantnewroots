@@ -166,31 +166,6 @@ header h1 {
   color: #989898;
 }
 
-/* footer */
-footer p,
-footer span {
-  position: relative;
-  font-family: "Gangsar";
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 2rem;
-  font-weight: lighter;
-}
-
-footer span {
-  position: relative;
-}
-
-footer span:after {
-  position: absolute;
-  content: "";
-  display: block;
-  width: 3.5rem;
-  height: 1.5px;
-  top: 40px;
-  right: 0.3rem;
-  background: var(--primary);
-}
 
 header .h1,
 header .h2 {
@@ -270,25 +245,50 @@ header h2 {
 }
 
 .footer-typing {
-  width: 22ch;
-  animation: custom-typing 2s steps(22), custom-blink .5s step-end infinite alternate;
+  width: auto;
   white-space: nowrap;
   overflow: hidden;
   border-right: 3px solid;
-  font-family: monospace;
+  font-family: "monospace";
   font-size: 2em;
 }
 
+.footer-typing p {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  font-family: "Gangsar";
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 2rem;
+  font-weight: lighter;
+  animation: custom-typing 4s steps(50) infinite, custom-blink 0.5s step-end infinite alternate;
+}
+
 @keyframes custom-typing {
-  from {
-    width: 0
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
   }
 }
 
 @keyframes custom-blink {
   50% {
-    border-color: transparent
+    border-color: transparent;
   }
 }
 
+.footer-typing p::after {
+  position: absolute;
+  content: "";
+  display: block;
+  width: 3.5rem;
+  height: 1.5px;
+  top: 40px;
+  right: 0.3rem;
+  background: var(--primary);
+  
+}
 
