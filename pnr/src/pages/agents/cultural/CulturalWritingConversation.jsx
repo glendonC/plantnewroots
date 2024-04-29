@@ -10,7 +10,7 @@ function CulturalWritingConversation() {
     const [conversationName, setConversationName] = useState('');
     const [showModal, setShowModal] = useState(false);
 
-    const conversationTag = "Professional Writing";
+    const conversationTag = "Cultural Writing";
 
     const sendMessage = async () => {
         if (!userInput.trim()) return;
@@ -42,7 +42,6 @@ function CulturalWritingConversation() {
         } catch (error) {
             console.error('Failed to send message:', error);
         }
-    
         setUserInput('');
     };
     
@@ -53,7 +52,7 @@ function CulturalWritingConversation() {
         }
         saveConversation();
     };
-
+    
     const saveConversation = async () => {
         if (!conversationName) {
             alert('Please enter a name for the conversation.');

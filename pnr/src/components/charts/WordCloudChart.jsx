@@ -11,8 +11,8 @@ const WordCloudChart = ({ words }) => {
       d3.select(ref.current).selectAll("*").remove();
 
       const layout = cloud()
-        .size([800, 400])
-        .words(words.map(word => ({ text: word.text, size: word.size })))
+        .size([1200, 800])
+        .words(words.map(word => ({ text: word.text, size: word.size * 4 })))
         .padding(5)
         .rotate(() => Math.random() > 0.5 ? 0 : 90)
         .fontSize(d => d.size)

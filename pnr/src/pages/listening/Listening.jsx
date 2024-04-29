@@ -4,6 +4,8 @@ import { Modal, Button, Form, Container, Row, Col, Dropdown } from 'react-bootst
 import HomeButton from "../../components/homebutton/HomeButton";
 import Transition from "../../components/transition/Transition";
 import axios from 'axios';
+import Loader from 'react-loaders';
+import 'loaders.css/loaders.min.css';
 
 const Listening = () => {
   const { selectedLevel, selectedLanguage } = useLevelLanguage();
@@ -16,9 +18,10 @@ const Listening = () => {
   const [speechReady, setSpeechReady] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [sessionName, setSessionName] = useState("");
-
+  const [loading, setLoading] = useState(false);
 
   const generateContent = async () => {
+    setLoading(true);
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(API_KEY);
@@ -51,7 +54,10 @@ const Listening = () => {
     } catch (error) {
       console.error('Error generating content:', error);
       setContent({ text: "Failed to generate content.", questions: [] });
+    } finally {
+      setLoading(false);
     }
+
   };
 
   const handlePlayAudio = async () => {
@@ -192,6 +198,11 @@ const Listening = () => {
             <h4 className="text-center">Language: {selectedLanguage}</h4>
           </Col>
         </Row>
+        {loading && (
+          <div className="loader-container">
+            <Loader type="ball-scale-ripple-multiple" active />
+          </div>
+        )}
         <Row className="justify-content-md-center mt-3">
           <Col md={6} className="d-flex justify-content-center">
             <Form className="w-100">
@@ -249,14 +260,47 @@ const Listening = () => {
           </Col>
           <Col md={4} className="align-self-start" style={{ marginTop: '-12px' }}>
             {feedback && (
-              <div className="mt-3" style={{ border: '1px solid #ccc', padding: '10px' }}>
-                <h3>Feedback</h3>
-                {feedback.split('\n').map((feedbackLine, index) => (
-                  <p key={index}>{feedbackLine}</p>
-                ))}
-              </div>
-            )}
-          </Col>
+              <div className="feedback-container mt-3" style={{
+                  border: '1px solid #ccc',
+                  padding: '10px',
+                  backgroundColor: '#eae0c8',
+                  color: '#2a4d69',
+                  marginTop: '20px',
+                  marginBottom: '20px',
+                  borderRadius: '8px',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              }}>
+              <h3 style={{ color: '#2a4d69' }}>Feedback</h3>
+              {feedback.split('Question').slice(1).map((section, index) => {
+                const cleanSection = section.replace(/\*+/g, '').replace(/^\d+:\s*/gm, '').trim();
+                const parts = cleanSection.split('\n').filter(line => line.trim());
+                return (
+                    <div key={index} className="mb-4">
+                      <p className="font-weight-bold" style={{ color: '#2a4d69' }}>Question {index + 1}:</p>
+                      {parts.map((line, lineIndex) => {
+                          const isCorrect = line.includes("Correct");
+                          const isIncorrect = line.includes("Incorrect");
+                          let className = '';
+                          if (isCorrect) {
+                              className = 'text-success';
+                          } else if (isIncorrect) {
+                              className = 'text-danger';
+                          }
+                          if (line.includes("Expected Answer: undefined")) {
+                              return null;
+                          }
+                          return (
+                              <p key={lineIndex} className={className} style={{ color: className ? '' : '#2a4d69' }}>
+                                  {line.replace(/^\d+:/, '').trim()}
+                              </p>
+                          );
+                      })}
+                </div>
+              );
+            })}
+          </div>
+          )}
+        </Col>
         </Row>
         <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
           <Modal.Header closeButton>
@@ -284,17 +328,13 @@ const Listening = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-        <Button variant="primary" onClick={() => setShowSaveModal(true)} className="mt-3">
-          Save Session
-        </Button>
+      <Button variant="primary" onClick={() => setShowSaveModal(true)} className="mt-auto">
+        Save Session
+      </Button>
       </div>
       <HomeButton className="mt-auto"/>
     </Container>
   );
-  
-  
-
-  
 };
 
 export default Transition(Listening);
