@@ -92,8 +92,10 @@ function Login() {
             <p>Forgot your password? <Link to="/password-reset">Reset it</Link></p>
           </div>
         </header>
-        <footer>
-          <p>Plant your roots <span>today</span></p>
+        <footer className="footer-typing">
+          <p>
+            Plant your roots <span className="footer-span">today</span>.
+          </p>
         </footer>
       </div>
     </div>
