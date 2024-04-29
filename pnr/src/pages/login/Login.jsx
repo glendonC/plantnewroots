@@ -60,13 +60,9 @@ function Login() {
   return (
     <div className="login-container">
       <div className="hero-image-wrapper wrapper">
-        <div className="bg-img">
-          <img src="./login.jpg" alt="" />
-        </div>
-        <div className="front-img">
-          <img src="./login.jpg" alt="" />
-        </div>
+        <img className="front-img" src="./login.jpg" alt="" />
       </div>
+
       <div className="content-wrapper wrapper">
         <nav>
           <p>From tiny seedlings grow <a href="#">mighty trees.</a></p>
