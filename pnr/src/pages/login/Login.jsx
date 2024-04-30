@@ -65,7 +65,7 @@ function Login() {
 
       <div className="content-wrapper wrapper">
         <nav>
-          <p>From tiny seedlings grow <a href="#">mighty trees.</a></p>
+          {/* <p>From tiny seedlings grow <a href="#">mighty trees.</a></p> */}
         </nav>
         <header>
         <h1>Login</h1>
