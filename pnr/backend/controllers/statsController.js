@@ -1,23 +1,36 @@
+const moment = require('moment');
 const ListeningAnalysis = require('../models/ListeningAnalysis');
 const ReadingAnalysis = require('../models/ReadingAnalysis');
 const SpeakingAnalysis = require('../models/SpeakingAnalysis');
 const WritingConversationAnalysis = require('../models/WritingConversationAnalysis');
 
+//compute date ranges (helper)
 function getDateRange(filter) {
+    let start, end;
     switch (filter) {
       case 'today':
-        return { start: moment().startOf('day').toDate(), end: moment().endOf('day').toDate() };
+        start = moment().startOf('day').toDate();
+        end = moment().endOf('day').toDate();
+        break;
       case 'week':
-        return { start: moment().startOf('week').toDate(), end: moment().endOf('week').toDate() };
+        start = moment().startOf('week').toDate();
+        end = moment().endOf('week').toDate();
+        break;
       case 'month':
-        return { start: moment().startOf('month').toDate(), end: moment().endOf('month').toDate() };
+        start = moment().startOf('month').toDate();
+        end = moment().endOf('month').toDate();
+        break;
       case 'all':
       default:
-        return { start: new Date(0), end: new Date() };
+        start = new Date(0);
+        end = new Date();
+        break;
     }
-  }
-  
-  exports.getStatistics = async (dateRange) => {
+    console.log(`Date Range for ${filter}: Start = ${start}, End = ${end}`);
+    return { start, end };
+}
+
+async function getStatistics(dateRange) {
     const pipeline = [
         {
             $match: {
@@ -43,12 +56,12 @@ function getDateRange(filter) {
         reading: readingCount.length > 0 ? readingCount[0].count : 0,
         listening: listeningCount.length > 0 ? listeningCount[0].count : 0,
     };
-};
+}
 
 exports.handleGetStatistics = async (req, res) => {
     try {
         const dateRange = getDateRange(req.query.timeframe);
-        const stats = await exports.getStatistics(dateRange);
+        const stats = await getStatistics(dateRange);
         res.json(stats);
     } catch (error) {
         console.error('Failed to fetch statistics:', error);
