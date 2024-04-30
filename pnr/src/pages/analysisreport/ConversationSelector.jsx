@@ -3,7 +3,13 @@ import { Dropdown } from 'react-bootstrap';
 
 function ConversationSelector({ conversations, selectedConversationId, onSelect }) {
   const groupedConversations = conversations.reduce((acc, conversation) => {
-    acc[conversation.type] = [...(acc[conversation.type] || []), conversation];
+    const uniqueKey = `${conversation.name}-${conversation.tag}`;
+    acc[conversation.type] = acc[conversation.type] || {};
+
+    if (!acc[conversation.type][uniqueKey]) {
+      acc[conversation.type][uniqueKey] = conversation;
+    }
+    
     return acc;
   }, {});
 
@@ -18,9 +24,9 @@ function ConversationSelector({ conversations, selectedConversationId, onSelect 
         {Object.entries(groupedConversations).map(([type, conversations]) => (
           <React.Fragment key={type}>
             <Dropdown.ItemText>{type.toUpperCase()}</Dropdown.ItemText>
-            {conversations.map(conversation => (
+            {Object.values(conversations).map(conversation => (
               <Dropdown.Item key={conversation._id} eventKey={conversation._id}>
-                {conversation.name} - {conversation.type === 'reading' ? 'Reading' : conversation.tag}
+                {conversation.name} - {type === 'reading' ? 'Reading' : conversation.tag}
               </Dropdown.Item>
             ))}
           </React.Fragment>
